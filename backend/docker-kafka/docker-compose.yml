@@ -2,9 +2,9 @@ version: '2'
 services:
 
   zookeeper:
-    build: .
+    build: kafka-zookeeper
     image: kafka-zookeeper
-    container_name: zookeeper
+    #container_name: zookeeper
     ports:
       - "2181:2181"
     networks:
@@ -17,7 +17,7 @@ services:
 
   kafka:
     image: kafka-zookeeper
-    container_name: kafka
+    #container_name: kafka
     links:
     - zookeeper:zoo
     ports:
@@ -28,6 +28,22 @@ services:
           - kafka
     command:
       - /app/start-kafka.sh
+
+  socketio_backend:
+    build: socketio
+    image: socketio
+    #container_name: socketio
+    #links:
+    #- kafka
+    ports:
+    - "10123:10123"
+    networks:
+      zoo_kafka:
+        aliases:
+          - socketio
+    #command:
+      #- mvn
+      #- exec:java
 
 networks:
   zoo_kafka:

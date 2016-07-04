@@ -1,8 +1,14 @@
 FROM java:8
 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Common stuff START
+
 RUN apt-get update
 RUN apt-get install -y sudo
 RUN sudo apt-get install nano
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Common stuff END
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Kafka-Zookeeper START
 
 ENV VERSION 0.10.0.0
 ENV KAFKA kafka_2.11-"$VERSION"
@@ -24,3 +30,4 @@ WORKDIR /app
 
 # 2181 is Zookeeper, 9092 is Kafka
 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Kafka-Zookeeper END
