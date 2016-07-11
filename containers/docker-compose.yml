@@ -1,0 +1,68 @@
+version: '2'
+
+services:
+
+  zookeeper:
+    build: kafka-zookeeper
+    image: kafka-zookeeper
+    #container_name: zookeeper
+    ports:
+      - "2181:2181"
+    networks:
+      zoo_kafka:
+        aliases:
+          - zookeeper
+    command:
+    - /app/kafka/bin/zookeeper-server-start.sh
+    - /app/kafka/config/zookeeper.properties
+
+  kafka:
+    image: kafka-zookeeper
+    #container_name: kafka
+    links:
+    - zookeeper:zoo
+    ports:
+    - "9092:9092"
+    networks:
+      zoo_kafka:
+        aliases:
+          - kafka
+    command:
+      - /app/start-kafka.sh
+
+  socketio_backend:
+    build: socketio_backend
+    image: socketio_backend
+    #container_name: socketio
+    ports:
+    #- "10123:10123"
+    #- "10124:10124"
+    - "81:65000"
+    #links:
+    #- kafka
+#    networks:
+#      zoo_kafka:
+#        aliases:
+#          - socketio_backend
+    #command:
+      #- mvn
+      #?- exec:java
+
+  web_server:
+    build: web_server
+    image: web_server
+    ports:
+      - "80:80"
+    volumes:
+      - ../source/front_end/html/client:/usr/share/nginx/html
+    links:
+      - socketio_backend
+
+  nodejs:
+    build: nodejs
+    image: nodejs
+    volumes:
+      - ../source:/mnt/src
+
+networks:
+  zoo_kafka:
