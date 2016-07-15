@@ -16,7 +16,7 @@ public class Send {
         Channel channel = connection.createChannel();
 
         channel.queueDeclare(QUEUE_NAME, true, false, false, null);
-        String message =     "Hello World! 2";
+        String message = "Hello World! 2";
         channel.basicPublish("", QUEUE_NAME, null, message.getBytes());
         System.out.println(" [x] Sent '" + message + "'");
 

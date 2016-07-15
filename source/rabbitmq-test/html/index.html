@@ -1,24 +1,72 @@
+<!DOCTYPE html>
 <html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>-->
+		<script src="stomp.js"></script>
+	</head>
+<body>
+<h1>RabbitMQ client WebStomp test</h1>
 
-<script src="stomp.js"></script>
+<p>
+	<form onsubmit="return false">
+		<input id="chat_text" name="chat_text" type="text" />
+		<button id="send_btn">Send</button>
+	</form>
+</p>
+
+<p>
+	<button id="disconnect_btn">Disconnect</button>
+</p>
+
 <script>
 
-    var ws = new WebSocket('ws://172.23.0.2:15674/ws');
-    var client = Stomp.over(ws);
+	(function() {
 
-    var on_connect = function() {
-        console.log('Koblet til!!');
-        // {"content-type":"text/plain"}
-        client.send("hello3", {}, "HELLO from browser!!" );
-	    console.log("Beskjed sendt!");
-   		client.disconnect();
-   	 	console.log("Koblet fra.");
-    };
-    var on_error =  function() {
-        console.log('error');
-    };
-    client.connect('guest', 'guest', on_connect, on_error, '/');
+	    var ws = new WebSocket('ws://172.23.0.2:15674/ws');
+	    //var ws = new WebSocket('ws://localhost:15674/ws');
+	    
+	    //var ws = new SockJS('http://127.0.0.1:15674/stomp');
+	    var client = Stomp.over(ws);
+
+		var sendYk = function(text) {
+			console.log("Sending text: " + text);
+	        client.send("hello3", {}, text);
+		}
+
+	    var on_connect = function() {
+	        console.log('Koblet til!!');
+	        // {"content-type":"text/plain"}
+	        client.subscribe("hello3", function(msg) {
+	        	console.log("---------- MESSAGE FROM SOCKET:");
+	        	console.log(msg);
+	        	console.log(msg.headers);
+	        	console.log(msg.body);
+	        });
+
+	        sendYk("Hi, I'm a new browser, ready to receive.");
+
+		    console.log("Beskjed sendt!");
+	    };
+	    var on_error =  function() {
+	        console.log('error');
+	    };
+	    
+	    client.connect('guest', 'guest', on_connect, on_error, '/');
+
+		document.getElementById("send_btn").onclick = function() {
+			var msg = document.getElementById("chat_text").value;
+			sendYk(msg);
+			document.getElementById("chat_text").value = "";
+		};
+
+		document.getElementById("disconnect_btn").onclick = function() {
+	   		client.disconnect();
+	   	 	console.log("Koblet fra.");
+		};
+	})();
     
 </script>
 
+</body>
 </html>
