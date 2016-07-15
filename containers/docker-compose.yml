@@ -2,39 +2,12 @@ version: '2'
 
 services:
 
-  zookeeper:
-    build: kafka-zookeeper
-    image: kafka-zookeeper
-    #container_name: zookeeper
-    ports:
-      - "2181:2181"
-    networks:
-      zoo_kafka:
-        aliases:
-          - zookeeper
-    command:
-    - /app/kafka/bin/zookeeper-server-start.sh
-    - /app/kafka/config/zookeeper.properties
-
-  kafka:
-    image: kafka-zookeeper
-    #container_name: kafka
-    links:
-    - zookeeper:zoo
-    ports:
-    - "9092:9092"
-    networks:
-      zoo_kafka:
-        aliases:
-          - kafka
-    command:
-      - /app/start-kafka.sh
-
   rabbitmq:
     image: rabbitmq:3-management
     hostname: rabbithost
     ports:
       - 8080:15672
+      - 15674:15674
     networks:
       rabbit:
         aliases:
@@ -57,5 +30,4 @@ services:
       - ../source:/mnt/src
 
 networks:
-  zoo_kafka:
   rabbit:
