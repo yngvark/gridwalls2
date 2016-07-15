@@ -1,0 +1,24 @@
+<html>
+
+<script src="stomp.js"></script>
+<script>
+
+    var ws = new WebSocket('ws://172.23.0.2:15674/ws');
+    var client = Stomp.over(ws);
+
+    var on_connect = function() {
+        console.log('Koblet til!!');
+        // {"content-type":"text/plain"}
+        client.send("hello3", {}, "HELLO from browser!!" );
+	    console.log("Beskjed sendt!");
+   		client.disconnect();
+   	 	console.log("Koblet fra.");
+    };
+    var on_error =  function() {
+        console.log('error');
+    };
+    client.connect('guest', 'guest', on_connect, on_error, '/');
+    
+</script>
+
+</html>

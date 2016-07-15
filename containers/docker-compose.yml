@@ -30,23 +30,15 @@ services:
     command:
       - /app/start-kafka.sh
 
-  socketio_backend:
-    build: socketio_backend
-    image: socketio_backend
-    #container_name: socketio
+  rabbitmq:
+    image: rabbitmq:3-management
+    hostname: rabbithost
     ports:
-    #- "10123:10123"
-    #- "10124:10124"
-    - "81:65000"
-    #links:
-    #- kafka
-#    networks:
-#      zoo_kafka:
-#        aliases:
-#          - socketio_backend
-    #command:
-      #- mvn
-      #?- exec:java
+      - 8080:15672
+    networks:
+      rabbit:
+        aliases:
+          - rabbithost
 
   web_server:
     build: web_server
@@ -55,8 +47,8 @@ services:
       - "80:80"
     volumes:
       - ../source/front_end/html/client:/usr/share/nginx/html
-    links:
-      - socketio_backend
+    #links:
+    #  - socketio_backend
 
   nodejs:
     build: nodejs
@@ -66,3 +58,4 @@ services:
 
 networks:
   zoo_kafka:
+  rabbit:

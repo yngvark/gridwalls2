@@ -1,0 +1,440 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="googlebot" content="NOODP"><meta name="google-site-verification" content="nSYeDgyKM9mw5CWcZuD0xu7iSWXlJijAlg9rcxVOYf4"><meta name="google-site-verification" content="6UEaC3SWhpGQvqRnSJIEm2swxXpM5Adn4dxZhFsNdw0"><link rel="stylesheet" href="RabbitMQ%20-%20RabbitMQ%20tutorial%20-%20%22Hello%20World%21%22_files/rabbit.css" type="text/css"><!--[if IE 6]>
+      <link rel="stylesheet" href="/css/rabbit-ie6.css" type="text/css" />
+      <![endif]--><link rel="icon" type="/image/vnd.microsoft.icon" href="https://www.rabbitmq.com/favicon.ico"><link rel="stylesheet" href="RabbitMQ%20-%20RabbitMQ%20tutorial%20-%20%22Hello%20World%21%22_files/tutorial.css" type="text/css"><script src="RabbitMQ%20-%20RabbitMQ%20tutorial%20-%20%22Hello%20World%21%22_files/munchkin_002.js" async="" type="text/javascript"></script><script src="RabbitMQ%20-%20RabbitMQ%20tutorial%20-%20%22Hello%20World%21%22_files/ga.js" async="" type="text/javascript"></script><script type="text/javascript" src="RabbitMQ%20-%20RabbitMQ%20tutorial%20-%20%22Hello%20World%21%22_files/site.js"></script><script type="text/javascript" src="RabbitMQ%20-%20RabbitMQ%20tutorial%20-%20%22Hello%20World%21%22_files/ga-bootstrap.js"></script><script src="RabbitMQ%20-%20RabbitMQ%20tutorial%20-%20%22Hello%20World%21%22_files/munchkin.js" async="" type="text/javascript"></script><title>RabbitMQ - RabbitMQ tutorial - "Hello World!" </title>
+    
+  <script>try {  for(var lastpass_iter=0; lastpass_iter < document.forms.length; lastpass_iter++){    var lastpass_f = document.forms[lastpass_iter];    if(typeof(lastpass_f.lpsubmitorig)=="undefined"){      if (typeof(lastpass_f.submit) == "function") {        lastpass_f.lpsubmitorig = lastpass_f.submit;        lastpass_f.submit = function(){          var form = this;          try {            if (document.documentElement && 'createEvent' in document)            {              var forms = document.getElementsByTagName('form');              for (var i=0 ; i<forms.length ; ++i)                if (forms[i]==form)                {                  var element = document.createElement('lpformsubmitdataelement');                  element.setAttribute('formnum',i);                  element.setAttribute('from','submithook');                  document.documentElement.appendChild(element);                  var evt = document.createEvent('Events');                  evt.initEvent('lpformsubmit',true,false);                  element.dispatchEvent(evt);                  break;                }            }          } catch (e) {}          try {            form.lpsubmitorig();          } catch (e) {}        }      }    }  }} catch (e) {}</script></head>
+  <body><div id="outerContainer"><div id="rabbit-logo"><a href="https://www.rabbitmq.com/"><img src="RabbitMQ%20-%20RabbitMQ%20tutorial%20-%20%22Hello%20World%21%22_files/rabbitmq_logo_strap.png" alt="RabbitMQ" height="53" width="253"></a></div><div id="pivotal-logo"><a href="http://pivotal.io/"><img src="RabbitMQ%20-%20RabbitMQ%20tutorial%20-%20%22Hello%20World%21%22_files/logo-pivotal-118x25.png" alt="Pivotal" height="25" width="118"></a></div><div id="nav-search"><div id="search-box"><form action="/search.html" method="get"><input name="q" size="25" id="search-query" value="Search RabbitMQ" onfocus="handle_SearchBoxFocus();" onblur="handle_SearchBoxBlur();" type="text"><input id="search-button" alt="Search" value="" type="submit"></form></div><ul class="mainNav"><li><a href="https://www.rabbitmq.com/features.html">Features</a></li><li><a href="https://www.rabbitmq.com/download.html">Installation</a></li><li><a href="https://www.rabbitmq.com/documentation.html">Docs</a></li><li><a href="https://www.rabbitmq.com/getstarted.html" class="selected">Tutorials</a></li><li><a href="https://www.rabbitmq.com/services.html">Support</a></li><li><a href="https://www.rabbitmq.com/community.html">Community</a></li><li><a href="http://pivotal.io/careers/engineering">Pivotal is Hiring</a></li><li><a href="https://www.rabbitmq.com/blog/">Blog</a></li></ul></div><div class="nav-separator"></div>
+<div id="sidebar" class="tutorial-one">
+   <table id="tutorials" xml:base="site/tutorials/tutorials-menu.xml.inc">
+  <tbody><tr>
+  <td id="tutorial-one">
+    <h2><span class="tute-num">1</span> <a href="https://www.rabbitmq.com/tutorials/tutorial-one-python.html">"Hello World!"</a></h2>
+    <p>
+      The simplest thing that does <em>something</em>
+    </p>
+    <p><img src="RabbitMQ%20-%20RabbitMQ%20tutorial%20-%20%22Hello%20World%21%22_files/python-one.png" width="180"></p>
+    <ul>
+      <li><a href="https://www.rabbitmq.com/tutorials/tutorial-one-python.html">Python</a></li>
+      <li><a href="https://www.rabbitmq.com/tutorials/tutorial-one-java.html">Java</a></li>
+      <li><a href="https://www.rabbitmq.com/tutorials/tutorial-one-ruby.html">Ruby</a></li>
+      <li><a href="https://www.rabbitmq.com/tutorials/tutorial-one-php.html">PHP</a></li>
+      <li><a href="https://www.rabbitmq.com/tutorials/tutorial-one-dotnet.html">C#</a></li>
+      <li><a href="https://www.rabbitmq.com/tutorials/tutorial-one-javascript.html">Javascript</a></li>
+      <li><a href="https://www.rabbitmq.com/tutorials/tutorial-one-go.html">Go</a></li>
+      <li><a href="https://www.rabbitmq.com/tutorials/tutorial-one-elixir.html">Elixir</a></li>
+      <li><a href="https://www.rabbitmq.com/tutorials/tutorial-one-objectivec.html">Objective-C</a></li>
+    </ul>
+  </td>
+
+  <td id="tutorial-two">
+    <h2><span class="tute-num">2</span> <a href="https://www.rabbitmq.com/tutorials/tutorial-two-python.html">Work queues</a></h2>
+    <p>
+      Distributing tasks among workers
+    </p>
+    <p><img src="RabbitMQ%20-%20RabbitMQ%20tutorial%20-%20%22Hello%20World%21%22_files/python-two.png" width="180"></p>
+    <ul>
+        <li><a href="https://www.rabbitmq.com/tutorials/tutorial-two-python.html">Python</a></li>
+        <li><a href="https://www.rabbitmq.com/tutorials/tutorial-two-java.html">Java</a></li>
+        <li><a href="https://www.rabbitmq.com/tutorials/tutorial-two-ruby.html">Ruby</a></li>
+        <li><a href="https://www.rabbitmq.com/tutorials/tutorial-two-php.html">PHP</a></li>
+        <li><a href="https://www.rabbitmq.com/tutorials/tutorial-two-dotnet.html">C#</a></li>
+        <li><a href="https://www.rabbitmq.com/tutorials/tutorial-two-javascript.html">Javascript</a></li>
+        <li><a href="https://www.rabbitmq.com/tutorials/tutorial-two-go.html">Go</a></li>
+        <li><a href="https://www.rabbitmq.com/tutorials/tutorial-two-elixir.html">Elixir</a></li>
+        <li><a href="https://www.rabbitmq.com/tutorials/tutorial-two-objectivec.html">Objective-C</a></li>
+    </ul>
+  </td>
+
+  <td id="tutorial-three">
+    <h2><span class="tute-num">3</span> <a href="https://www.rabbitmq.com/tutorials/tutorial-three-python.html">Publish/Subscribe</a></h2>
+    <p>
+      Sending messages to many consumers at once
+    </p>
+    <p><img src="RabbitMQ%20-%20RabbitMQ%20tutorial%20-%20%22Hello%20World%21%22_files/python-three.png" height="50" width="180"></p>
+    <ul>
+      <li><a href="https://www.rabbitmq.com/tutorials/tutorial-three-python.html">Python</a></li>
+      <li><a href="https://www.rabbitmq.com/tutorials/tutorial-three-java.html">Java</a></li>
+      <li><a href="https://www.rabbitmq.com/tutorials/tutorial-three-ruby.html">Ruby</a></li>
+      <li><a href="https://www.rabbitmq.com/tutorials/tutorial-three-php.html">PHP</a></li>
+      <li><a href="https://www.rabbitmq.com/tutorials/tutorial-three-dotnet.html">C#</a></li>
+      <li><a href="https://www.rabbitmq.com/tutorials/tutorial-three-javascript.html">Javascript</a></li>
+      <li><a href="https://www.rabbitmq.com/tutorials/tutorial-three-go.html">Go</a></li>
+      <li><a href="https://www.rabbitmq.com/tutorials/tutorial-three-elixir.html">Elixir</a></li>
+      <li><a href="https://www.rabbitmq.com/tutorials/tutorial-three-objectivec.html">Objective-C</a></li>
+    </ul>
+  </td>
+  </tr>
+
+  <tr>
+  <td id="tutorial-four">
+    <h2><span class="tute-num">4</span> <a href="https://www.rabbitmq.com/tutorials/tutorial-four-python.html">Routing</a></h2>
+    <p>
+      Receiving messages selectively
+    </p>
+    <p><img src="RabbitMQ%20-%20RabbitMQ%20tutorial%20-%20%22Hello%20World%21%22_files/python-four.png" height="50" width="180"></p>
+    <ul>
+      <li><a href="https://www.rabbitmq.com/tutorials/tutorial-four-python.html">Python</a></li>
+      <li><a href="https://www.rabbitmq.com/tutorials/tutorial-four-java.html">Java</a></li>
+      <li><a href="https://www.rabbitmq.com/tutorials/tutorial-four-ruby.html">Ruby</a></li>
+      <li><a href="https://www.rabbitmq.com/tutorials/tutorial-four-php.html">PHP</a></li>
+      <li><a href="https://www.rabbitmq.com/tutorials/tutorial-four-dotnet.html">C#</a></li>
+      <li><a href="https://www.rabbitmq.com/tutorials/tutorial-four-javascript.html">Javascript</a></li>
+      <li><a href="https://www.rabbitmq.com/tutorials/tutorial-four-go.html">Go</a></li>
+      <li><a href="https://www.rabbitmq.com/tutorials/tutorial-four-elixir.html">Elixir</a></li>
+      <li><a href="https://www.rabbitmq.com/tutorials/tutorial-four-objectivec.html">Objective-C</a></li>
+    </ul>
+  </td>
+
+  <td id="tutorial-five">
+    <h2><span class="tute-num">5</span> <a href="https://www.rabbitmq.com/tutorials/tutorial-five-python.html">Topics</a></h2>
+    <p>
+      Receiving messages based on a pattern
+    </p>
+    <p><img src="RabbitMQ%20-%20RabbitMQ%20tutorial%20-%20%22Hello%20World%21%22_files/python-five.png" height="50" width="180"></p>
+    <ul>
+      <li><a href="https://www.rabbitmq.com/tutorials/tutorial-five-python.html">Python</a></li>
+      <li><a href="https://www.rabbitmq.com/tutorials/tutorial-five-java.html">Java</a></li>
+      <li><a href="https://www.rabbitmq.com/tutorials/tutorial-five-ruby.html">Ruby</a></li>
+      <li><a href="https://www.rabbitmq.com/tutorials/tutorial-five-php.html">PHP</a></li>
+      <li><a href="https://www.rabbitmq.com/tutorials/tutorial-five-dotnet.html">C#</a></li>
+      <li><a href="https://www.rabbitmq.com/tutorials/tutorial-five-javascript.html">Javascript</a></li>
+      <li><a href="https://www.rabbitmq.com/tutorials/tutorial-five-go.html">Go</a></li>
+      <li><a href="https://www.rabbitmq.com/tutorials/tutorial-five-elixir.html">Elixir</a></li>
+      <li><a href="https://www.rabbitmq.com/tutorials/tutorial-five-objectivec.html">Objective-C</a></li>
+    </ul>
+  </td>
+
+  <td id="tutorial-six">
+    <h2><span class="tute-num">6</span> <a href="https://www.rabbitmq.com/tutorials/tutorial-six-python.html">RPC</a></h2>
+    <p>
+      Remote procedure call implementation
+    </p>
+    <p><img src="RabbitMQ%20-%20RabbitMQ%20tutorial%20-%20%22Hello%20World%21%22_files/python-six.png" height="50" width="180"></p>
+    <ul>
+      <li><a href="https://www.rabbitmq.com/tutorials/tutorial-six-python.html">Python</a></li>
+      <li><a href="https://www.rabbitmq.com/tutorials/tutorial-six-java.html">Java</a></li>
+      <li><a href="https://www.rabbitmq.com/tutorials/tutorial-six-ruby.html">Ruby</a></li>
+      <li><a href="https://www.rabbitmq.com/tutorials/tutorial-six-php.html">PHP</a></li>
+      <li><a href="https://www.rabbitmq.com/tutorials/tutorial-six-dotnet.html">C#</a></li>
+      <li><a href="https://www.rabbitmq.com/tutorials/tutorial-six-javascript.html">Javascript</a></li>
+      <li><a href="https://www.rabbitmq.com/tutorials/tutorial-six-go.html">Go</a></li>
+      <li><a href="https://www.rabbitmq.com/tutorials/tutorial-six-elixir.html">Elixir</a></li>
+    </ul>
+  </td>
+  </tr>
+</tbody></table>
+</div>
+
+<div id="tutorial">
+
+<h2>Introduction</h2>
+<p></p><div class="aside" xml:base="site/tutorials/tutorials-help.xml.inc">
+    <h3>Prerequisites</h3>
+    <p>
+      This tutorial assumes RabbitMQ is <a href="https://www.rabbitmq.com/download.html">installed</a> and running
+      on <span class="code ">localhost</span> on standard port (<span class="code ">5672</span>). In case you use
+      a different host, port or credentials, connections settings would require adjusting.
+    </p>
+
+    <h3>Where to get help</h3>
+    <p>
+        If you're having trouble going through this tutorial you can
+        <a href="https://groups.google.com/forum/#%21forum/rabbitmq-users">contact us</a> through the mailing list.
+    </p>
+  </div>
+<div xmlns="" xml:base="site/tutorials/tutorials-intro.xml.inc">
+<p>RabbitMQ is a message broker. The principal idea is pretty simple: it accepts
+and forwards messages. You can think about it as a post office: when you send
+mail to the post box you're pretty sure that Mr. Postman will eventually
+deliver the mail to your recipient. Using this metaphor RabbitMQ is a post box,
+a post office and a postman.</p>
+<p>The major difference between RabbitMQ and the post office is the fact that it
+doesn't deal with paper, instead it accepts, stores and forwards binary
+blobs of data ‒ <em>messages</em>.</p>
+<p>RabbitMQ, and messaging in general, uses some jargon.</p>
+<ul>
+<li>
+<p><em>Producing</em> means nothing more than sending. A program that sends messages
+is a <em>producer</em>. We'll draw it like that, with "P":
+</p><div class="diagram">
+ <img src="RabbitMQ%20-%20RabbitMQ%20tutorial%20-%20%22Hello%20World%21%22_files/producer.png" height="50">
+ <div class="diagram_source">
+ digraph {
+   bgcolor=transparent;
+   truecolor=true;
+   rankdir=LR;
+   node [style="filled"];
+   //
+   P1 [label="P", fillcolor="#00ffff"];
+ }
+ </div>
+</div><p></p>
+</li>
+<li>
+<p><em>A queue</em> is the name for a mailbox. It lives inside
+RabbitMQ. Although messages flow through RabbitMQ and your
+applications, they can be stored only inside a <em>queue</em>. A <em>queue</em>
+is not bound by any limits, it can store as many messages as you
+like ‒ it's essentially an infinite buffer. Many <em>producers</em> can send
+messages that go to one queue, many <em>consumers</em> can try to
+receive data from one <em>queue</em>. A queue will be drawn as like that, with
+its name above it:
+</p><div class="diagram">
+ <img src="RabbitMQ%20-%20RabbitMQ%20tutorial%20-%20%22Hello%20World%21%22_files/queue.png" height="90">
+ <div class="diagram_source">
+ digraph {
+   bgcolor=transparent;
+   truecolor=true;
+   rankdir=LR;
+   node [style="filled"];
+   //
+   subgraph cluster_Q1 {
+     label="queue_name";
+     color=transparent;
+     Q1 [label="{||||}", fillcolor="red", shape="record"];
+   };
+ }
+ </div>
+</div><p></p>
+</li>
+<li>
+<p><em>Consuming</em> has a similar meaning to receiving. A <em>consumer</em> is a program
+that mostly waits to receive messages. On our drawings it's shown with "C":
+</p><div class="diagram">
+ <img src="RabbitMQ%20-%20RabbitMQ%20tutorial%20-%20%22Hello%20World%21%22_files/consumer.png" height="50">
+ <div class="diagram_source">
+ digraph {
+   bgcolor=transparent;
+   truecolor=true;
+   rankdir=LR;
+   node [style="filled"];
+   //
+   C1 [label="C", fillcolor="#33ccff"];
+ }
+ </div>
+</div><p></p>
+</li>
+</ul>
+<p>Note that the producer, consumer, and broker do not have to reside on
+the same machine; indeed in most applications they don't.</p>
+</div><p></p>
+<h2>"Hello World"</h2>
+<h3>(using the Java Client)</h3>
+<p>In this part of the tutorial we'll write two programs in Java; a
+producer that sends a single message, and a consumer that receives
+messages and prints them out.  We'll gloss over some of the detail in
+the Java API, concentrating on this very simple thing just to get
+started.  It's a "Hello World" of messaging.</p>
+<p>In the diagram below, "P" is our producer and "C" is our consumer. The
+box in the middle is a queue - a message buffer that RabbitMQ keeps
+on behalf of the consumer.</p>
+<div class="diagram">
+  <img src="RabbitMQ%20-%20RabbitMQ%20tutorial%20-%20%22Hello%20World%21%22_files/python-one.png" alt="(P) -&gt; [|||] -&gt; (C)" height="60">
+</div>
+
+<blockquote>
+<h4>The Java client library</h4>
+<p>RabbitMQ speaks multiple protocols. This tutorial uses AMQP 0-9-1, which is an open,
+general-purpose protocol for messaging. There are a number of clients
+for RabbitMQ in <a href="http://rabbitmq.com/devtools.html">many different
+languages</a>. We'll
+use the Java client provided by RabbitMQ.</p>
+<p>Download the <a href="http://www.rabbitmq.com/java-client.html">client library
+package</a>, and check its
+signature as described. Unzip it into your working directory and grab
+the JAR files from the unzipped directory:</p>
+<div class="highlight"><pre><span class="nv">$ </span>unzip rabbitmq-java-client-bin-*.zip
+<span class="nv">$ </span>cp rabbitmq-java-client-bin-*/*.jar ./
+</pre></div>
+
+
+<p>(The RabbitMQ Java client is also in the central Maven repository,
+with the groupId <span class="code ">com.rabbitmq</span> and the artifactId <span class="code ">amqp-client</span>.)</p>
+</blockquote>
+<p>Now we have the Java client and its dependencies, we can write some
+code.</p>
+<h3>Sending</h3>
+<div class="diagram">
+  <img src="RabbitMQ%20-%20RabbitMQ%20tutorial%20-%20%22Hello%20World%21%22_files/sending.png" alt="(P) -&gt; [|||]" height="100">
+</div>
+
+<p>We'll call our message sender <span class="code ">Send</span> and our message receiver
+<span class="code ">Recv</span>.  The sender will connect to RabbitMQ, send a single message,
+then exit.</p>
+<p>In
+<a href="http://github.com/rabbitmq/rabbitmq-tutorials/blob/master/java/Send.java"><span class="code ">Send.java</span></a>,
+we need some classes imported:</p>
+<div class="highlight"><pre><span class="kn">import</span> <span class="nn">com.rabbitmq.client.ConnectionFactory</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.rabbitmq.client.Connection</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.rabbitmq.client.Channel</span><span class="o">;</span>
+</pre></div>
+
+
+<p>Set up the class and name the queue:</p>
+<div class="highlight"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Send</span> <span class="o">{</span>
+  <span class="kd">private</span> <span class="kd">final</span> <span class="kd">static</span> <span class="n">String</span> <span class="n">QUEUE_NAME</span> <span class="o">=</span> <span class="s">"hello"</span><span class="o">;</span>
+
+  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">argv</span><span class="o">)</span>
+      <span class="kd">throws</span> <span class="n">java</span><span class="o">.</span><span class="na">io</span><span class="o">.</span><span class="na">IOException</span> <span class="o">{</span>
+      <span class="o">...</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<p>then we can create a connection to the server:</p>
+<div class="highlight"><pre>    <span class="n">ConnectionFactory</span> <span class="n">factory</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ConnectionFactory</span><span class="o">();</span>
+    <span class="n">factory</span><span class="o">.</span><span class="na">setHost</span><span class="o">(</span><span class="s">"localhost"</span><span class="o">);</span>
+    <span class="n">Connection</span> <span class="n">connection</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="na">newConnection</span><span class="o">();</span>
+    <span class="n">Channel</span> <span class="n">channel</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="na">createChannel</span><span class="o">();</span>
+</pre></div>
+
+
+<p>The connection abstracts the socket connection, and takes care of
+protocol version negotiation and authentication and so on for us. Here
+we connect to a broker on the local machine - hence the
+<em>localhost</em>. If we wanted to connect to a broker on a different
+machine we'd simply specify its name or IP address here.</p>
+<p>Next we create a channel, which is where most of the API for getting
+things done resides.</p>
+<p>To send, we must declare a queue for us to send to; then we can publish a message
+to the queue:</p>
+<div class="highlight"><pre>    <span class="n">channel</span><span class="o">.</span><span class="na">queueDeclare</span><span class="o">(</span><span class="n">QUEUE_NAME</span><span class="o">,</span> <span class="kc">false</span><span class="o">,</span> <span class="kc">false</span><span class="o">,</span> <span class="kc">false</span><span class="o">,</span> <span class="kc">null</span><span class="o">);</span>
+    <span class="n">String</span> <span class="n">message</span> <span class="o">=</span> <span class="s">"Hello World!"</span><span class="o">;</span>
+    <span class="n">channel</span><span class="o">.</span><span class="na">basicPublish</span><span class="o">(</span><span class="s">""</span><span class="o">,</span> <span class="n">QUEUE_NAME</span><span class="o">,</span> <span class="kc">null</span><span class="o">,</span> <span class="n">message</span><span class="o">.</span><span class="na">getBytes</span><span class="o">());</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">" [x] Sent '"</span> <span class="o">+</span> <span class="n">message</span> <span class="o">+</span> <span class="s">"'"</span><span class="o">);</span>
+</pre></div>
+
+
+<p>Declaring a queue is idempotent - it will only be created if it doesn't
+exist already. The message content is a byte array, so you can encode
+whatever you like there.</p>
+<p>Lastly, we close the channel and the connection;</p>
+<div class="highlight"><pre>    <span class="n">channel</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+    <span class="n">connection</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+</pre></div>
+
+
+<p><a href="http://github.com/rabbitmq/rabbitmq-tutorials/blob/master/java/Send.java">Here's the whole Send.java
+class</a>.</p>
+<blockquote>
+<h4>Sending doesn't work!</h4>
+<p>If this is your first time using RabbitMQ and you don't see the "Sent"
+message then you may be left scratching your head wondering what could
+be wrong. Maybe the broker was started without enough free disk space
+(by default it needs at least 1Gb free) and is therefore refusing to
+accept messages. Check the broker logfile to confirm and reduce the
+limit if necessary. The <a href="http://www.rabbitmq.com/configure.html#config-items">configuration
+file documentation</a> will show you how to set <span class="code ">disk_free_limit</span>.</p>
+</blockquote>
+<h3>Receiving</h3>
+<p>That's it for our sender.  Our receiver is pushed messages from
+RabbitMQ, so unlike the sender which publishes a single message, we'll
+keep it running to listen for messages and print them out.</p>
+<div class="diagram">
+  <img src="RabbitMQ%20-%20RabbitMQ%20tutorial%20-%20%22Hello%20World%21%22_files/receiving.png" alt="[|||] -&gt; (C)" height="100">
+</div>
+
+<p>The code (in <a href="http://github.com/rabbitmq/rabbitmq-tutorials/blob/master/java/Recv.java"><span class="code ">Recv.java</span></a>) has almost the same imports as <span class="code ">Send</span>:</p>
+<div class="highlight"><pre><span class="kn">import</span> <span class="nn">com.rabbitmq.client.ConnectionFactory</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.rabbitmq.client.Connection</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.rabbitmq.client.Channel</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.rabbitmq.client.Consumer</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.rabbitmq.client.DefaultConsumer</span><span class="o">;</span>
+</pre></div>
+
+
+<p>The extra <span class="code ">DefaultConsumer</span> is a class implementing the <span class="code ">Consumer</span>
+interface we'll use to buffer the messages pushed to us by the server.</p>
+<p>Setting up is the same as the sender; we open a connection and a
+channel, and declare the queue from which we're going to consume.
+Note this matches up with the queue that <span class="code ">send</span> publishes to.</p>
+<div class="highlight"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Recv</span> <span class="o">{</span>
+  <span class="kd">private</span> <span class="kd">final</span> <span class="kd">static</span> <span class="n">String</span> <span class="n">QUEUE_NAME</span> <span class="o">=</span> <span class="s">"hello"</span><span class="o">;</span>
+
+  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">argv</span><span class="o">)</span>
+      <span class="kd">throws</span> <span class="n">java</span><span class="o">.</span><span class="na">io</span><span class="o">.</span><span class="na">IOException</span><span class="o">,</span>
+             <span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">InterruptedException</span> <span class="o">{</span>
+
+    <span class="n">ConnectionFactory</span> <span class="n">factory</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ConnectionFactory</span><span class="o">();</span>
+    <span class="n">factory</span><span class="o">.</span><span class="na">setHost</span><span class="o">(</span><span class="s">"localhost"</span><span class="o">);</span>
+    <span class="n">Connection</span> <span class="n">connection</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="na">newConnection</span><span class="o">();</span>
+    <span class="n">Channel</span> <span class="n">channel</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="na">createChannel</span><span class="o">();</span>
+
+    <span class="n">channel</span><span class="o">.</span><span class="na">queueDeclare</span><span class="o">(</span><span class="n">QUEUE_NAME</span><span class="o">,</span> <span class="kc">false</span><span class="o">,</span> <span class="kc">false</span><span class="o">,</span> <span class="kc">false</span><span class="o">,</span> <span class="kc">null</span><span class="o">);</span>
+    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">" [*] Waiting for messages. To exit press CTRL+C"</span><span class="o">);</span>
+    <span class="o">...</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+
+<p>Note that we declare the queue here, as well. Because we might start
+the receiver before the sender, we want to make sure the queue exists
+before we try to consume messages from it.</p>
+<p>We're about to tell the server to deliver us the messages from the
+queue. Since it will push us messages asynchronously, we provide a
+callback in the form of an object that will buffer the messages until
+we're ready to use them. That is what a <span class="code ">DefaultConsumer</span> subclass does.</p>
+<div class="highlight"><pre>    <span class="n">Consumer</span> <span class="n">consumer</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DefaultConsumer</span><span class="o">(</span><span class="n">channel</span><span class="o">)</span> <span class="o">{</span>
+      <span class="nd">@Override</span>
+      <span class="kd">public</span> <span class="kt">void</span> <span class="nf">handleDelivery</span><span class="o">(</span><span class="n">String</span> <span class="n">consumerTag</span><span class="o">,</span> <span class="n">Envelope</span> <span class="n">envelope</span><span class="o">,</span> <span class="n">AMQP</span><span class="o">.</span><span class="na">BasicProperties</span> <span class="n">properties</span><span class="o">,</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">body</span><span class="o">)</span>
+          <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
+        <span class="n">String</span> <span class="n">message</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="o">(</span><span class="n">body</span><span class="o">,</span> <span class="s">"UTF-8"</span><span class="o">);</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">" [x] Received '"</span> <span class="o">+</span> <span class="n">message</span> <span class="o">+</span> <span class="s">"'"</span><span class="o">);</span>
+      <span class="o">}</span>
+    <span class="o">};</span>
+    <span class="n">channel</span><span class="o">.</span><span class="na">basicConsume</span><span class="o">(</span><span class="n">QUEUE_NAME</span><span class="o">,</span> <span class="kc">true</span><span class="o">,</span> <span class="n">consumer</span><span class="o">);</span>
+</pre></div>
+
+
+<p><a href="http://github.com/rabbitmq/rabbitmq-tutorials/blob/master/java/Recv.java">Here's the whole Recv.java
+class</a>.</p>
+<h3>Putting it all together</h3>
+<p>You can compile both of these with just the RabbitMQ java client on
+the classpath:</p>
+<div class="highlight"><pre><span class="nv">$ </span>javac -cp rabbitmq-client.jar Send.java Recv.java
+</pre></div>
+
+
+<p>To run them, you'll need <span class="code ">rabbitmq-client.jar</span> and its dependencies on
+the classpath.  In a terminal, run the sender:</p>
+<div class="highlight"><pre><span class="nv">$ </span>java -cp .:commons-io-1.2.jar:commons-cli-1.1.jar:rabbitmq-client.jar Send
+</pre></div>
+
+
+<p>then, run the receiver:</p>
+<div class="highlight"><pre><span class="nv">$ </span>java -cp .:commons-io-1.2.jar:commons-cli-1.1.jar:rabbitmq-client.jar Recv
+</pre></div>
+
+
+<p>On Windows, use a semicolon instead of a colon to separate items in the classpath.</p>
+<p>The receiver will print the message it gets from the sender via
+RabbitMQ. The receiver will keep running, waiting for messages (Use Ctrl-C to stop it), so try running
+the sender from another terminal.</p>
+<p>If you want to check on the queue, try using <span class="code ">rabbitmqctl list_queues</span>.</p>
+<p>hello</p>
+<p>Time to move on to <a href="https://www.rabbitmq.com/tutorials/tutorial-two-java.html">part 2</a> and build a simple <em>work queue</em>.</p>
+<blockquote>
+<h4>Hint</h4>
+<p>To save typing, you can set an environment variable for the classpath e.g.</p>
+<div class="highlight"><pre> $ <span class="n">export</span> <span class="n">CP</span><span class="p">=.:</span><span class="n">commons</span><span class="o">-</span><span class="n">io</span><span class="o">-</span>1<span class="p">.</span>2<span class="p">.</span><span class="n">jar</span><span class="p">:</span><span class="n">commons</span><span class="o">-</span><span class="n">cli</span><span class="o">-</span>1<span class="p">.</span>1<span class="p">.</span><span class="n">jar</span><span class="p">:</span><span class="n">rabbitmq</span><span class="o">-</span><span class="n">client</span><span class="p">.</span><span class="n">jar</span>
+ $ <span class="n">java</span> <span class="o">-</span><span class="n">cp</span> $<span class="n">CP</span> <span class="n">Send</span>
+</pre></div>
+
+
+<p>or on Windows:</p>
+<div class="highlight"><pre> <span class="o">&gt;</span> <span class="n">set</span> <span class="n">CP</span><span class="p">=.;</span><span class="n">commons</span><span class="o">-</span><span class="n">io</span><span class="o">-</span>1<span class="p">.</span>2<span class="p">.</span><span class="n">jar</span><span class="p">;</span><span class="n">commons</span><span class="o">-</span><span class="n">cli</span><span class="o">-</span>1<span class="p">.</span>1<span class="p">.</span><span class="n">jar</span><span class="p">;</span><span class="n">rabbitmq</span><span class="o">-</span><span class="n">client</span><span class="p">.</span><span class="n">jar</span>
+ <span class="o">&gt;</span> <span class="n">java</span> <span class="o">-</span><span class="n">cp</span> <span class="c">%CP% Send</span>
+</pre></div>
+
+
+</blockquote></div><div class="clear"></div><div class="pageFooter"><p class="righter"><a href="https://www.rabbitmq.com/sitemap.html">Sitemap</a> |
+        <a href="https://www.rabbitmq.com/contact.html">Contact</a></p><p id="copyright">
+        Copyright © 2007-2016 Pivotal Software, Inc. All rights reserved
+        |&nbsp;<a href="http://pivotal.io/privacy-policy">Privacy Policy</a>
+        |&nbsp;<a href="https://github.com/rabbitmq/rabbitmq-website/">This Site is Open Source</a>
+        |&nbsp;<a href="http://pivotal.io/careers/engineering">Pivotal is Hiring</a></p></div></div>
+
+</body></html>
