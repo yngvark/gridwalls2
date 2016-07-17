@@ -6,7 +6,6 @@ import java.util.Stack;
 
 public class TestNetCom implements NetCom {
     private Stack<String> stack = new Stack<>();
-    private Object lastEvent;
 
     @Override
     public void publish(String event) {

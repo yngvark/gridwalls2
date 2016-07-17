@@ -1,4 +1,5 @@
 package com.yngvark.gridwalls.microservices.zombie;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.HashSet;
@@ -9,17 +10,23 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 
 public class ZombieTest {
+    private TestNetCom netCom;
+    private ZombieMovedSerializer zombieMovedSerializer;
+
+    @Before
+    public void before() {
+        netCom = TestNetComFactory.create();
+        zombieMovedSerializer = new ZombieMovedSerializer(new CoordinateSerializer());
+    }
+
+
     @Test
     public void should_always_change_coordinate_and_never_stand_still_on_next_turn() {
         // Given
-        TestNetCom netCom = TestNetComFactory.create();
-
         MapCoordinates mapCoordinates = new MapCoordinates(10, 10);
         CoordinateFactory coordinateFactory = new CoordinateFactory(mapCoordinates);
 
-        ZombieMovedSerializer zombieMovedSerializer = new ZombieMovedSerializer(new CoordinateSerializer());
-
-        Coordinate initCoord = mapCoordinates.middle();
+        Coordinate initCoord = mapCoordinates.center();
         Zombie zombie = new Zombie(netCom, coordinateFactory, zombieMovedSerializer, initCoord);
 
         Coordinate lastCoord = initCoord;
@@ -41,14 +48,10 @@ public class ZombieTest {
     @Test
     public void should_visit_all_coords_of_a_small_map() {
         // Given
-        TestNetCom netCom = TestNetComFactory.create();
-
         MapCoordinates mapCoordinates = new MapCoordinates(2, 2);
         CoordinateFactory coordinateFactory = new CoordinateFactory(mapCoordinates);
 
-        ZombieMovedSerializer zombieMovedSerializer = new ZombieMovedSerializer(new CoordinateSerializer());
-
-        Coordinate initCoord = mapCoordinates.middle();
+        Coordinate initCoord = mapCoordinates.center();
         Zombie zombie = new Zombie(netCom, coordinateFactory, zombieMovedSerializer, initCoord);
 
         Set<Coordinate> visitedCoords = new HashSet<>();

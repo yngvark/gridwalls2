@@ -12,7 +12,7 @@ class MapCoordinates {
         this.height = height;
     }
 
-    public Coordinate middle() {
+    public Coordinate center() {
         return new Coordinate(
                 Math.floorDiv(width, 2),
                 Math.floorDiv(height, 2)
