@@ -1,0 +1,17 @@
+version: '2'
+
+services:
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    hostname: rabbithost
+
+  test:
+    image: metahelicase/gradle
+    #image: debian
+    command:
+      - test
+    volumes:
+      - ..:/project
+    links:
+      - rabbitmq:rabbithost
