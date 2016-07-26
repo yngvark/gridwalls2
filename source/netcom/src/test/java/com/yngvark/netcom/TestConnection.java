@@ -1,15 +1,26 @@
 package com.yngvark.netcom;
 
-import java.util.Stack;
+import java.io.IOException;
 
 class TestConnection implements Connection {
+
     @Override
-    public Topic subscribeTo(String topicName) {
-        return new TestTopic();
+    public void subscribeTo(String topicName) throws IOException {
+        
     }
 
     @Override
-    public void disconnect() {
+    public Topic getSubscription(String topicName) {
+        return null;
     }
 
+    @Override
+    public void publish(String topicName, String message) {
+
+    }
+
+    @Override
+    public void disconnect() throws IOException {
+
+    }
 }

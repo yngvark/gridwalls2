@@ -1,32 +1,31 @@
 package com.yngvark.netcom;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import static org.junit.jupiter.api.Assertions.*;
 
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
+import java.util.concurrent.TimeoutException;
 
 public class RabbitMqInitializerTest {
-    @Rule
-    public ExpectedException expectedException = ExpectedException.none();
-
     private Initializer initializer;
 
-    @Before
+    @BeforeEach
     public void before() {
-        //initializer = new RabbitMqInitializer();
-        initializer = new TestInitializer();
+        initializer = new RabbitMqInitializer();
+        //initializer = new TestInitializer();
     }
 
     @Test
-    public void should_throw_exception_if_no_host_is_provided() {
-        expectedException.expect(NoHostProvidedException.class);
-        initializer.connect("");
+    public void should_throw_exception_if_no_host_is_provided() throws IOException, TimeoutException {
+        expectThrows(NoHostProvidedException.class, () -> {
+            initializer.connect("");
+        });
     }
 
     @Test
-    public void should_connect_and_disconnect_without_error() {
+    public void should_connect_and_disconnect_without_error() throws IOException, TimeoutException {
         initializer.connect("rabbithost");
         Connection connection = initializer.getConnection();
         connection.disconnect();
@@ -34,19 +33,19 @@ public class RabbitMqInitializerTest {
 
     @Test
     public void should_throw_error_if_attempt_to_get_connection_before_connected() {
-        expectedException.expect(NotYetConnectedException.class);
-        initializer.getConnection();
+        expectThrows(NotYetConnectedException.class, () -> {
+            initializer.getConnection();
+        });
     }
 
     @Test
-    public void should_publish_message_without_error() {
+    public void should_publish_message_without_error() throws IOException, TimeoutException {
         // Given
         initializer.connect("rabbithost");
         Connection connection = initializer.getConnection();
-        Topic clientOut = connection.subscribeTo("clientOut");
 
         // When
-        clientOut.publish("Hello folks, this is a test in " + RabbitMqInitializer.class.getSimpleName());
+        connection.publish("news", "Hello folks, this is a test in " + RabbitMqInitializer.class.getSimpleName());
 
         // Then no error should occur
 
@@ -55,19 +54,32 @@ public class RabbitMqInitializerTest {
     }
 
     @Test
-    public void should_consume_published_message() {
+    public void should_throw_error_if_attempt_to_get_subscription_before_subscribed_to_it() throws IOException, TimeoutException {
+        initializer.connect("rabbithost");
+        Connection connection = initializer.getConnection();
+
+        expectThrows(NoSuchTopicException.class, () -> {
+            connection.getSubscription("notYetDefined");
+        });
+
+        connection.disconnect();
+    }
+
+    @Test
+    public void should_consume_published_message() throws IOException, TimeoutException {
         // Given
         initializer.connect("rabbithost");
         Connection connection = initializer.getConnection();
-        Topic clientOut = connection.subscribeTo("clientOut");
+        connection.subscribeTo("news");
+        Topic news = connection.getSubscription("news");
 
         String outMsg = "Hello folks, this is a test in " + RabbitMqInitializer.class.getSimpleName();
 
         // When
-        clientOut.publish(outMsg);
+        connection.publish("news", outMsg);
 
         // Then
-        String consumedMSg = clientOut.consume();
+        String consumedMSg = news.consume();
         assertEquals(outMsg, consumedMSg);
 
         // Finally
