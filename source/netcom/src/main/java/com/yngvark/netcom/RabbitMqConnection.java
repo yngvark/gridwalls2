@@ -24,6 +24,9 @@ public class RabbitMqConnection implements Connection {
 
     @Override
     public Topic getSubscription(String topicName) {
+        if (topics.get(topicName) == null)
+            throw new NoSuchTopicException();
+
         return topics.get(topicName);
     }
 

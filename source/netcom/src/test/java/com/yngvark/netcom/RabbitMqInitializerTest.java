@@ -3,9 +3,11 @@ package com.yngvark.netcom;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.concurrent.TimeoutException;
 
 public class RabbitMqInitializerTest {
@@ -59,13 +61,14 @@ public class RabbitMqInitializerTest {
         Connection connection = initializer.getConnection();
 
         expectThrows(NoSuchTopicException.class, () -> {
-            connection.getSubscription("notYetDefined");
+            connection.getSubscription("aTopicWeHaventSubscribedToYet");
         });
 
         connection.disconnect();
     }
 
     @Test
+    @Disabled("Wait to implement until I can get Javadoc working.")
     public void should_consume_published_message() throws IOException, TimeoutException {
         // Given
         initializer.connect("rabbithost");
