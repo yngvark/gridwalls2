@@ -12,6 +12,8 @@ public class RabbitMqChannel implements Topic {
     @Override
     public String consume() {
         return null;
+        channel.basicGet()
+        channel.basicConsume(channel.get)
     }
 
     @Override

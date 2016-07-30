@@ -191,7 +191,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/rabbitmq-test.iml" filepath="$PROJECT_DIR$/.idea/modules/rabbitmq-test.iml" />
-      <module fileurl="file://$PROJECT_DIR$/rabbitmq-test.iml" filepath="$PROJECT_DIR$/rabbitmq-test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/rabbitmq-test_main.iml" filepath="$PROJECT_DIR$/.idea/modules/rabbitmq-test_main.iml" group="rabbitmq-test" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/rabbitmq-test_test.iml" filepath="$PROJECT_DIR$/.idea/modules/rabbitmq-test_test.iml" group="rabbitmq-test" />
     </modules>
