@@ -1,6 +1,6 @@
-package com.yngvark.gridwalls.microservices.zombie;
+package com.yngvark.gridwalls.core;
 
-class Coordinate {
+public class Coordinate {
     private final int x;
     private final int y;
 

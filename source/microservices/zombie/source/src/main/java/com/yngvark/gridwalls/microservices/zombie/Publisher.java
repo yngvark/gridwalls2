@@ -1,19 +1,18 @@
 package com.yngvark.gridwalls.microservices.zombie;
 
 import com.rabbitmq.client.Channel;
+import com.yngvark.gridwalls.core.CoordinateSerializer;
 
 import java.io.IOException;
 
-public class Publisher {
+class Publisher {
     private ZombieMovedSerializer zombieMovedSerializer = new ZombieMovedSerializer(new CoordinateSerializer());
-    private Channel channel;
 
-    public Publisher(ZombieMovedSerializer zombieMovedSerializer, Channel channel) {
+    public Publisher(ZombieMovedSerializer zombieMovedSerializer) {
         this.zombieMovedSerializer = zombieMovedSerializer;
-        this.channel = channel;
     }
 
-    public void publishEvent(ZombieMoved event) throws IOException {
+    public void publishEvent(ZombieMoved event, Channel channel) throws IOException {
         String message = zombieMovedSerializer.serialize(event);
         System.out.println("Sending message: " + message);
         channel.basicPublish("ZombieMoved", "", null, message.getBytes());

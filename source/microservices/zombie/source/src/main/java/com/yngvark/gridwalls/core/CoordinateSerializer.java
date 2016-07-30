@@ -1,6 +1,6 @@
-package com.yngvark.gridwalls.microservices.zombie;
+package com.yngvark.gridwalls.core;
 
-class CoordinateSerializer {
+public class CoordinateSerializer {
     public static String serialize(Coordinate c) {
         return c.getX() + "," + c.getY();
     }

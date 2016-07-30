@@ -1,7 +1,9 @@
 package com.yngvark.gridwalls.microservices.zombie;
 
+import com.yngvark.gridwalls.core.Coordinate;
+import com.yngvark.gridwalls.core.CoordinateSerializer;
+
 import java.util.UUID;
-import java.util.regex.Pattern;
 
 class ZombieMovedSerializer {
     private final CoordinateSerializer coordinateSerializer;

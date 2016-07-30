@@ -1,5 +1,7 @@
 package com.yngvark.gridwalls.microservices.zombie;
 
+import com.yngvark.gridwalls.core.Coordinate;
+
 import java.util.UUID;
 
 class ZombieMoved {

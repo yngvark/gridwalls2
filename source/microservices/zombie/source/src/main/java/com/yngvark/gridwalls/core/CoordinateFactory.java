@@ -1,9 +1,9 @@
-package com.yngvark.gridwalls.microservices.zombie;
+package com.yngvark.gridwalls.core;
 
 import java.util.HashMap;
 import java.util.Map;
 
-class CoordinateFactory {
+public class CoordinateFactory {
     private final MapCoordinates mapCoordinates;
     private final Map<Direction, Coordinate> coordinateChanges;
 

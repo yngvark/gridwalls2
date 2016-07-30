@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.util.Random;
 import java.util.UUID;
 
-import com.rabbitmq.client.Channel;
+import com.yngvark.gridwalls.core.Coordinate;
+import com.yngvark.gridwalls.core.CoordinateFactory;
+import com.yngvark.gridwalls.core.Direction;
 
 class Zombie {
     private final CoordinateFactory coordinateFactory;
@@ -22,11 +24,11 @@ class Zombie {
         this.coordinate = coordinate;
     }
 
-    public ZombieMoved nextTurn() throws IOException {
+    public ZombieMoved nextTurn() {
         return move();
     }
 
-    private ZombieMoved move() throws IOException {
+    private ZombieMoved move() {
         coordinate = decideNewCoordinate();
         return new ZombieMoved(id, coordinate);
     }

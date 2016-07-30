@@ -1,5 +1,7 @@
 package com.yngvark.gridwalls.microservices.zombie;
 
+import com.yngvark.gridwalls.core.Coordinate;
+import com.yngvark.gridwalls.core.CoordinateSerializer;
 import org.junit.jupiter.api.Test;
 
 import java.util.UUID;

@@ -1,9 +1,9 @@
-package com.yngvark.gridwalls.microservices.zombie;
+package com.yngvark.gridwalls.core;
 
 import java.util.HashSet;
 import java.util.Set;
 
-class MapCoordinates {
+public class MapCoordinates {
     private final int width;
     private final int height;
 
