@@ -1,36 +1,34 @@
 package com.yngvark.gridwalls.microservices.zombie;
 
-import com.yngvark.gridwalls.netcom.NetCom;
-
+import java.io.IOException;
 import java.util.Random;
+import java.util.UUID;
+
+import com.rabbitmq.client.Channel;
 
 class Zombie {
-    private final NetCom netCom;
     private final CoordinateFactory coordinateFactory;
-    private final ZombieMovedSerializer zombieMovedSerializer;
+    private final UUID id;
 
     private Coordinate coordinate;
 
     public Zombie(
-            NetCom netCom,
             CoordinateFactory coordinateFactory,
-            ZombieMovedSerializer zombieMovedSerializer,
+            UUID id,
             Coordinate coordinate) {
-        this.netCom = netCom;
-        this.zombieMovedSerializer = zombieMovedSerializer;
-
-        this.coordinate = coordinate;
         this.coordinateFactory = coordinateFactory;
+
+        this.id = id;
+        this.coordinate = coordinate;
     }
 
-    public void nextTurn() {
-        move();
+    public ZombieMoved nextTurn() throws IOException {
+        return move();
     }
 
-    private void move() {
+    private ZombieMoved move() throws IOException {
         coordinate = decideNewCoordinate();
-        ZombieMoved zombieMoved = new ZombieMoved(coordinate);
-        netCom.publish(zombieMovedSerializer.serialize(zombieMoved));
+        return new ZombieMoved(id, coordinate);
     }
 
     private Coordinate decideNewCoordinate() {
@@ -47,4 +45,5 @@ class Zombie {
         Direction[] directions = Direction.values();
         return directions[new Random().nextInt(directions.length)];
     }
+
 }

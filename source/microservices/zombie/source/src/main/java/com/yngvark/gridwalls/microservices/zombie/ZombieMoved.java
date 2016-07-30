@@ -1,10 +1,18 @@
 package com.yngvark.gridwalls.microservices.zombie;
 
+import java.util.UUID;
+
 class ZombieMoved {
+    private final UUID id;
     private final Coordinate targetCoordinate;
 
-    public ZombieMoved(Coordinate targetCoordinate) {
+    public ZombieMoved(UUID id, Coordinate targetCoordinate) {
+        this.id = id;
         this.targetCoordinate = targetCoordinate;
+    }
+
+    public UUID getId() {
+        return id;
     }
 
     public Coordinate getTargetCoordinate() {
