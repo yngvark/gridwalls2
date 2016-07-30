@@ -7,7 +7,7 @@ services:
     external_links:
       - rabbitmq:rabbithost
     volumes:
-      - app:/app
+      - ./app:/app
     command:
       "/app/bin/zombie"
 

@@ -1,6 +1,5 @@
 rm -rf container/app
 cd source
-gradle build
-gradle installDist
+gradle build installDist
 cd ..
 cp -r source/build/install/zombie container/app
