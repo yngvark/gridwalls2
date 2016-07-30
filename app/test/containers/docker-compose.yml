@@ -1,0 +1,20 @@
+version: '2'
+
+services:
+
+  rabbitmq:
+    networks:
+      rabbit_test:
+        aliases:
+          - rabbithost
+
+  web_server:
+    volumes:
+      - ../../../source/front_end/html/client:/usr/share/nginx/html
+
+  nodejs:
+    volumes:
+      - ../../../source:/mnt/src
+
+networks:
+  rabbit_test:
