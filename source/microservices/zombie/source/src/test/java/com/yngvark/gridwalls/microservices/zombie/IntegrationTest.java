@@ -39,8 +39,6 @@ public class IntegrationTest {
         BlockingQueue<String> blockingQueue = new ArrayBlockingQueue<>(1);
 
         Consumer consumer = new DefaultConsumer(channel) {
-            private int i = 0;
-
             @Override
             public void handleDelivery(String consumerTag, Envelope envelope,
                     AMQP.BasicProperties properties, byte[] body) throws IOException {

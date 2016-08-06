@@ -14,9 +14,9 @@ class RabbitMqConnector {
     public Connection connect() throws IOException, TimeoutException {
         if (isConnected)
             throw new RuntimeException("Already connected");
-        isConnected = true;
 
         connection = createConnection();
+        isConnected = true;
 
         return connection;
     }

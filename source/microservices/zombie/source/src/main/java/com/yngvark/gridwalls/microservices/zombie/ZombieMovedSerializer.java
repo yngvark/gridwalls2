@@ -19,8 +19,6 @@ class ZombieMovedSerializer {
     }
 
     public ZombieMoved deserialize(String serialized) {
-        // [ZombieMoved] id=abcd-efgh-ijkl tc=8,5
-
         int idStart = serialized.indexOf("id=");
         int tcStart = serialized.indexOf("tc=");
 

@@ -9,13 +9,14 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-class GameRunner {
+class GameRunner implements ICanExitOnSignal {
     private final RabbitMqConnector rabbitMqConnector;
     private final ZombieRunnableFactory zombieRunnableFactory;
     private final ZombieFactory zombieFactory;
     private final GameErrorHandler gameErrorHandler;
+    private GameConfigFetcher gameConfigFetcher = new GameConfigFetcher();
 
-    private boolean continueRunning = true;
+    private boolean exitSignalReceived = false;
 
     public GameRunner(RabbitMqConnector rabbitMqConnector, ZombieRunnableFactory zombieRunnableFactory,
             ZombieFactory zombieFactory, GameErrorHandler gameErrorHandler) {
@@ -25,32 +26,49 @@ class GameRunner {
         this.gameErrorHandler = gameErrorHandler;
     }
 
-    public void runGame() throws IOException, TimeoutException, InterruptedException {
+    public void runGame() {
+        try {
+            tryToRun();
+        } catch (Exception e) {
+            System.out.println("Error occured. Exiting game. Error: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void tryToRun() throws IOException, TimeoutException, InterruptedException {
         // Connect to server
         Connection connection = rabbitMqConnector.connect();
 
-        // Connect to server and get following info. For now, just assume these.
-        int mapHeight = 10;
-        int mapWidth = 10;
+        // TODO Må være mulig å avbryte RPC-kallet også.
+        GameConfig gameConfig = gameConfigFetcher.getGameConfigFromServer(connection);
+
+        if (!exitSignalReceived) {
+            // Connect to server and get following info. For now, just assume these.
+            runGame(connection, gameConfig);
+        }
+
+        rabbitMqConnector.disconnect(); // Also disconnects channels.
+        System.out.println("Game exiting.");
+    }
+
+    private void runGame(Connection connection, GameConfig gameConfig) throws IOException, InterruptedException, TimeoutException {
+        int mapHeight = gameConfig.getMapHeight();
+        int mapWidth = gameConfig.getMapWidth();
         List<Zombie> zombies = zombieFactory.createZombies(mapHeight, mapWidth);
 
         List<Runnable> zombieRunnables = zombieRunnableFactory.createZombieRunnables(zombies, connection);
 
-        run(zombieRunnables);
-
-        rabbitMqConnector.disconnect();
+        runGame(zombieRunnables);
     }
 
-    private void run(List<Runnable> zombieRunnables) throws IOException, InterruptedException, TimeoutException {
+    private void runGame(List<Runnable> zombieRunnables) throws IOException, InterruptedException, TimeoutException {
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 
         scheduleRunnables(zombieRunnables, executor);
         runGameloop();
 
-        System.out.println("Stopping game...");
         executor.shutdown();
         executor.awaitTermination(3, TimeUnit.SECONDS);
-        System.out.println("Stopping game... done.");
     }
 
     private void scheduleRunnables(List<Runnable> zombieRunnables, ScheduledExecutorService executor) {
@@ -62,17 +80,19 @@ class GameRunner {
     private void runGameloop() throws InterruptedException {
         do {
             if (gameErrorHandler.receivedErrors()) {
-                System.out.println("Error occurred, exiting game. Errors::");
+                System.out.println("Error occurred, exiting game. Errors:");
                 System.out.println(gameErrorHandler.getErrors());
                 break;
             }
 
             Thread.sleep(1000);
-        } while (continueRunning);
+        } while (!exitSignalReceived);
+        System.out.println("Game loop exited.");
     }
 
 
-    public void initateStop() {
-        continueRunning = false;
+    public void exitSignalReceived() throws Exception {
+        exitSignalReceived = true;
+        gameConfigFetcher.exitSignalReceived();
     }
 }

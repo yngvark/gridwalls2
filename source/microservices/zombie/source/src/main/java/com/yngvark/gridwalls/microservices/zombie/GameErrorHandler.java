@@ -3,7 +3,7 @@ package com.yngvark.gridwalls.microservices.zombie;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class GameErrorHandler {
+class GameErrorHandler {
     private List<Throwable> throwables = new CopyOnWriteArrayList<>();
 
     public void handle(Throwable e) {

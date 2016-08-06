@@ -17,9 +17,15 @@ class ExitSignalAwareRunner {
                 // signal the game runner to exit the game, which will stop the game runner. Then we'll wait for the signal that the game runner has
                 // completed exiting the game.
 
-                System.out.println("Exiting gracefully...");
-                gameRunner.initateStop();
+                System.out.println("Exiting gracefully: Notifying gamerunner about exit.");
+                try {
+                    gameRunner.exitSignalReceived();
+                } catch (Exception e) {
+                    System.out.println("Exiting gracefully: Received exception while notifying gamerunner about exit.");
+                    e.printStackTrace();
+                }
 
+                System.out.println("Exiting gracefully: Waiting for game to complete.");
                 synchronized (waitForOkToShutdownApplicationProcess) {
                     try {
                         System.out.println("Waiting for game to complete...");
@@ -33,6 +39,7 @@ class ExitSignalAwareRunner {
         });
 
         // Blocking call.
+        System.out.println("Running gamerunner.");
         gameRunner.runGame();
 
         System.out.println("Notifying gameCompleteLock...");
@@ -40,7 +47,6 @@ class ExitSignalAwareRunner {
             waitForOkToShutdownApplicationProcess.notify();
         }
         System.out.println("Notifying gameCompleteLock... done.");
-
         System.out.println("Exiting gracefully... done.");
     }
 }

@@ -33,8 +33,6 @@ dependencies {
     compile 'org.slf4j:slf4j-api:1.7.21'
     compile 'com.rabbitmq:amqp-client:3.6.3'
 
-    compileOnly "org.projectlombok:lombok:1.16.10"
-
     // Declare the dependency for your favourite test framework you want to use in your tests.
     // TestNG is also supported by the Gradle Test task. Just change the
     // testCompile dependency to testCompile 'org.testng:testng:6.8.1' and add

@@ -15,6 +15,7 @@ class Publisher {
     public void publishEvent(ZombieMoved event, Channel channel) throws IOException {
         String message = zombieMovedSerializer.serialize(event);
         System.out.println("Sending message: " + message);
+
         channel.basicPublish("ZombieMoved", "", null, message.getBytes());
     }
 }
