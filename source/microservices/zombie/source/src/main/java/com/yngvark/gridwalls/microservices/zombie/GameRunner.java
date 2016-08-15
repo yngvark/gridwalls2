@@ -36,6 +36,16 @@ class GameRunner implements ICanExitOnSignal {
     }
 
     private void tryToRun() throws IOException, TimeoutException, InterruptedException {
+        do {
+            // publish GetGameConfig, (reposnse) -> gameCOnfigReceived = true
+
+
+
+            Thread.sleep(1000);
+        } while (!exitSignalReceived);
+    }
+
+    private void tryToRun2() throws IOException, TimeoutException, InterruptedException {
         // Connect to server
         Connection connection = rabbitMqConnector.connect();
 
@@ -43,7 +53,6 @@ class GameRunner implements ICanExitOnSignal {
         GameConfig gameConfig = gameConfigFetcher.getGameConfigFromServer(connection);
 
         if (!exitSignalReceived) {
-            // Connect to server and get following info. For now, just assume these.
             runGame(connection, gameConfig);
         }
 
