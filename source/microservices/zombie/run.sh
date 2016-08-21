@@ -1,0 +1,2 @@
+cd container
+./start.sh

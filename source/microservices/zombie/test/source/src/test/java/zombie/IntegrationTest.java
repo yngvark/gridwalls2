@@ -20,6 +20,18 @@ import java.util.concurrent.TimeoutException;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class IntegrationTest {
+
+    @Test
+    public void should_get_version() {
+
+    }
+
+    @Test
+    public void should_exit_withing_10_seconds_when_not_table_to_connect() { // how about logging?
+
+    }
+
+
     @Test
     public void should_always_change_coordinate_and_never_stand_still_on_next_turn() throws IOException, TimeoutException, InterruptedException {
         // Given

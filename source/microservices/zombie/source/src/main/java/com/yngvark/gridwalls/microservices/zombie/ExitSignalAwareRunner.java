@@ -1,10 +1,9 @@
 package com.yngvark.gridwalls.microservices.zombie;
 
-import java.io.IOException;
-import java.util.concurrent.TimeoutException;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 class ExitSignalAwareRunner {
-    public void run(GameRunner gameRunner) throws IOException, TimeoutException, InterruptedException {
+    public void run(ICanRunAndAbort iCanRunAndAbort) {
         Object waitForOkToShutdownApplicationProcess = new Object();
 
         Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -17,36 +16,40 @@ class ExitSignalAwareRunner {
                 // signal the game runner to exit the game, which will stop the game runner. Then we'll wait for the signal that the game runner has
                 // completed exiting the game.
 
-                System.out.println("Exiting gracefully: Notifying gamerunner about exit.");
+                System.out.println("Exiting gracefully: Signalling runnable to exit.");
                 try {
-                    gameRunner.exitSignalReceived();
-                } catch (Exception e) {
-                    System.out.println("Exiting gracefully: Received exception while notifying gamerunner about exit.");
-                    e.printStackTrace();
+                    iCanRunAndAbort.startAborting();
+                } catch (Throwable e) {
+                    System.out.println("Exiting gracefully: Received exception while notifying runnable about exit. Details: " + ExceptionUtils.getStackTrace(e));
                 }
 
-                System.out.println("Exiting gracefully: Waiting for game to complete.");
                 synchronized (waitForOkToShutdownApplicationProcess) {
                     try {
-                        System.out.println("Waiting for game to complete...");
-                        waitForOkToShutdownApplicationProcess.wait();
-                        System.out.println("Waiting for game to complete... done.");
+                        System.out.println("Exiting gracefully: Waiting for runnable to complete...");
+                        waitForOkToShutdownApplicationProcess.wait(4000l);
+                        System.out.println("Exiting gracefully: Waiting for runnable to complete... done.");
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        System.out.println("Exception while waiting for runnable to complete. Details: " + ExceptionUtils.getStackTrace(e));
                     }
                 }
             }
         });
 
         // Blocking call.
-        System.out.println("Running gamerunner.");
-        gameRunner.runGame();
+        System.out.println("Running runnable instance (" + ICanRunAndAbort.class.getSimpleName() + ")");
+        try {
+            iCanRunAndAbort.run();
+        } catch (Throwable e) {
+            System.out.println("Runnable threw an exception: " + ExceptionUtils.getStackTrace(e));
+            e.printStackTrace();
+        }
 
-        System.out.println("Notifying gameCompleteLock...");
+        System.out.println("Runnable completed running.");
+        System.out.println("Notifying shutdown hook that it can exit the process...");
         synchronized (waitForOkToShutdownApplicationProcess) {
             waitForOkToShutdownApplicationProcess.notify();
         }
-        System.out.println("Notifying gameCompleteLock... done.");
-        System.out.println("Exiting gracefully... done.");
+        System.out.println("Notifying shutdown hook that it can exit the process... done");
+        System.out.println("Exiting gracefully.");
     }
 }

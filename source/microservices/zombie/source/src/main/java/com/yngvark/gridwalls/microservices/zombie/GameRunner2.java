@@ -1,44 +1,70 @@
 package com.yngvark.gridwalls.microservices.zombie;
 
-import com.rabbitmq.client.Connection;
+import com.google.inject.Inject;
 
 import java.io.IOException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeoutException;
 
 public class GameRunner2 {
-    private RabbitMqConnector rabbitMqConnector;
+    private final ExitSignalAwareRunner exitSignalAwareRunner;
+    private final SystemInputCommandExecutor systemInputCommandExecutor;
+    private final AbortableConnecter abortableConnecter;
+    private final AbortableGameConfigFetcher abortableGameConfigFetcher;
+    private final GameLoop gameLoop;
+
+    @Inject
+    public GameRunner2(ExitSignalAwareRunner exitSignalAwareRunner, SystemInputCommandExecutor systemInputCommandExecutor,
+            AbortableConnecter abortableConnecter, AbortableGameConfigFetcher abortableGameConfigFetcher,
+            GameLoop gameLoop) {
+        this.exitSignalAwareRunner = exitSignalAwareRunner;
+        this.systemInputCommandExecutor = systemInputCommandExecutor;
+        this.abortableConnecter = abortableConnecter;
+        this.abortableGameConfigFetcher = abortableGameConfigFetcher;
+        this.gameLoop = gameLoop;
+    }
 
     public void run() {
-        final Connection connection;
+        System.out.println("Start async game.");
+        exitSignalAwareRunner.run(new ICanRunAndAbort() {
+            @Override
+            public void run() {
 
-        try {
-            connection = rabbitMqConnector.connect();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return;
-        } catch (TimeoutException e) {
-            e.printStackTrace();
-            return;
-        }
 
-        runConnected(connection);
+                // Step: Connect.
+                System.out.println("Connecting to message bus.");
+                ConnectResult connectResult = abortableConnecter.connect();
+                if (!connectResult.isConnected()) {
+                    System.out.println("Connecting failed. Details: " + connectResult.getConnectFailedDetails());
+                    return;
+                }
+                System.out.println("Connected.");
 
-        try {
-            connection.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return;
-        }
-    }
+                /*
+                // Step: Get game configuration.
+                GameConfig gameConfig = abortableGameConfigFetcher.fetchGameConfig();
 
-    private void runConnected(Connection connection) {
-        ExecutorService executor = Executors.newCachedThreadPool();
-        executor.submit(() -> {
+                // Step: Run game.
+                gameLoop.run(connectResult.getConnection());
+                */
 
+
+                try {
+                    connectResult.getConnection().close();
+                } catch (IOException e) {
+                    System.out.println("Error occured while disconnecting.");
+                    e.printStackTrace();
+                }
+
+                System.out.println("Connection closed.");
+            }
+
+            @Override
+            public void startAborting() {
+                abortableConnecter.startAborting();
+                gameLoop.startAborting();
+            }
         });
-    }
 
+        System.out.println("Start sync read from input.");
+
+    }
 }

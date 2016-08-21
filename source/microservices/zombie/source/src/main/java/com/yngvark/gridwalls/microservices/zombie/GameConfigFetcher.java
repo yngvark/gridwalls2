@@ -1,19 +1,13 @@
 package com.yngvark.gridwalls.microservices.zombie;
 
-import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.Consumer;
-import com.rabbitmq.client.DefaultConsumer;
-import com.rabbitmq.client.Envelope;
-import com.rabbitmq.client.QueueingConsumer;
 import com.rabbitmq.client.RpcClient;
 
 import java.io.IOException;
-import java.util.UUID;
 import java.util.concurrent.TimeoutException;
 
-class GameConfigFetcher implements ICanExitOnSignal {
+class GameConfigFetcher implements ICanAbortOnSignal {
     private static final String RPC_QUEUE_NAME = "rpc_queue";
 
     private Channel channel;
@@ -50,9 +44,14 @@ class GameConfigFetcher implements ICanExitOnSignal {
     }
 
     @Override
-    public void exitSignalReceived() throws Exception {
+    public void startAborting() {
         System.out.println(getClass().getSimpleName() + ": Exit signal received");
-        if (channel.isOpen())
-            channel.close();
+        if (channel.isOpen()) {
+            try {
+                channel.close();
+            } catch (IOException | TimeoutException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

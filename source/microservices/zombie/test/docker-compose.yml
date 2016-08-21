@@ -9,11 +9,14 @@ services:
       - 8080:15672
 #      - 15674:15674
 
-  zombie:
-    image: java:8-jre
-    links:
-      - rabbitmq:rabbithost
-    volumes:
-      - ./app:/app
-    command:
-      "/app/bin/zombie"
+#  zombie:
+#    image: java:8-jre
+#    links:
+#      - rabbitmq:rabbithost
+#    volumes:
+#      - ./app:/app
+#    command:
+#      "/app/bin/zombie"
+
+  integration_test:
+    

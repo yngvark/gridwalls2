@@ -7,7 +7,7 @@ import java.util.concurrent.TimeoutException;
 
 public class Main {
     public static void main(String[] argv) throws IOException, TimeoutException, InterruptedException {
-        // Set up depdendencies
+/*        // Set up depdendencies
         ZombieFactory zombieFactory = new ZombieFactory();
         ZombieMovedSerializer zombieMovedSerializer = new ZombieMovedSerializer(new CoordinateSerializer());
         Publisher publisher = new Publisher(zombieMovedSerializer);
@@ -22,7 +22,7 @@ public class Main {
         ExitSignalAwareRunner exitSignalAwareRunner = new ExitSignalAwareRunner();
 
         // Run
-        exitSignalAwareRunner.run(gameRunner);
+        exitSignalAwareRunner.run(gameRunner);*/
     }
 
 }

@@ -9,7 +9,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-class GameRunner implements ICanExitOnSignal {
+class GameRunner implements ICanAbortOnSignal {
     private final RabbitMqConnector rabbitMqConnector;
     private final ZombieRunnableFactory zombieRunnableFactory;
     private final ZombieFactory zombieFactory;
@@ -46,7 +46,7 @@ class GameRunner implements ICanExitOnSignal {
     }
 
     private void tryToRun2() throws IOException, TimeoutException, InterruptedException {
-        // Connect to server
+        /*// Connect to server
         Connection connection = rabbitMqConnector.connect();
 
         // TODO Må være mulig å avbryte RPC-kallet også.
@@ -57,7 +57,7 @@ class GameRunner implements ICanExitOnSignal {
         }
 
         rabbitMqConnector.disconnect(); // Also disconnects channels.
-        System.out.println("Game exiting.");
+        System.out.println("Game exiting.");*/
     }
 
     private void runGame(Connection connection, GameConfig gameConfig) throws IOException, InterruptedException, TimeoutException {
@@ -99,9 +99,9 @@ class GameRunner implements ICanExitOnSignal {
         System.out.println("Game loop exited.");
     }
 
-
-    public void exitSignalReceived() throws Exception {
+    @Override
+    public void startAborting() {
         exitSignalReceived = true;
-        gameConfigFetcher.exitSignalReceived();
+        gameConfigFetcher.startAborting();
     }
 }
