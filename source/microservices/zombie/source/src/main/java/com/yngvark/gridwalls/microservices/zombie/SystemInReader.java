@@ -53,10 +53,8 @@ public class SystemInReader { // TODO: test.
 
     private String read() throws IOException {
         String input = bufferedReader.readLine();
-        if (input == null) {
-            bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-            return read();
-        }
+        if (input == null)
+            return "exit";
 
         return input;
     }
