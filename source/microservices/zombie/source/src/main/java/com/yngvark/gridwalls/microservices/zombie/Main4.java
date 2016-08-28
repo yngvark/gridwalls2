@@ -7,9 +7,6 @@ import java.util.concurrent.Executors;
 
 public class Main4 {
     public static void main(String[] args) {
-//        Injector injector = Guice.createInjector(new ModuleConfig());
-//        GameRunner4 gameRunner = createGameRunnerWithInjector(injector);
-
         createGameRunner();
     }
 
@@ -36,10 +33,4 @@ public class Main4 {
 
         gameRunner.run();
     }
-
-    //    private static GameRunner4 createGameRunnerWithInjector(Injector injector) {
-//        GameRunnerInitializer2 gameRunnerInitializer = injector.getInstance(GameRunnerInitializer2.class);
-//        gameRunnerInitializer.setupCommands();
-//        return injector.getInstance(GameRunner4.class);
-//    }
 }

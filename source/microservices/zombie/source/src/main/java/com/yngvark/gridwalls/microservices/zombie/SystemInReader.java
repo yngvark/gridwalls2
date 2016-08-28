@@ -29,6 +29,7 @@ public class SystemInReader { // TODO: test.
     private void tryToReadFromStdIn() throws IOException {
         while (true) {
             String input = readNonNullLineFromSystemInput();
+            System.out.println("You entered: " + input);
 
             if (input.equals("exit"))
                 break;
@@ -45,9 +46,8 @@ public class SystemInReader { // TODO: test.
 
     private String readNonNullLineFromSystemInput() throws IOException {
         System.out.println("");
-        System.out.print("Enter something: ");
+        System.out.println("Enter something: ");
         String input = read();
-        System.out.print("");
         return input;
     }
 
@@ -60,8 +60,6 @@ public class SystemInReader { // TODO: test.
     }
 
     private void handleInput(String input) {
-        System.out.println("You entered: " + input);
-
         commandHandler.handle(input);
         sleep(10);
     }

@@ -19,17 +19,7 @@ import java.util.concurrent.TimeoutException;
 
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-public class IntegrationTest {
-
-    @Test
-    public void should_get_version() {
-
-    }
-
-    @Test
-    public void should_exit_withing_10_seconds_when_not_table_to_connect() { // how about logging?
-
-    }
+public class QueueBasedTest {
 
 
     @Test
