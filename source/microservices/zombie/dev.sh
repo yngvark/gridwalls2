@@ -1,5 +1,3 @@
-echo 1 is: $1
-
 if [[ $1 == "-b" ]]; then
 	echo --- Building ---
 	rm -rf container/app
@@ -22,6 +20,7 @@ if [[ $1 == "-t" ]]; then
 	exit;
 fi
 
-echo --- Running normally with in_pipe ---
-./container/app/bin/zombie < container/app/in_pipe
+echo --- Running normally ---
+./container/app/bin/zombie 
+
 

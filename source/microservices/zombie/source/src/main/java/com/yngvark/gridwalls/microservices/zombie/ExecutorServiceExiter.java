@@ -14,8 +14,12 @@ public class ExecutorServiceExiter {
         this.stackTracePrinter = stackTracePrinter;
     }
 
-    public void exitGracefully(ExecutorService executorService) {
-        System.out.println("Exiting gracefully.");
+    public synchronized  void exitGracefully(ExecutorService executorService) {
+        System.out.println("Shutdownhook: Exiting gracefully.");
+
+        if (executorService.isShutdown()) {
+            System.out.println("Shutdownhook not necessary, because " + ExecutorService.class.getSimpleName() + " is already shut down.");
+        }
 
         executorService.shutdown();
 
@@ -28,12 +32,12 @@ public class ExecutorServiceExiter {
         }
 
         if (!terminatedBeforeTimeout) {
-            System.out.println("Exiting gracefully timed out. Calling shutdownNow.");
+            System.out.println("Exiting gracefully timed out. Forcing shutdown.");
             List<Runnable> unstartedRunnables = executorService.shutdownNow();
             System.out.println("Number of tasks not able to be shut down: " + unstartedRunnables.size());
             return;
         }
 
-        System.out.println("Exiting gracefully was successful. " + executorService.isTerminated());
+        System.out.println("Exiting gracefully was successful.");
     }
 }

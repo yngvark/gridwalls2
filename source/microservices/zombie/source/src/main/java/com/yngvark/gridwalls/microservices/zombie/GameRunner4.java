@@ -53,10 +53,9 @@ public class GameRunner4 {
     }
 
     private void exit() {
-        System.out.println("Exit run in gamerunner. 1");
+        System.out.println("Exit run in gamerunner.");
         executorServiceExiter.exitGracefully(executorService);
         System.out.println("Exit run in gamerunner... Done.");
-
     }
 
 }
