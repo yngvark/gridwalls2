@@ -1,6 +1,7 @@
 package zombie;
 
 import org.junit.jupiter.api.Test;
+import sun.misc.IOUtils;
 import zombie.process_test.CommandExecutor;
 
 import java.io.BufferedReader;
@@ -20,9 +21,7 @@ public class ProcessTest {
     @Test
     public void should_be_able_to_exit() throws IOException, InterruptedException {
         // Given
-        ProcessBuilder processBuilder = new ProcessBuilder();
-        processBuilder.command(PATH_TO_APP);
-        Process process = processBuilder.start();
+        Process process = startProcess(PATH_TO_APP);
 
         BufferedWriter appInputStream = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
         BufferedReader appOutStream = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -31,20 +30,38 @@ public class ProcessTest {
         new CommandExecutor(appInputStream, appOutStream).run("exit");
 
         // Then
-        assertExited(process);
+        exitAndAssertExited(process);
     }
 
-    private void assertExited(Process process) throws InterruptedException {
+    private Process startProcess(String path) throws IOException {
+        ProcessBuilder processBuilder = new ProcessBuilder();
+        processBuilder.command(path);
+        return processBuilder.start();
+    }
+
+    private void exitAndAssertExited(Process process) throws InterruptedException {
         boolean processHasExited = process.waitFor(3, TimeUnit.SECONDS);
         assertTrue(processHasExited);
     }
 
     @Test
+    public void should_be_able_to_force_exit_within_3_seconds() throws IOException, InterruptedException {
+        // Given
+        Process process = startProcess(PATH_TO_APP);
+
+        // When
+        process.destroyForcibly();
+
+        // Then
+        exitAndAssertExited(process);
+
+        assert false; // This test doesn't quite work I think.
+    }
+
+    @Test
     public void should_get_version() throws IOException, InterruptedException {
         // Given
-        ProcessBuilder processBuilder = new ProcessBuilder();
-        processBuilder.command(PATH_TO_APP);
-        Process process = processBuilder.start();
+        Process process = startProcess(PATH_TO_APP);
 
         BufferedWriter appInputStream = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
         BufferedReader appOutStream = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -59,7 +76,7 @@ public class ProcessTest {
         boolean versionOutputFound = response.stream().anyMatch((String line) -> line.contains("Version: Zombie"));
         assertTrue(versionOutputFound);
 
-        assertExited(process);
+        exitAndAssertExited(process);
     }
 
     @Test

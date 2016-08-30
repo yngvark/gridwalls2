@@ -14,7 +14,7 @@ public class ExecutorServiceExiter {
         this.stackTracePrinter = stackTracePrinter;
     }
 
-    public synchronized  void exitGracefully(ExecutorService executorService) {
+    public synchronized void exitGracefully(ExecutorService executorService) {
         System.out.println("Shutdownhook: Exiting gracefully.");
 
         if (executorService.isShutdown()) {
