@@ -64,7 +64,7 @@ idea {
 // Run java -jar build/install/<appname>/lib/<appname>.jar
 apply plugin: 'application'
 
-mainClassName = 'com.yngvark.gridwalls.microservices.zombie.Main4'
+mainClassName = 'com.yngvark.gridwalls.microservices.zombie.Main'
 
 jar {
     manifest {

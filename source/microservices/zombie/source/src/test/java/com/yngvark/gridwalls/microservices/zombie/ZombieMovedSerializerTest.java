@@ -2,6 +2,8 @@ package com.yngvark.gridwalls.microservices.zombie;
 
 import com.yngvark.gridwalls.core.Coordinate;
 import com.yngvark.gridwalls.core.CoordinateSerializer;
+import com.yngvark.gridwalls.microservices.zombie.gamelogic.ZombieMoved;
+import com.yngvark.gridwalls.microservices.zombie.gamelogic.ZombieMovedSerializer;
 import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
