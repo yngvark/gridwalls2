@@ -15,6 +15,7 @@ import java.io.OutputStreamWriter;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -74,9 +75,7 @@ public class ProcessTest {
     public void should_get_version() throws IOException, InterruptedException {
         // Given
         Process process = new ProcessStarter().startProcess(Config.PATH_TO_APP);
-        BufferedWriter appInputStream = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
-        BufferedReader appOutStream = new BufferedReader(new InputStreamReader(process.getInputStream()));
-        CommandExecutor commandExecutor = new CommandExecutor(appInputStream, appOutStream);
+        CommandExecutor commandExecutor = new CommandExecutorFactory().create(process);
 
         // When
         List<String> response = commandExecutor.run("version");
@@ -85,6 +84,25 @@ public class ProcessTest {
         // Then
         boolean versionOutputFound = response.stream().anyMatch((String line) -> line.contains("Version: Zombie"));
         assertTrue(versionOutputFound);
+
+        exitAndAssertExited(process);
+    }
+
+    @Test
+    public void connect_command_needs_one_argument() throws IOException, InterruptedException {
+        // Given
+        Process process = new ProcessStarter().startProcess(Config.PATH_TO_APP);
+        CommandExecutor commandExecutor = new CommandExecutorFactory().create(process);
+
+        // When
+        List<String> response = commandExecutor.run("connect");
+        commandExecutor.run("exit");
+
+        // Then
+        Optional<String> errorMessageFound = response.stream().filter((String line) -> line.contains("Usage: Connect")).findFirst();
+        assertTrue(errorMessageFound.isPresent(), "Could not find expected response from command.");
+
+        assertEquals("Usage: Connect to <broker host>", errorMessageFound.get());
 
         exitAndAssertExited(process);
     }

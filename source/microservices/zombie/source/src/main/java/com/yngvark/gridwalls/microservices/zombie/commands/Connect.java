@@ -1,17 +1,14 @@
 package com.yngvark.gridwalls.microservices.zombie.commands;
 
-public class Version implements Command {
+public class Connect implements Command {
+
     @Override
     public void run() {
-        doRun();
-    }
-
-    private void doRun() {
-        System.out.println("Version: Zombie 0.1");
+        System.out.println("Usage: Connect to <broker host>");
     }
 
     @Override
     public void run(String[] arguments) {
-        run();
+        System.out.println("Connecting to some host.");
     }
 }

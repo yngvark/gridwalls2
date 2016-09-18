@@ -60,7 +60,7 @@ public class SystemInReader { // TODO: test.
     }
 
     private void handleInput(String input) {
-        commandHandler.handle(input);
+        commandHandler.handleInput(input);
         sleep(10);
     }
 

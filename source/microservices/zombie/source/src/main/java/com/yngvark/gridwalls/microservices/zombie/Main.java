@@ -1,5 +1,6 @@
 package com.yngvark.gridwalls.microservices.zombie;
 
+import com.yngvark.gridwalls.microservices.zombie.commands.Connect;
 import com.yngvark.gridwalls.microservices.zombie.commands.Version;
 import com.yngvark.gridwalls.microservices.zombie.infrastructure.CommandExecutor;
 import com.yngvark.gridwalls.microservices.zombie.infrastructure.CommandHandler;
@@ -21,11 +22,8 @@ public class Main {
         StackTracePrinter stackTracePrinter = new StackTracePrinter();
 
         CommandHandler commandHandler = new CommandHandler(
-                new CommandExecutor(
-                        executorService,
-                        stackTracePrinter
-                ));
-        commandHandler.addCommand("version", new Version());
+                new CommandExecutor(executorService));
+        addCommands(commandHandler);
 
         GameRunner gameRunner = new GameRunner(
                 new SystemInReader(
@@ -38,5 +36,10 @@ public class Main {
         );
 
         gameRunner.run();
+    }
+
+    private static void addCommands(CommandHandler commandHandler) {
+        commandHandler.addCommand("version", new Version());
+        commandHandler.addCommand("connect", new Connect());
     }
 }
