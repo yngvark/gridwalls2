@@ -1,4 +1,4 @@
-package com.yngvark.gridwalls.microservices.zombie.infrastructure;
+package com.yngvark.gridwalls.microservices.zombie.use_later;
 
 import com.google.inject.Inject;
 import com.yngvark.gridwalls.microservices.zombie.infrastructure.ICanAbortOnSignal;

@@ -1,4 +1,4 @@
-package zombie.process_test;
+package zombie.lib;
 
 import java.lang.reflect.Field;
 

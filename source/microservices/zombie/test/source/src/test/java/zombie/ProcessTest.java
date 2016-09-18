@@ -1,16 +1,17 @@
 package zombie;
 
 import org.junit.jupiter.api.Test;
-import zombie.process_test.CommandExecutor;
-import zombie.process_test.ProcessKiller;
-import zombie.process_test.StdOutCharReader;
+import zombie.lib.CommandExecutor;
+import zombie.lib.CommandExecutorFactory;
+import zombie.lib.ProcessKiller;
+import zombie.lib.ProcessStarter;
+import zombie.lib.StdOutCharReader;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.time.Duration;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -20,13 +21,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ProcessTest {
-    private final static String PATH_TO_APP = "../../container/app/bin/zombie";
-
     @Test
     public void should_be_able_to_exit() throws IOException, InterruptedException {
         // Given
-        Process process = startProcess(PATH_TO_APP);
-
+        Process process = new ProcessStarter().startProcess(Config.PATH_TO_APP);
         BufferedWriter appInputStream = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
         BufferedReader appOutStream = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
@@ -35,12 +33,6 @@ public class ProcessTest {
 
         // Then
         exitAndAssertExited(process);
-    }
-
-    private Process startProcess(String path) throws IOException {
-        ProcessBuilder processBuilder = new ProcessBuilder();
-        processBuilder.command(path);
-        return processBuilder.start();
     }
 
     private void exitAndAssertExited(Process process) throws InterruptedException {
@@ -56,7 +48,7 @@ public class ProcessTest {
         }
 
         // Given
-        Process process = startProcess(PATH_TO_APP);
+        Process process = new ProcessStarter().startProcess(Config.PATH_TO_APP);
         BufferedWriter appInputStream = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
         BufferedReader appOutStream = new BufferedReader(new InputStreamReader(process.getInputStream()));
         new CommandExecutor(appInputStream, appOutStream).run("version");
@@ -81,11 +73,9 @@ public class ProcessTest {
     @Test
     public void should_get_version() throws IOException, InterruptedException {
         // Given
-        Process process = startProcess(PATH_TO_APP);
-
+        Process process = new ProcessStarter().startProcess(Config.PATH_TO_APP);
         BufferedWriter appInputStream = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
         BufferedReader appOutStream = new BufferedReader(new InputStreamReader(process.getInputStream()));
-
         CommandExecutor commandExecutor = new CommandExecutor(appInputStream, appOutStream);
 
         // When
@@ -97,11 +87,6 @@ public class ProcessTest {
         assertTrue(versionOutputFound);
 
         exitAndAssertExited(process);
-    }
-
-    @Test
-    public void should_exit_withing_10_seconds_when_not_able_to_connect() { // how about logging?
-
     }
 
 }
