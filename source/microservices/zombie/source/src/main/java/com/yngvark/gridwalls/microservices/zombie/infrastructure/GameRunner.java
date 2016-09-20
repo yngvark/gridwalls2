@@ -26,6 +26,7 @@ public class GameRunner {
     public void run() {
         initShutdownhook();
         readSystemInput();
+        disconnectIfConnected();
         exit();
     }
 
@@ -50,6 +51,10 @@ public class GameRunner {
         } catch (ExecutionException e) {
             stackTracePrinter.print("Error while reading stdin.", e);
         }
+    }
+
+    private void disconnectIfConnected() {
+
     }
 
     private void exit() {

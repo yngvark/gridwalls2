@@ -28,10 +28,10 @@ public class CommandExecutor {
         StringBuilder commandResponse = new StringBuilder();
         while (true) {
             String line = appOutStream.readLine();
+            log(line);
+
             if (line == null || line.startsWith(ENTER_COMMAND_TEXT))
                 return createListBasedOnLineBreaks(commandResponse);
-
-            log(line);
 
             commandResponse.append(String.format(line + "%n"));
         }

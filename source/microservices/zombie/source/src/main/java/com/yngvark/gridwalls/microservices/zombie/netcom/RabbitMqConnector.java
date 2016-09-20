@@ -2,31 +2,25 @@ package com.yngvark.gridwalls.microservices.zombie.netcom;
 
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
-import com.yngvark.gridwalls.microservices.zombie.netcom.ConnectFailed;
-import com.yngvark.gridwalls.microservices.zombie.netcom.ConnectResult;
-import com.yngvark.gridwalls.microservices.zombie.netcom.ConnectSucceeded;
-import com.yngvark.gridwalls.microservices.zombie.netcom.MessageBusConnecter;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
-class RabbitMqConnector implements MessageBusConnecter {
-    private Connection connection;
+public class RabbitMqConnector implements BrokerConnecter {
     private boolean isConnected = false;
 
-    public ConnectResult connect(int timeout) {
+    @Override
+    public ConnectResult connect(String host, int timeoutMilliseconds) {
         if (isConnected)
             throw new RuntimeException("Already connected.");
 
-        ConnectResult connectResult = tryToConnect(timeout);
-
-        return connectResult;
+        return tryToConnect(timeoutMilliseconds);
     }
 
-    private ConnectResult tryToConnect(int timeout) {
+    private ConnectResult tryToConnect(int timeoutMilliseconds) {
         ConnectionFactory factory = new ConnectionFactory();
-        factory.setConnectionTimeout(timeout);
+        factory.setConnectionTimeout(timeoutMilliseconds);
         factory.setHost("rabbithost");
 
         try {
@@ -38,8 +32,8 @@ class RabbitMqConnector implements MessageBusConnecter {
         }
     }
 
-    public void disconnect() throws IOException, TimeoutException {
-        if (isConnected)
-            connection.close();
+    @Override
+    public ConnectResult connect(String host, int port, int timeoutMilliseconds) {
+        return connect(host, timeoutMilliseconds);
     }
 }

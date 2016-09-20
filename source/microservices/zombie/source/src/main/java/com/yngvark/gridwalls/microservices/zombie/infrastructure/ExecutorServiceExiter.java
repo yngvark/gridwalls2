@@ -19,6 +19,7 @@ public class ExecutorServiceExiter {
 
         if (executorService.isShutdown()) {
             System.out.println("Shutdownhook not necessary, because " + ExecutorService.class.getSimpleName() + " is already shut down.");
+            return;
         }
 
         executorService.shutdown();

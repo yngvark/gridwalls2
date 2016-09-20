@@ -1,6 +1,9 @@
 package zombie.lib;
 
 import java.lang.reflect.Field;
+import java.util.concurrent.TimeUnit;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /*
  * Taken from http://stackoverflow.com/questions/2950338/how-can-i-kill-a-linux-process-in-java-with-sigkill-process-destroy-does-sigte/2951193#2951193
@@ -22,5 +25,10 @@ public class ProcessKiller {
         } else {
             throw new IllegalArgumentException("Needs to be a UNIXProcess");
         }
+    }
+
+    public void exitAndAssertExited(Process process) throws InterruptedException {
+        boolean processHasExited = process.waitFor(3, TimeUnit.SECONDS);
+        assertTrue(processHasExited);
     }
 }

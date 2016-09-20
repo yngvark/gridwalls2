@@ -10,7 +10,7 @@ public class ConnectSucceeded implements ConnectResult {
     }
 
     @Override
-    public boolean isConnected() {
+    public boolean success() {
         return true;
     }
 

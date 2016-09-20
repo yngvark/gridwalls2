@@ -8,6 +8,7 @@ import com.yngvark.gridwalls.microservices.zombie.infrastructure.ExecutorService
 import com.yngvark.gridwalls.microservices.zombie.infrastructure.GameRunner;
 import com.yngvark.gridwalls.microservices.zombie.infrastructure.StackTracePrinter;
 import com.yngvark.gridwalls.microservices.zombie.infrastructure.SystemInReader;
+import com.yngvark.gridwalls.microservices.zombie.netcom.RabbitMqConnector;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -40,6 +41,6 @@ public class Main {
 
     private static void addCommands(CommandHandler commandHandler) {
         commandHandler.addCommand("version", new Version());
-        commandHandler.addCommand("connect", new Connect());
+        commandHandler.addCommand("connect", new Connect(new RabbitMqConnector(), connectionSingleton));
     }
 }

@@ -121,6 +121,10 @@ public class QueueBasedTest {
 
     @Test
     public void should_connect_and_disconnect() throws IOException, TimeoutException, InterruptedException {
+        // On command "run":
+        // - Get gameconfig from server
+        // - On received gameconfig, start zombies.
+
         // Given
         // Set up the broker
         ConnectionFactory factory = new ConnectionFactory();
@@ -167,7 +171,7 @@ public class QueueBasedTest {
         CommandExecutor commandExecutor = new CommandExecutorFactory().create(process);
 
         // When
-        commandExecutor.run("connect rabbithost");
+        commandExecutor.run("run");
 
         //  Then
         ExecutorService executorService = Executors.newCachedThreadPool();
