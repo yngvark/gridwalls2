@@ -1,4 +1,4 @@
-package com.yngvark.gridwalls.microservices.zombie.netcom;
+package com.yngvark.gridwalls.netcom;
 
 import com.rabbitmq.client.Channel;
 import com.yngvark.gridwalls.core.CoordinateSerializer;

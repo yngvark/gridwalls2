@@ -2,7 +2,7 @@ package com.yngvark.gridwalls.microservices.zombie.gamelogic;
 
 import com.rabbitmq.client.Channel;
 import com.yngvark.gridwalls.microservices.zombie.infrastructure.GameErrorHandler;
-import com.yngvark.gridwalls.microservices.zombie.netcom.Publisher;
+import com.yngvark.gridwalls.netcom.Publisher;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +15,8 @@ public class ZombiesController {
 
     private List<Zombie> zombies = new ArrayList<>();
 
+    private boolean initialized;
+
     public ZombiesController(ZombieFactory zombieFactory, Publisher publisher, Channel channel,
             GameErrorHandler gameErrorHandler) {
         this.zombieFactory = zombieFactory;
@@ -24,8 +26,11 @@ public class ZombiesController {
     }
 
     public void nextTurn() {
-        if (!initialized)
+        if (!initialized) {
             init();
+            initialized = true;
+        }
+
         for (Zombie zombie : zombies) {
             runNextTurnOn(zombie);
         }

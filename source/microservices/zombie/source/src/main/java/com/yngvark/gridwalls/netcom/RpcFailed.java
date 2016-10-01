@@ -1,4 +1,4 @@
-package com.yngvark.gridwalls.microservices.zombie.netcom;
+package com.yngvark.gridwalls.netcom;
 
 public class RpcFailed implements RpcResult {
     private final String failReason;

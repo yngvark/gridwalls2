@@ -1,6 +1,7 @@
 package com.yngvark.gridwalls.microservices.zombie.infrastructure;
 
 import com.yngvark.gridwalls.microservices.zombie.gamelogic.GameRunner;
+import com.yngvark.gridwalls.netcom.Netcom;
 
 import java.util.concurrent.ExecutorService;
 
@@ -8,21 +9,22 @@ public class ProcessRunner {
     private final ExecutorService executorService;
     private final ExecutorServiceExiter executorServiceExiter;
     private final GameRunner gameRunner;
-    private final BrokerConnecter brokerConnecter;
+    private final Netcom netcom;
 
     public ProcessRunner(ExecutorService executorService,
-            ExecutorServiceExiter executorServiceExiter, GameRunner gameRunner,
-            BrokerConnecter brokerConnecter) {
+            ExecutorServiceExiter executorServiceExiter,
+            GameRunner gameRunner,
+            Netcom netcom) {
         this.executorService = executorService;
         this.executorServiceExiter = executorServiceExiter;
         this.gameRunner = gameRunner;
-        this.brokerConnecter = brokerConnecter;
+        this.netcom = netcom;
     }
 
     public void run() {
         initShutdownhook();
         gameRunner.run();
-        disconnectIfConnected();
+        netcom.disconnectIfConnected();
         exit();
     }
 
@@ -37,14 +39,9 @@ public class ProcessRunner {
         });
     }
 
-    private void disconnectIfConnected() {
-    }
-
     private void exit() {
-        System.out.println("Exit run in gamerunner.");
-        brokerConnecter.disconnectIfConnected();
         executorServiceExiter.exitGracefully(executorService);
-        System.out.println("Exit run in gamerunner... Done.");
+        netcom.disconnectIfConnected();
     }
 
 }

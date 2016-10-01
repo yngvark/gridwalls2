@@ -1,16 +1,19 @@
-package com.yngvark.gridwalls.microservices.zombie.netcom;
+package com.yngvark.gridwalls.netcom;
 
 import com.yngvark.gridwalls.microservices.zombie.Config;
+import com.yngvark.gridwalls.netcom.rabbitmq.OneTimeConnecter;
 
 public class RetryConnecter {
     private final Config config;
-    private final OneTImeConnecter oneTImeConnecter;
+    private final OneTimeConnecter oneTimeConnecter;
     private final ConnectFailedFactory connectFailedFactory;
 
-    public RetryConnecter(Config config, OneTImeConnecter oneTImeConnecter,
+    private ConnectionWrapper connectionWrapper;
+
+    public RetryConnecter(Config config, OneTimeConnecter oneTimeConnecter,
             ConnectFailedFactory connectFailedFactory) {
         this.config = config;
-        this.oneTImeConnecter = oneTImeConnecter;
+        this.oneTimeConnecter = oneTimeConnecter;
         this.connectFailedFactory = connectFailedFactory;
     }
 
@@ -20,11 +23,11 @@ public class RetryConnecter {
 
         for (int i = 0; i < attemptCount; i++) {
             System.out.println("Connecting to " + config.RABBITMQ_HOST + " (attempt " + i + ")");
-
-            connectAttempt = oneTImeConnecter.connect(config.RABBITMQ_HOST, 5000);
+            connectAttempt = oneTimeConnecter.connect(config.RABBITMQ_HOST, 5000);
 
             if (connectAttempt.succeeded()) {
                 System.out.println("Connected.");
+                connectionWrapper = connectAttempt.getConnectionWrapper();
                 return connectAttempt;
             } else {
                 System.out.println("Cannot connect. Reason: " + connectAttempt.getConnectFailedDetails());
@@ -32,5 +35,9 @@ public class RetryConnecter {
         }
 
         return connectFailedFactory.failed("Could not connect after " + attemptCount + " attempts.");
+    }
+
+    public void disconnectIfConnected() {
+        connectionWrapper.disconnectIfConnected();
     }
 }

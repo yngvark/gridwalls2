@@ -1,37 +1,29 @@
 package com.yngvark.gridwalls.microservices.zombie.gamelogic;
 
-import com.yngvark.gridwalls.microservices.zombie.infrastructure.StackTracePrinter;
-import com.yngvark.gridwalls.microservices.zombie.netcom.FetchGameConfigRpc;
-import com.yngvark.gridwalls.microservices.zombie.netcom.FetchGameConfigRpcOld;
+import com.yngvark.gridwalls.netcom.GameConfigFetcher;
 
-import java.util.concurrent.CancellationException;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
+import java.util.Optional;
 
 public class GameRunner {
-    private final FetchGameConfigRpc fetchGameConfigRpc;
-    private final GameLoop gameLoop;
-    private final ExecutorService executorService;
-    private final StackTracePrinter stackTracePrinter;
+    private static final String RPC_QUEUE_NAME = "rpc_queue";
 
+    private final GameConfigFetcher gameConfigFetcher;
+    private final GameLoop gameLoop;
+
+    public GameRunner(GameConfigFetcher gameConfigFetcher, GameLoop gameLoop) {
+        this.gameConfigFetcher = gameConfigFetcher;
+        this.gameLoop = gameLoop;
+    }
 
     public void run() {
-        Future<GameConfig> gameConfigFuture = executorService.submit(() -> fetchGameConfigRpc.getGameConfigFromServer());
-        GameConfig gameConfig = null;
-        try {
-            System.out.println("Fetching game configuration.");
-            gameConfig = gameConfigFuture.get();
-            gameConfigFuture.
-        } catch (InterruptedException | ExecutionException | CancellationException e) {
-            stackTracePrinter.print("Could not get game configuration. Exiting", e);
+        Optional<GameConfig> gameConfigOptional = gameConfigFetcher.getGameConfigFromServer();
+        if (!gameConfigOptional.isPresent()) {
+            System.out.println("Could not get game configuration.");
             return;
         }
 
+        GameConfig gameConfig = gameConfigOptional.get();
+
         gameLoop.run(gameConfig);
-
-
-        disconnectIfConnected();
-        exit();
     }
 }

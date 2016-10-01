@@ -5,12 +5,10 @@ import com.yngvark.gridwalls.microservices.zombie.gamelogic.ZombieMovedSerialize
 import org.junit.jupiter.api.BeforeEach;
 
 public class ZombieTest {
-    private TestNetCom netCom;
     private ZombieMovedSerializer zombieMovedSerializer;
 
     @BeforeEach
     public void before() {
-        netCom = TestNetComFactory.create();
         zombieMovedSerializer = new ZombieMovedSerializer(new CoordinateSerializer());
     }
 //
