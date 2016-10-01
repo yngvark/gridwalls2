@@ -1,5 +1,5 @@
 package com.yngvark.gridwalls.microservices.zombie.netcom;
 
-public interface Connector {
+public interface OneTImeConnecter {
     ConnectAttempt connect(String host, int timeoutMilliseconds);
 }

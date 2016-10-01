@@ -7,7 +7,7 @@ import org.mockito.Mockito;
 
 import java.io.IOException;
 
-public class NetcomOldTest {
+public class RetryConnecterOldTest {
     @Test
     public void should_print_list_of_connection_errors_when_retry_connection() throws IOException {
         Connection connectionMock = Mockito.mock(Connection.class);

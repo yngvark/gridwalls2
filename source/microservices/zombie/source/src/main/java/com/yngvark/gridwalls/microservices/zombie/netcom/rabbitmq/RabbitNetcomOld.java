@@ -3,27 +3,27 @@ package com.yngvark.gridwalls.microservices.zombie.netcom.rabbitmq;
 import com.rabbitmq.client.Connection;
 import com.yngvark.gridwalls.microservices.zombie.netcom.Broker;
 import com.yngvark.gridwalls.microservices.zombie.netcom.ConnectAttempt;
-import com.yngvark.gridwalls.microservices.zombie.netcom.Netcom;
+import com.yngvark.gridwalls.microservices.zombie.netcom.RetryConnecter;
 import com.yngvark.gridwalls.microservices.zombie.netcom.RpcException;
 import com.yngvark.gridwalls.microservices.zombie.netcom.RpcFailed;
 import com.yngvark.gridwalls.microservices.zombie.netcom.RpcResult;
 
 public class RabbitNetcomOld implements Broker {
-    private final Netcom netcom;
-    private final RabbitMqConnector connector;
+    private final RetryConnecter retryConnecter;
+    private final RabbitMqOneTImeConnecter connector;
     private final RabbitRpcCaller rpcCaller;
 
     private Connection connection;
 
-    public RabbitNetcomOld(Netcom netcom, RabbitMqConnector connector, RabbitRpcCaller rpcCaller) {
-        this.netcom = netcom;
+    public RabbitNetcomOld(RetryConnecter retryConnecter, RabbitMqOneTImeConnecter connector, RabbitRpcCaller rpcCaller) {
+        this.retryConnecter = retryConnecter;
         this.connector = connector;
         this.rpcCaller = rpcCaller;
     }
 
     @Override
     public RpcResult rpcCall(String rpcQueueName, String message) throws RpcException {
-        ConnectAttempt<Connection> connectAttempt = netcom.tryToEnsureConnected(new RabbitConnectionWrapper(connection));
+        ConnectAttempt<Connection> connectAttempt = retryConnecter.tryToEnsureConnected(new RabbitConnectionWrapper(connection));
         if (connectAttempt.succeeded())
             connection = connectAttempt.getConnection().getConnection();
         else
@@ -37,7 +37,7 @@ public class RabbitNetcomOld implements Broker {
     }
 
     public RpcResult rpcCall2(String rpcQueueName, String message) throws RpcException {
-        ConnectAttempt<Connection> connectAttempt = netcom.tryToEnsureConnected(new RabbitConnectionWrapper(this.connection));
+        ConnectAttempt<Connection> connectAttempt = retryConnecter.tryToEnsureConnected(new RabbitConnectionWrapper(this.connection));
         return connectAttempt.rpcCall(rpcQueueName, message);
     }
 }

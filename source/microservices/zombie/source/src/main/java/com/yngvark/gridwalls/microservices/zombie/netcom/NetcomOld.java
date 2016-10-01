@@ -7,14 +7,14 @@ import java.util.concurrent.TimeoutException;
 
 public class NetcomOld implements Broker {
     private final Config config;
-    private final Connector connector;
+    private final OneTImeConnecter oneTImeConnecter;
     private final RpcCaller rpcCaller;
 
     private ConnectionWrapper ConnectionWrapper;
 
-    public NetcomOld(Config config, Connector connector, RpcCaller rpcCaller) {
+    public NetcomOld(Config config, OneTImeConnecter oneTImeConnecter, RpcCaller rpcCaller) {
         this.config = config;
-        this.connector = connector;
+        this.oneTImeConnecter = oneTImeConnecter;
         this.rpcCaller = rpcCaller;
     }
 
@@ -34,7 +34,7 @@ public class NetcomOld implements Broker {
         for (int i = 0; i < 3; i++) {
             System.out.println("Connecting to " + config.RABBITMQ_HOST + " (attempt " + i + ")");
 
-            connectAttempt = connector.connect(config.RABBITMQ_HOST, 5000);
+            connectAttempt = oneTImeConnecter.connect(config.RABBITMQ_HOST, 5000);
 
             if (connectAttempt.succeeded()) {
                 System.out.println("Connected.");

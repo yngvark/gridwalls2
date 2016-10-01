@@ -8,22 +8,12 @@ public class ConnectSucceeded implements ConnectAttempt {
     }
 
     @Override
-    public boolean succeeded() {
-        return true;
-    }
-
-    @Override
-    public boolean failed() {
-        return false;
-    }
-
-    @Override
     public String getConnectFailedDetails() {
         return "";
     }
 
     @Override
-    public ConnectionWrapper getConnection() {
-        return connection;
+    public RpcResult rpcCall(String rpcQueueName, String message) {
+        return null;
     }
 }
