@@ -40,6 +40,7 @@ public class ProcessRunner {
     }
 
     private void exit() {
+        System.out.println("Exiting normally");
         executorServiceExiter.exitGracefully(executorService);
         netcom.disconnectIfConnected();
     }

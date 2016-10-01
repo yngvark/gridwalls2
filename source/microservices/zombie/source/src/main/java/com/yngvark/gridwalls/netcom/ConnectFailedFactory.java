@@ -9,10 +9,6 @@ public class ConnectFailedFactory {
         this.messageFormatter = messageFormatter;
     }
 
-    public ConnectSucceeded succeeded(ConnectionWrapper connectionWrapper) {
-        return new ConnectSucceeded(connectionWrapper);
-    }
-
     public ConnectFailed failed(String reason) {
         return new ConnectFailed(messageFormatter, reason);
     }

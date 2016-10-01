@@ -9,7 +9,7 @@ public class ConnectSucceeded implements ConnectAttempt {
 
     @Override
     public boolean succeeded() {
-        return false;
+        return true;
     }
 
     @Override

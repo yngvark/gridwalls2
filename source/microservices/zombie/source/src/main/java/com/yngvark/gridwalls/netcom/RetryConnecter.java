@@ -3,12 +3,14 @@ package com.yngvark.gridwalls.netcom;
 import com.yngvark.gridwalls.microservices.zombie.Config;
 import com.yngvark.gridwalls.netcom.rabbitmq.OneTimeConnecter;
 
+import java.util.Optional;
+
 public class RetryConnecter {
     private final Config config;
     private final OneTimeConnecter oneTimeConnecter;
     private final ConnectFailedFactory connectFailedFactory;
 
-    private ConnectionWrapper connectionWrapper;
+    private Optional<ConnectionWrapper> connectionWrapperOptional = Optional.empty();
 
     public RetryConnecter(Config config, OneTimeConnecter oneTimeConnecter,
             ConnectFailedFactory connectFailedFactory) {
@@ -27,7 +29,7 @@ public class RetryConnecter {
 
             if (connectAttempt.succeeded()) {
                 System.out.println("Connected.");
-                connectionWrapper = connectAttempt.getConnectionWrapper();
+                connectionWrapperOptional = Optional.of(connectAttempt.getConnectionWrapper());
                 return connectAttempt;
             } else {
                 System.out.println("Cannot connect. Reason: " + connectAttempt.getConnectFailedDetails());
@@ -38,6 +40,6 @@ public class RetryConnecter {
     }
 
     public void disconnectIfConnected() {
-        connectionWrapper.disconnectIfConnected();
+        connectionWrapperOptional.ifPresent((connectionWrapper) -> connectionWrapper.disconnectIfConnected());
     }
 }

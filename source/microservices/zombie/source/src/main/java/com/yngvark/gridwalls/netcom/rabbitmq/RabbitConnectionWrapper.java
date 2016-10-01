@@ -1,5 +1,6 @@
 package com.yngvark.gridwalls.netcom.rabbitmq;
 
+import com.rabbitmq.client.AlreadyClosedException;
 import com.rabbitmq.client.Connection;
 import com.yngvark.gridwalls.microservices.zombie.infrastructure.StackTracePrinter;
 import com.yngvark.gridwalls.netcom.ConnectionWrapper;
@@ -27,6 +28,8 @@ class RabbitConnectionWrapper implements ConnectionWrapper<Connection> {
             connection.close();
         } catch (IOException e) {
             stackTracePrinter.print("Could not disconnect.", e);
+        } catch (AlreadyClosedException e) {
+            System.out.println("Connection already closed. Details: " + e.getMessage());
         }
     }
 

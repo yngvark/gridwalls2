@@ -8,6 +8,8 @@ import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class GameConfigFetcher {
     private static final String RPC_QUEUE_NAME = "rpc_queue";
@@ -34,8 +36,8 @@ public class GameConfigFetcher {
         RpcResult gameConfigRpcResult;
         try {
             System.out.println("Fetching game configuration.");
-            gameConfigRpcResult = rpcFuture.get();
-        } catch (InterruptedException | ExecutionException | CancellationException e) {
+            gameConfigRpcResult = rpcFuture.get(5, TimeUnit.SECONDS);
+        } catch (InterruptedException | ExecutionException | CancellationException | TimeoutException e) {
             stackTracePrinter.print("Error while getting game configuration. Exiting", e);
             return Optional.empty();
         }
