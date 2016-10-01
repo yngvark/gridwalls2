@@ -3,14 +3,14 @@ package com.yngvark.gridwalls.microservices.zombie.use_later;
 import com.google.inject.Inject;
 import com.yngvark.gridwalls.microservices.zombie.gamelogic.GameConfig;
 import com.yngvark.gridwalls.microservices.zombie.infrastructure.ICanAbortOnSignal;
-import com.yngvark.gridwalls.microservices.zombie.netcom.ConnectResult;
+import com.yngvark.gridwalls.microservices.zombie.netcom.ConnectAttempt;
 import com.yngvark.gridwalls.netcom.NetCom;
 
 import java.util.concurrent.Future;
 
 public class AbortableGameConfigFetcher implements ICanAbortOnSignal {
     private final NetCom netCom;
-    private Future<ConnectResult> subscribeFuture;
+    private Future<ConnectAttempt> subscribeFuture;
 
     @Inject
     public AbortableGameConfigFetcher(NetCom netCom) {

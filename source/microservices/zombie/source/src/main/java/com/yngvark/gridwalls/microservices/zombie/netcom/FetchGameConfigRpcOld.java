@@ -9,12 +9,12 @@ import com.yngvark.gridwalls.microservices.zombie.infrastructure.ICanAbortOnSign
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
-class GameConfigFetcher implements ICanAbortOnSignal {
+public class FetchGameConfigRpcOld implements ICanAbortOnSignal {
     private static final String RPC_QUEUE_NAME = "rpc_queue";
 
     private Channel channel;
 
-    public GameConfig getGameConfigFromServer(Connection connection) throws IOException, TimeoutException {
+    public GameConfig getGameConfigFromServer() throws IOException, TimeoutException {
         channel = connection.createChannel();
         channel.queueDeclare(RPC_QUEUE_NAME, true, false, true, null);
 
@@ -26,23 +26,6 @@ class GameConfigFetcher implements ICanAbortOnSignal {
         rpc.close();
         channel.close();
         return parseGameConfig(gameConfigTxt);
-    }
-
-    private GameConfig parseGameConfig(String serialized) {
-        // "[GameInfo] mapHeight=10 mapWidth=10"
-        int heightStart = serialized.indexOf("mapHeight=");
-        int widthStart = serialized.indexOf("mapWidth=");
-
-        String heightTxt = serialized.substring(heightStart + "mapHeight=".length(), widthStart - 1);
-        String widthTxt = serialized.substring(widthStart + "mapWidth=".length());
-
-        int mapHeight = Integer.parseInt(heightTxt);
-        int mapWidth = Integer.parseInt(widthTxt);
-
-        return GameConfig.builder()
-                .mapHeight(mapHeight)
-                .mapWidth(mapWidth)
-                .build();
     }
 
     @Override

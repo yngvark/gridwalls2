@@ -1,14 +1,13 @@
 package com.yngvark.gridwalls.microservices.zombie.gamelogic;
 
-import com.rabbitmq.client.Connection;
-import com.yngvark.gridwalls.microservices.zombie.infrastructure.ICanAbortOnSignal;
+public class GameLoop {
+    private ZombiesController zombiesController;
 
-public class GameLoop implements ICanAbortOnSignal {
-    public void run(Connection connection) {
-
-    }
-
-    public void startAborting() {
-
+    public void run(GameConfig gameConfig) {
+        int i = 0;
+        while (i < 10) {
+            i++;
+            zombiesController.nextTurn();
+        }
     }
 }

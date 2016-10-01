@@ -1,17 +1,20 @@
 package com.yngvark.gridwalls.microservices.zombie.netcom;
 
-import com.rabbitmq.client.Connection;
+public class ConnectSucceeded implements ConnectAttempt {
+    private ConnectionWrapper connection;
 
-public class ConnectSucceeded implements ConnectResult {
-    private Connection connection;
-
-    public ConnectSucceeded(Connection connection) {
+    public ConnectSucceeded(ConnectionWrapper connection) {
         this.connection = connection;
     }
 
     @Override
-    public boolean success() {
+    public boolean succeeded() {
         return true;
+    }
+
+    @Override
+    public boolean failed() {
+        return false;
     }
 
     @Override
@@ -20,7 +23,7 @@ public class ConnectSucceeded implements ConnectResult {
     }
 
     @Override
-    public Connection getConnection() {
+    public ConnectionWrapper getConnection() {
         return connection;
     }
 }

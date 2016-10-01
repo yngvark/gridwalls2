@@ -1,5 +1,6 @@
 package zombie.lib;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.concurrent.TimeUnit;
 
@@ -10,12 +11,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * Thanks to Martijn Courteaux, http://stackoverflow.com/users/155137/martijn-courteaux
  */
 public class ProcessKiller {
-    public static void killUnixProcess(Process process) throws Exception {
+    public static void killUnixProcess(Process process) throws NoSuchFieldException, IllegalAccessException, IOException, InterruptedException {
         int pid = getUnixPID(process);
         Runtime.getRuntime().exec("kill " + pid).waitFor();
     }
 
-    private static int getUnixPID(Process process) throws Exception {
+    private static int getUnixPID(Process process) throws NoSuchFieldException, IllegalAccessException {
         if (process.getClass().getName().equals("java.lang.UNIXProcess")) {
             Class cl = process.getClass();
             Field field = cl.getDeclaredField("pid");

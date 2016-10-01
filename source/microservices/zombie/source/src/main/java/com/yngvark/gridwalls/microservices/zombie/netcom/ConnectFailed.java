@@ -1,8 +1,6 @@
 package com.yngvark.gridwalls.microservices.zombie.netcom;
 
-import com.rabbitmq.client.Connection;
-
-public class ConnectFailed implements ConnectResult {
+public class ConnectFailed implements ConnectAttempt {
     private String reason;
 
     public ConnectFailed(String reason) {
@@ -10,7 +8,7 @@ public class ConnectFailed implements ConnectResult {
     }
 
     @Override
-    public boolean success() {
+    public boolean succeeded() {
         return false;
     }
 
@@ -20,7 +18,7 @@ public class ConnectFailed implements ConnectResult {
     }
 
     @Override
-    public Connection getConnection() {
+    public ConnectionWrapper getConnection() {
         throw new RuntimeException("Cannot get the connection of a failed connection attempt.");
     }
 }

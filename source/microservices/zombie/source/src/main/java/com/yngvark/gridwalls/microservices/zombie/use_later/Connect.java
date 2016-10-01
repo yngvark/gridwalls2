@@ -1,7 +1,6 @@
-package com.yngvark.gridwalls.microservices.zombie.commands;
+package com.yngvark.gridwalls.microservices.zombie.use_later;
 
-import com.yngvark.gridwalls.microservices.zombie.netcom.BrokerConnecter;
-import com.yngvark.gridwalls.microservices.zombie.netcom.ConnectResult;
+import com.yngvark.gridwalls.microservices.zombie.netcom.ConnectAttempt;
 
 public class Connect implements Command {
     private final BrokerConnecter brokerConnecter;
@@ -34,9 +33,9 @@ public class Connect implements Command {
 
         String host = arguments[0];
         int timeoutMilliseconds = 5000;
-        ConnectResult connectResult = brokerConnecter.connect(host, timeoutMilliseconds);
+        ConnectAttempt connectAttempt = brokerConnecter.connect(host, timeoutMilliseconds);
 
-        if (!connectResult.success()) {
+        if (!connectAttempt.succeeded()) {
             System.out.println("Connect failed.");
         }
 
