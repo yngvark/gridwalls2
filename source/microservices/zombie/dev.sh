@@ -5,12 +5,6 @@ if [[ $1 == "-b" ]]; then
 	gradle build installDist
 	cd ..
 	cp -r source/build/install/zombie container/app
-
-	echo --- Creating pipes for testing. ---
-	rm -f container/app/in_pipe
-	rm -f container/app/out_pipe
-	mkfifo container/app/in_pipe
-	mkfifo container/app/out_pipe
 	exit;
 fi
 

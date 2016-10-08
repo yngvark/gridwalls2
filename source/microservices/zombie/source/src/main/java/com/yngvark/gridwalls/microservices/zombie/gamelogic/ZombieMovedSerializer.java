@@ -16,7 +16,7 @@ public class ZombieMovedSerializer {
     }
 
     public String serialize(ZombieMoved zombieMoved) {
-        String targetCoordinate = CoordinateSerializer.serialize(zombieMoved.getTargetCoordinate());
+        String targetCoordinate = coordinateSerializer.serialize(zombieMoved.getTargetCoordinate());
         return prefix + "id=" + zombieMoved.getId() + " tc=" + targetCoordinate;
     }
 
@@ -28,7 +28,7 @@ public class ZombieMovedSerializer {
         String coordsTxt = serialized.substring(tcStart + 3);
 
         UUID id = UUID.fromString(idTxt);
-        Coordinate targetCoordinate = CoordinateSerializer.deserialize(coordsTxt);
+        Coordinate targetCoordinate = coordinateSerializer.deserialize(coordsTxt);
         return new ZombieMoved(id, targetCoordinate);
     }
 }

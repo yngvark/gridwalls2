@@ -3,7 +3,6 @@ package com.yngvark.gridwalls.netcom.rabbitmq;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.RpcClient;
-import com.yngvark.gridwalls.netcom.ConnectionWrapper;
 import com.yngvark.gridwalls.netcom.RpcCaller;
 import com.yngvark.gridwalls.netcom.RpcFailed;
 import com.yngvark.gridwalls.netcom.RpcResult;
@@ -13,9 +12,9 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
-public class RabbitRpcCaller implements RpcCaller<Connection> {
+public class RabbitRpcCaller implements RpcCaller<RabbitConnectionWrapper> {
     @Override
-    public RpcResult rpcCall(ConnectionWrapper<Connection> connectionWrapper, String rpcQueueName, String message) {
+    public RpcResult rpcCall(RabbitConnectionWrapper connectionWrapper, String rpcQueueName, String message) {
         Connection connection = connectionWrapper.getConnection();
 
         try {

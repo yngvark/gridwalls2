@@ -1,14 +1,9 @@
 package com.yngvark.gridwalls.netcom;
 
-import com.yngvark.gridwalls.microservices.zombie.utils.MessageFormatter;
-
 public class ConnectFailed implements ConnectAttempt {
-    private final MessageFormatter messageFormatter;
+    private final String connectFailedDetails;
 
-    private String connectFailedDetails;
-
-    public ConnectFailed(MessageFormatter messageFormatter, String connectFailedDetails) {
-        this.messageFormatter = messageFormatter;
+    public ConnectFailed(String connectFailedDetails) {
         this.connectFailedDetails = connectFailedDetails;
     }
 

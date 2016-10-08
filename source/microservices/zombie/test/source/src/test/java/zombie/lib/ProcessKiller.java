@@ -13,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class ProcessKiller {
     public static void killUnixProcess(Process process) throws NoSuchFieldException, IllegalAccessException, IOException, InterruptedException {
         int pid = getUnixPID(process);
+        System.out.println("Killing process with pid: " + pid);
         Runtime.getRuntime().exec("kill " + pid).waitFor();
     }
 
@@ -28,8 +29,8 @@ public class ProcessKiller {
         }
     }
 
-    public void exitAndAssertExited(Process process) throws InterruptedException {
-        boolean processHasExited = process.waitFor(3, TimeUnit.SECONDS);
+    public static void waitForExitAndAssertExited(Process process, long timeout, TimeUnit timeUnit) throws InterruptedException {
+        boolean processHasExited = process.waitFor(timeout, timeUnit);
         assertTrue(processHasExited);
     }
 }

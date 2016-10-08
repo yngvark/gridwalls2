@@ -7,7 +7,7 @@ import com.yngvark.gridwalls.netcom.ConnectionWrapper;
 
 import java.io.IOException;
 
-class RabbitConnectionWrapper implements ConnectionWrapper<Connection> {
+class RabbitConnectionWrapper implements ConnectionWrapper {
     private final StackTracePrinter stackTracePrinter;
 
     private Connection connection;
@@ -17,7 +17,6 @@ class RabbitConnectionWrapper implements ConnectionWrapper<Connection> {
         this.connection = connection;
     }
 
-    @Override
     public Connection getConnection() {
         return connection;
     }

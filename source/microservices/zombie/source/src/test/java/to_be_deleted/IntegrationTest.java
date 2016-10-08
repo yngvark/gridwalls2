@@ -1,4 +1,4 @@
-package com.yngvark.gridwalls.microservices.zombie;
+package to_be_deleted;
 
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;

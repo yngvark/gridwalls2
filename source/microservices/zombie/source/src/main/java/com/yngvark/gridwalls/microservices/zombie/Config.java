@@ -1,5 +1,10 @@
 package com.yngvark.gridwalls.microservices.zombie;
 
+import lombok.Builder;
+import lombok.Getter;
+
+@Builder
+@Getter
 public class Config {
-    public final String RABBITMQ_HOST = "rabbithost";
+    private final String brokerHostname;
 }

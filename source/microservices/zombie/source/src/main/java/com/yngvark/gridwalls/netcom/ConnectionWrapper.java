@@ -1,6 +1,5 @@
 package com.yngvark.gridwalls.netcom;
 
-public interface ConnectionWrapper<T> {
-    T getConnection();
+public interface ConnectionWrapper {
     void disconnectIfConnected();
 }
