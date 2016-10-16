@@ -18,6 +18,11 @@ import java.util.concurrent.Executors;
 public class Main {
     public static void main(String[] args) {
         System.out.println("Starting zombie 0.0.1.alpha");
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         createGameRunner();
     }
 

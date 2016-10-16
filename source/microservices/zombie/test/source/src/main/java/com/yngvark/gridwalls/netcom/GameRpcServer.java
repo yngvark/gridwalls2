@@ -73,10 +73,10 @@ public class GameRpcServer implements ICanRunAndStop {
     }
 
     private void initQueue() throws IOException {
-        Map<String, Object> standardArgs = null;
         boolean queueDurable = false;
-        boolean queueExclusive = true;
+        boolean queueExclusive = false;
         boolean queueAutoDelete = true;
+        Map<String, Object> standardArgs = null;
         channel.queueDeclare(queueName, queueDurable, queueExclusive, queueAutoDelete, standardArgs);
     }
 

@@ -10,6 +10,7 @@ import com.yngvark.gridwalls.netcom.RpcSucceeded;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
 public class RabbitRpcCaller implements RpcCaller<RabbitConnectionWrapper> {
@@ -27,9 +28,16 @@ public class RabbitRpcCaller implements RpcCaller<RabbitConnectionWrapper> {
     private RpcResult tryToRpcCall(Connection connection, String rpcQueueName, String message)
             throws IOException, TimeoutException {
         Channel channel = connection.createChannel();
-        channel.queueDeclare(rpcQueueName, true, false, true, null);
 
-        RpcClient rpc = new RpcClient(channel, "", rpcQueueName);
+        boolean queueDurable = false;
+        boolean queueExclusive = false;
+        boolean queueAutoDelete = true;
+        Map<String, Object> standardArgs = null;
+        channel.queueDeclare(rpcQueueName, queueDurable, queueExclusive, queueAutoDelete, standardArgs);
+
+        String exchange = "";
+        RpcClient rpc = new RpcClient(channel, exchange, rpcQueueName);
+
         System.out.println("Receiving game config.");
         String gameConfigTxt = rpc.stringCall(message);
         System.out.println("Response: " + gameConfigTxt);

@@ -12,6 +12,7 @@ import com.yngvark.gridwalls.netcom.ThreadedRunner;
 import org.junit.jupiter.api.Test;
 import zombie.lib.ProcessKiller;
 import zombie.lib.ProcessStarter;
+import zombie.lib.StdOutThreadedListener;
 
 import java.io.IOException;
 import java.util.Map;
@@ -26,7 +27,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class QueueBasedTest {
     @Test
-    public void should_start_game_after_receiving_gameconfig() throws IOException, TimeoutException, InterruptedException {
+    public void should_start_game_after_receiving_gameconfig()
+            throws IOException, TimeoutException, InterruptedException, NoSuchFieldException, IllegalAccessException {
         // Given
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost("rabbithost");
@@ -49,10 +51,11 @@ public class QueueBasedTest {
         threadedGameInfoRequestHandler.runInNewThread();
 
         // Listen for events from client.
+        String zombieMovedQueueName = "zombie_moved_queue";
         Channel eventsFromClientChannel = connection.createChannel();
         eventsFromClientChannel.exchangeDeclare("ZombieMoved", "fanout", exchangeDurable, exchangeAutoDelete, standardArgs);
-        eventsFromClientChannel.queueDeclare("zombie_moved_queue", queueDurable, queueExclusive, queueAutoDelete, standardArgs);
-        eventsFromClientChannel.queueBind("zombie_moved_queue", "ZombieMoved", "");
+        eventsFromClientChannel.queueDeclare(zombieMovedQueueName, queueDurable, queueExclusive, queueAutoDelete, standardArgs);
+        eventsFromClientChannel.queueBind(zombieMovedQueueName, "ZombieMoved", "");
 
         BlockingQueue<String> blockingQueue = new ArrayBlockingQueue<>(1);
 
@@ -71,16 +74,25 @@ public class QueueBasedTest {
             }
         };
 
+        System.out.println("Start basic consume.");
+        eventsFromClientChannel.basicConsume(zombieMovedQueueName, true /* autoAck */, consumer);
+
         // When
-        Process process = new ProcessStarter().startProcess(Config.PATH_TO_APP);
+        Process process = ProcessStarter.startProcess(Config.PATH_TO_APP);
+
+        StdOutThreadedListener stdOutThreadedListener = new StdOutThreadedListener();
+        stdOutThreadedListener.listen(process.getInputStream());
+        stdOutThreadedListener.waitFor("Receiving game config.", 2000);
 
         // Then
-        String event = blockingQueue.take();
+        System.out.println("Waiting for zombie move event.");
+        String event = blockingQueue.take(); // TODO putt i tråd med timeout
         System.out.println("Event: " + event);
 
         // Finally
         threadedGameInfoRequestHandler.stop();
         connection.close();
+        ProcessKiller.killUnixProcess(process);
         ProcessKiller.waitForExitAndAssertExited(process, 3, TimeUnit.SECONDS);
     }
 
