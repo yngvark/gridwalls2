@@ -1,18 +1,11 @@
 package zombie;
 
 import org.junit.jupiter.api.Test;
-import to_be_deleted.CommandExecutor;
 import zombie.lib.ProcessKiller;
 import zombie.lib.ProcessStarter;
-import zombie.lib.StdOutThreadedListener;
+import zombie.lib.InputStreamListener;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -23,16 +16,17 @@ public class ProcessTest {
         // Given
         Process process = ProcessStarter.startProcess(Config.PATH_TO_APP);
 
-        StdOutThreadedListener stdOutThreadedListener = new StdOutThreadedListener();
-        stdOutThreadedListener.listen(process.getInputStream());
-        stdOutThreadedListener.waitFor("Receiving game config.", 2000);
+        InputStreamListener inputStreamListener = new InputStreamListener();
+        inputStreamListener.listenInNewThreadOn(process.getInputStream());
+        inputStreamListener.listenInNewThreadOn(process.getErrorStream());
+        inputStreamListener.waitFor("Receiving game config.", 2, TimeUnit.SECONDS);
 
         // When
         ProcessKiller.killUnixProcess(process);
 
         // Then
         ProcessKiller.waitForExitAndAssertExited(process, 3, TimeUnit.SECONDS);
-        stdOutThreadedListener.stopListening();
+        inputStreamListener.stopListening();
     }
 }
 

@@ -6,6 +6,7 @@ import com.rabbitmq.client.RpcServer;
 import com.rabbitmq.client.StringRpcServer;
 
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
@@ -36,19 +37,19 @@ public class GameRpcServer implements ICanRunAndStop {
             throw new RuntimeException("Cannot run the server more than once.");
         runStarted = true;
 
-        doRun();
+        tryToRun();
     }
 
-    private void doRun() {
+    private void tryToRun() {
         try {
-            tryToRun();
+            doRun();
         } catch (IOException e) {
             e.printStackTrace();
             stop();
         }
     }
 
-    private void tryToRun() throws IOException {
+    private void doRun() throws IOException {
         channel = connection.createChannel();
         initQueue();
         rpcServer = initRpcServer();
@@ -58,26 +59,26 @@ public class GameRpcServer implements ICanRunAndStop {
         System.out.println("RPC server for queue '" + queueName + "' exited mainloop.");
     }
 
+    private void initQueue() throws IOException {
+        boolean queueDurable = false;
+        boolean queueExclusive = false;
+        boolean queueAutoDelete = false;
+        Map<String, Object> standardArgs = null;
+        channel.queueDeclare(queueName, queueDurable, queueExclusive, queueAutoDelete, standardArgs);
+    }
+
     private StringRpcServer initRpcServer() throws IOException {
         return new StringRpcServer(channel, queueName) {
             @Override
             public String handleStringCall(String request) {
-                System.out.println("Received request: " + request);
+                System.out.println(MessageFormat.format("{0} Received request: {1} ", getClass().getSimpleName(), request));
 
                 String response = rpcRequestHandler.handle(request);
-                System.out.println("Response: " + response);
+                System.out.println(MessageFormat.format("{0} Response: {1} ", getClass().getSimpleName(), response));
 
                 return response;
             }
         };
-    }
-
-    private void initQueue() throws IOException {
-        boolean queueDurable = false;
-        boolean queueExclusive = false;
-        boolean queueAutoDelete = true;
-        Map<String, Object> standardArgs = null;
-        channel.queueDeclare(queueName, queueDurable, queueExclusive, queueAutoDelete, standardArgs);
     }
 
     public void stop() {
@@ -96,9 +97,7 @@ public class GameRpcServer implements ICanRunAndStop {
         if (rpcServer != null)
             rpcServer.terminateMainloop();
 
-        if (channel.isOpen())
-            channel.close();
-
+        channel.close();
         channel = null;
     }
 }

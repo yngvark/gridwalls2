@@ -31,18 +31,18 @@ public class RabbitRpcCaller implements RpcCaller<RabbitConnectionWrapper> {
 
         boolean queueDurable = false;
         boolean queueExclusive = false;
-        boolean queueAutoDelete = true;
+        boolean queueAutoDelete = false;
         Map<String, Object> standardArgs = null;
         channel.queueDeclare(rpcQueueName, queueDurable, queueExclusive, queueAutoDelete, standardArgs);
 
         String exchange = "";
-        RpcClient rpc = new RpcClient(channel, exchange, rpcQueueName);
+        RpcClient rpcClient = new RpcClient(channel, exchange, rpcQueueName);
 
         System.out.println("Receiving game config.");
-        String gameConfigTxt = rpc.stringCall(message);
+        String gameConfigTxt = rpcClient.stringCall(message);
         System.out.println("Response: " + gameConfigTxt);
 
-        rpc.close();
+        rpcClient.close();
         channel.close();
 
         return new RpcSucceeded(gameConfigTxt);

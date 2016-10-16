@@ -1,23 +1,23 @@
 package com.yngvark.gridwalls.netcom;
 
-import com.rabbitmq.client.Channel;
-import com.yngvark.gridwalls.core.CoordinateSerializer;
 import com.yngvark.gridwalls.microservices.zombie.gamelogic.ZombieMoved;
 import com.yngvark.gridwalls.microservices.zombie.gamelogic.ZombieMovedSerializer;
 
 import java.io.IOException;
 
 public class Publisher {
-    private ZombieMovedSerializer zombieMovedSerializer = new ZombieMovedSerializer(new CoordinateSerializer());
+    private ZombieMovedSerializer zombieMovedSerializer;
+    private Netcom netcom;
 
-    public Publisher(ZombieMovedSerializer zombieMovedSerializer) {
+    public Publisher(ZombieMovedSerializer zombieMovedSerializer, Netcom netcom) {
         this.zombieMovedSerializer = zombieMovedSerializer;
+        this.netcom = netcom;
     }
 
-    public void publishEvent(ZombieMoved event, Channel channel) throws IOException {
-        String message = zombieMovedSerializer.serialize(event);
-        System.out.println("Sending message: " + message);
+    public void publishEvent(ZombieMoved event) throws IOException {
+        String zombieMovedEvent = zombieMovedSerializer.serialize(event);
+        System.out.println("Sending message: " + zombieMovedEvent);
 
-        channel.basicPublish("ZombieMoved", "", null, message.getBytes());
+        netcom.publish("ZombieMoved", zombieMovedEvent);
     }
 }

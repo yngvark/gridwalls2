@@ -1,14 +1,20 @@
 package com.yngvark.gridwalls.microservices.zombie;
 
+import com.yngvark.gridwalls.core.CoordinateSerializer;
 import com.yngvark.gridwalls.microservices.zombie.gamelogic.GameLoop;
 import com.yngvark.gridwalls.microservices.zombie.gamelogic.GameRunner;
+import com.yngvark.gridwalls.microservices.zombie.gamelogic.ZombieFactory;
+import com.yngvark.gridwalls.microservices.zombie.gamelogic.ZombieMovedSerializer;
+import com.yngvark.gridwalls.microservices.zombie.gamelogic.ZombiesController;
 import com.yngvark.gridwalls.microservices.zombie.infrastructure.ExecutorServiceExiter;
+import com.yngvark.gridwalls.microservices.zombie.infrastructure.GameErrorHandler;
 import com.yngvark.gridwalls.microservices.zombie.infrastructure.ProcessRunner;
 import com.yngvark.gridwalls.microservices.zombie.infrastructure.StackTracePrinter;
 import com.yngvark.gridwalls.netcom.GameConfigDeserializer;
 import com.yngvark.gridwalls.netcom.GameConfigFetcher;
 import com.yngvark.gridwalls.netcom.Netcom;
 import com.yngvark.gridwalls.netcom.NetcomBuilder;
+import com.yngvark.gridwalls.netcom.Publisher;
 import com.yngvark.gridwalls.netcom.rabbitmq.RabbitBrokerConnecter;
 import com.yngvark.gridwalls.netcom.rabbitmq.RabbitRpcCaller;
 
@@ -18,11 +24,6 @@ import java.util.concurrent.Executors;
 public class Main {
     public static void main(String[] args) {
         System.out.println("Starting zombie 0.0.1.alpha");
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         createGameRunner();
     }
 
@@ -46,7 +47,14 @@ public class Main {
                                 netcom,
                                 new GameConfigDeserializer()
                         ),
-                        new GameLoop()
+                        new GameLoop(
+                                new ZombiesController(
+                                        new ZombieFactory(),
+                                        new Publisher(
+                                                new ZombieMovedSerializer(new CoordinateSerializer()),
+                                                netcom)
+                                ),
+                                new GameErrorHandler())
                 ),
                 netcom
         );

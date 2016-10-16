@@ -12,7 +12,7 @@ import com.yngvark.gridwalls.netcom.ThreadedRunner;
 import org.junit.jupiter.api.Test;
 import zombie.lib.ProcessKiller;
 import zombie.lib.ProcessStarter;
-import zombie.lib.StdOutThreadedListener;
+import zombie.lib.InputStreamListener;
 
 import java.io.IOException;
 import java.util.Map;
@@ -40,13 +40,11 @@ public class QueueBasedTest {
         boolean exchangeAutoDelete = true;
 
         boolean queueDurable = false;
-        boolean queueExclusive = true;
+        boolean queueExclusive = false;
         boolean queueAutoDelete = true;
 
         // Listen for GameInfo RPC-calls from client.
-        GameRpcServer gameInfoRequestHandler = new GameRpcServer(connection, "rpc_queue", (String request) -> {
-            return "[GameInfo] mapHeight=10 mapWidth=10";
-        });
+        GameRpcServer gameInfoRequestHandler = new GameRpcServer(connection, "rpc_queue", (String request) -> "[GameInfo] mapHeight=10 mapWidth=10");
         ThreadedRunner threadedGameInfoRequestHandler = new ThreadedRunner(gameInfoRequestHandler);
         threadedGameInfoRequestHandler.runInNewThread();
 
@@ -74,15 +72,18 @@ public class QueueBasedTest {
             }
         };
 
-        System.out.println("Start basic consume.");
+        System.out.println("Consuming messages for queue: " + zombieMovedQueueName);
         eventsFromClientChannel.basicConsume(zombieMovedQueueName, true /* autoAck */, consumer);
 
         // When
         Process process = ProcessStarter.startProcess(Config.PATH_TO_APP);
 
-        StdOutThreadedListener stdOutThreadedListener = new StdOutThreadedListener();
-        stdOutThreadedListener.listen(process.getInputStream());
-        stdOutThreadedListener.waitFor("Receiving game config.", 2000);
+        InputStreamListener stdoutListener = new InputStreamListener();
+        stdoutListener.listenInNewThreadOn(process.getInputStream());
+        stdoutListener.waitFor("Receiving game config.", 5, TimeUnit.SECONDS);
+
+        InputStreamListener stderrListener = new InputStreamListener();
+        stderrListener.listenInNewThreadOn(process.getErrorStream());
 
         // Then
         System.out.println("Waiting for zombie move event.");
@@ -94,6 +95,19 @@ public class QueueBasedTest {
         connection.close();
         ProcessKiller.killUnixProcess(process);
         ProcessKiller.waitForExitAndAssertExited(process, 3, TimeUnit.SECONDS);
+
+        assertTrue(event.startsWith("ZombieMoved"));
+    }
+
+    @Test
+    public void arne() throws InterruptedException {
+        Object a = new Object();
+        long start = System.nanoTime();
+        synchronized (a) {
+            a.wait(500);
+        }
+        long end = System.nanoTime();
+        System.out.println("Wait time: " + (end - start) + " " + ((end - start) / Math.pow(10, 9)));
     }
 
     @Test

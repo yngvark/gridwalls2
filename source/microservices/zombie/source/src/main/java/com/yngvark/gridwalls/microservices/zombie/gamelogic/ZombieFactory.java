@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-class ZombieFactory {
+public class ZombieFactory {
     public List<Zombie> createZombies(int mapHeight, int mapWidth) {
         List<Zombie> zombies = new ArrayList<>();
         MapCoordinates mapCoordinates = new MapCoordinates(mapHeight, mapWidth);

@@ -1,33 +1,27 @@
 package com.yngvark.gridwalls.microservices.zombie.gamelogic;
 
-import com.rabbitmq.client.Channel;
 import com.yngvark.gridwalls.microservices.zombie.infrastructure.GameErrorHandler;
 import com.yngvark.gridwalls.netcom.Publisher;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ZombiesController {
     private final ZombieFactory zombieFactory;
     private final Publisher publisher;
-    private final Channel channel;
-    private final GameErrorHandler gameErrorHandler;
 
     private List<Zombie> zombies = new ArrayList<>();
-
     private boolean initialized;
 
-    public ZombiesController(ZombieFactory zombieFactory, Publisher publisher, Channel channel,
-            GameErrorHandler gameErrorHandler) {
+    public ZombiesController(ZombieFactory zombieFactory, Publisher publisher) {
         this.zombieFactory = zombieFactory;
         this.publisher = publisher;
-        this.channel = channel;
-        this.gameErrorHandler = gameErrorHandler;
     }
 
     public void nextTurn() {
         if (!initialized) {
-            init();
+            createZombies();
             initialized = true;
         }
 
@@ -36,17 +30,17 @@ public class ZombiesController {
         }
     }
 
-    private void init() {
+    private void createZombies() {
         zombies = zombieFactory.createZombies(10, 10);
     }
 
     private void runNextTurnOn(Zombie zombie) {
+        System.out.println("zombie1.nextTurn()");
+        ZombieMoved event = zombie.nextTurn();
         try {
-            System.out.println("zombie1.nextTurn()");
-            ZombieMoved event = zombie.nextTurn();
-            publisher.publishEvent(event, channel);
-        } catch (Throwable e) {
-            gameErrorHandler.handle(e);
+            publisher.publishEvent(event);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }

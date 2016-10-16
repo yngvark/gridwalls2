@@ -1,5 +1,7 @@
 package com.yngvark.gridwalls.microservices.zombie.infrastructure;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
+
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -16,7 +18,7 @@ public class GameErrorHandler {
 
         StringBuilder stringBuilder = new StringBuilder();
         for (Throwable throwable : throwables) {
-            stringBuilder.append(throwable.getStackTrace().toString());
+            stringBuilder.append(ExceptionUtils.getStackTrace(throwable));
         }
 
         return stringBuilder.toString();

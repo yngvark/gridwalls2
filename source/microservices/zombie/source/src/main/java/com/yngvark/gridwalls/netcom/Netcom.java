@@ -1,7 +1,5 @@
 package com.yngvark.gridwalls.netcom;
 
-import lombok.Builder;
-
 public class Netcom {
     private final RetryConnecter retryConnecter;
     private final RpcCaller rpcCaller;
