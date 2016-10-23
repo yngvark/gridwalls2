@@ -5,4 +5,9 @@ public class PublishSucceeded implements PublishResult{
     public boolean succeeded() {
         return true;
     }
+
+    @Override
+    public String getFailedInfo() {
+        return "No failure info available for succeeded publish.";
+    }
 }

@@ -1,7 +1,7 @@
 package com.yngvark.gridwalls.netcom.publish;
 
-public class Publisher<T> {
-    public PublishResult publish(String queue, String message) {
-        return null;
-    }
+import com.yngvark.gridwalls.netcom.connection.ConnectionWrapper;
+
+public interface Publisher<T extends ConnectionWrapper> {
+    PublishResult publish(T connectionWrapper, String queue, String message);
 }

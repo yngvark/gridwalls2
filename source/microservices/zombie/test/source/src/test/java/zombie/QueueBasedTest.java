@@ -55,7 +55,7 @@ public class QueueBasedTest {
         eventsFromClientChannel.queueDeclare(zombieMovedQueueName, queueDurable, queueExclusive, queueAutoDelete, standardArgs);
         eventsFromClientChannel.queueBind(zombieMovedQueueName, "ZombieMoved", "");
 
-        BlockingQueue<String> blockingQueue = new ArrayBlockingQueue<>(1);
+        BlockingQueue<String> blockingBrokerQueue = new ArrayBlockingQueue<>(1);
 
         Consumer consumer = new DefaultConsumer(eventsFromClientChannel) {
             @Override
@@ -65,7 +65,7 @@ public class QueueBasedTest {
                 System.out.println(" [x] Received '" + message + "'");
 
                 try {
-                    blockingQueue.put(message);
+                    blockingBrokerQueue.put(message);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -78,6 +78,7 @@ public class QueueBasedTest {
         // When
         Process process = ProcessStarter.startProcess(Config.PATH_TO_APP);
 
+        // Get process output
         InputStreamListener stdoutListener = new InputStreamListener();
         stdoutListener.listenInNewThreadOn(process.getInputStream());
         stdoutListener.waitFor("Receiving game config.", 5, TimeUnit.SECONDS);
@@ -85,9 +86,9 @@ public class QueueBasedTest {
         InputStreamListener stderrListener = new InputStreamListener();
         stderrListener.listenInNewThreadOn(process.getErrorStream());
 
-        // Then
+        // Read queue.
         System.out.println("Waiting for zombie move event.");
-        String event = blockingQueue.take(); // TODO putt i tråd med timeout
+        String event = blockingBrokerQueue.take(); // TODO putt i tråd med timeout
         System.out.println("Event: " + event);
 
         // Finally
@@ -98,6 +99,10 @@ public class QueueBasedTest {
 
         assertTrue(event.startsWith("ZombieMoved"));
     }
+
+    altså.. RetryConnecter prøve å connecte _hver_ gang.
+
+
 
     @Test
     public void arne() throws InterruptedException {

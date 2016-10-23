@@ -43,7 +43,7 @@ public class GameConfigFetcher {
             return Optional.empty();
         }
 
-        if (gameConfigRpcResult.failed()) {
+        if (!gameConfigRpcResult.succeeded()) {
             System.out.println("RPC call for game configuration failed. Details: " + gameConfigRpcResult.getFailedInfo());
             return Optional.empty();
         }

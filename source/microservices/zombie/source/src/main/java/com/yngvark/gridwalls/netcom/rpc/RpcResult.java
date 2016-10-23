@@ -1,8 +1,7 @@
 package com.yngvark.gridwalls.netcom.rpc;
 
 public interface RpcResult {
-    boolean success();
-    boolean failed();
+    boolean succeeded();
     String getFailedInfo();
     String getRpcResponse();
 }

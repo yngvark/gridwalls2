@@ -38,8 +38,7 @@ public class NetcomRpcTest {
         // Then
         verify(rpcCaller).rpcCall(any(ConnectionWrapper.class), eq("rpc_queue"), eq("hello"));
 
-        assertTrue(rpcResult.success());
-        assertFalse(rpcResult.failed());
+        assertTrue(rpcResult.succeeded());
         assertTrue(rpcResult.getFailedInfo().length() > 0);
         assertEquals("my RPC response", rpcResult.getRpcResponse());
     }
@@ -61,8 +60,7 @@ public class NetcomRpcTest {
         // Then
         verify(rpcCaller, times(0)).rpcCall(any(ConnectionWrapper.class), any(String.class), any(String.class));
 
-        assertFalse(rpcResult.success());
-        assertTrue(rpcResult.failed());
+        assertFalse(rpcResult.succeeded());
         assertEquals("Could not connect. Details: Could not contact host.", rpcResult.getFailedInfo());
         assertTrue(rpcResult.getRpcResponse().length() > 0);
     }

@@ -3,7 +3,9 @@ package com.yngvark.gridwalls.netcom;
 import com.yngvark.gridwalls.netcom.connection.connect_status.ConnectStatus;
 import com.yngvark.gridwalls.netcom.connection.ConnectionWrapper;
 import com.yngvark.gridwalls.netcom.connection.RetryConnecter;
+import com.yngvark.gridwalls.netcom.publish.PublishFailed;
 import com.yngvark.gridwalls.netcom.publish.PublishResult;
+import com.yngvark.gridwalls.netcom.publish.PublishSucceeded;
 import com.yngvark.gridwalls.netcom.publish.Publisher;
 import com.yngvark.gridwalls.netcom.rpc.RpcCaller;
 import com.yngvark.gridwalls.netcom.rpc.RpcFailed;
@@ -29,11 +31,11 @@ public class Netcom<T extends ConnectionWrapper> {
     }
 
     public PublishResult publish(String queueName, String message) {
-        ConnectStatus connectStatus = retryConnecter.tryToEnsureConnected();
+        ConnectStatus<T> connectStatus = retryConnecter.tryToEnsureConnected();
         if (connectStatus.succeeded()) {
-            return publisher.publish(queueName, message);
+            return publisher.publish(connectStatus.getConnectionWrapper(), queueName, message);
         } else {
-            throw new RuntimeException("Not implemented");
+            return new PublishFailed("Could not publish. Details: " + connectStatus.getConnectFailedDetails());
         }
     }
 

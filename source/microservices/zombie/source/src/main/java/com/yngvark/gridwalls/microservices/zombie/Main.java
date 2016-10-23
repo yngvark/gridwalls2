@@ -6,6 +6,7 @@ import com.yngvark.gridwalls.microservices.zombie.game.GameRunner;
 import com.yngvark.gridwalls.microservices.zombie.game.ZombieFactory;
 import com.yngvark.gridwalls.microservices.zombie.game.ZombieMovedSerializer;
 import com.yngvark.gridwalls.microservices.zombie.game.ZombiesController;
+import com.yngvark.gridwalls.microservices.zombie.game.netcom.rabbitmq.RabbitPublisher;
 import com.yngvark.gridwalls.microservices.zombie.game.os_process.ExecutorServiceExiter;
 import com.yngvark.gridwalls.microservices.zombie.game.utils.GameErrorHandler;
 import com.yngvark.gridwalls.microservices.zombie.game.os_process.ProcessRunner;
@@ -39,7 +40,7 @@ class Main {
                         new RabbitBrokerConnecter(stackTracePrinter)
                 ),
                 new RabbitRpcCaller(),
-                new Publisher<>()
+                new RabbitPublisher()
         );
 
         ProcessRunner processRunner = new ProcessRunner(

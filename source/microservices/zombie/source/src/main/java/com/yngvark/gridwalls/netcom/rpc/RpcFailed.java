@@ -8,13 +8,8 @@ public class RpcFailed implements RpcResult {
     }
 
     @Override
-    public boolean success() {
+    public boolean succeeded() {
         return false;
-    }
-
-    @Override
-    public boolean failed() {
-        return true;
     }
 
     @Override
