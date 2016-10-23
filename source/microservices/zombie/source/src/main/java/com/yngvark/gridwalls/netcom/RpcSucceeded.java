@@ -19,7 +19,7 @@ public class RpcSucceeded implements RpcResult {
 
     @Override
     public String getFailedInfo() {
-        return "";
+        return "No failure info for a succeeded RPC.";
     }
 
     @Override

@@ -1,9 +1,9 @@
 package com.yngvark.gridwalls.netcom;
 
-public class ConnectFailed implements ConnectAttempt {
+public class Disconnected implements ConnectStatus {
     private final String connectFailedDetails;
 
-    public ConnectFailed(String connectFailedDetails) {
+    public Disconnected(String connectFailedDetails) {
         this.connectFailedDetails = connectFailedDetails;
     }
 

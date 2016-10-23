@@ -1,9 +1,9 @@
 package com.yngvark.gridwalls.netcom;
 
-public class ConnectSucceeded implements ConnectAttempt {
+public class Connected implements ConnectStatus {
     private ConnectionWrapper connectionWrapper;
 
-    public ConnectSucceeded(ConnectionWrapper connectionWrapper) {
+    public Connected(ConnectionWrapper connectionWrapper) {
         this.connectionWrapper = connectionWrapper;
     }
 

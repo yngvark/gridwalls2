@@ -3,7 +3,7 @@ package com.yngvark.gridwalls.netcom;
 import com.yngvark.gridwalls.microservices.zombie.Config;
 import com.yngvark.gridwalls.netcom.rabbitmq.BrokerConnecter;
 
-public class RetryConnecter {
+public class RetryConnecter<T extends ConnectionWrapper> {
     private final Config config;
     private final BrokerConnecter brokerConnecter;
 
@@ -14,24 +14,24 @@ public class RetryConnecter {
         this.brokerConnecter = brokerConnecter;
     }
 
-    public ConnectAttempt tryToEnsureConnected() {
+    public ConnectStatus<T> tryToEnsureConnected() {
         int attemptCount = 3;
-        ConnectAttempt connectAttempt;
+        ConnectStatus connectStatus;
 
         for (int i = 0; i < attemptCount; i++) {
             System.out.println("Connecting to " + config.getBrokerHostname() + " (attempt " + i + ")");
-            connectAttempt = brokerConnecter.connect(config.getBrokerHostname(), 5000);
+            connectStatus = brokerConnecter.connect(config.getBrokerHostname(), 5000);
 
-            if (connectAttempt.succeeded()) {
+            if (connectStatus.succeeded()) {
                 System.out.println("Connected.");
-                connectionWrapper = connectAttempt.getConnectionWrapper();
-                return connectAttempt;
+                connectionWrapper = connectStatus.getConnectionWrapper();
+                return connectStatus;
             } else {
-                System.out.println("Cannot connect. Reason: " + connectAttempt.getConnectFailedDetails());
+                System.out.println("Cannot connect. Reason: " + connectStatus.getConnectFailedDetails());
             }
         }
 
-        return new ConnectFailed("Could not connect after " + attemptCount + " attempts.");
+        return new Disconnected("Could not connect after " + attemptCount + " attempts.");
     }
 
     public void disconnectIfConnected() {

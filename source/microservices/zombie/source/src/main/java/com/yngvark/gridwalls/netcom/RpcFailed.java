@@ -24,6 +24,6 @@ public class RpcFailed implements RpcResult {
 
     @Override
     public String getRpcResponse() {
-        return "";
+        return "No RPC response for a failed RPC call";
     }
 }

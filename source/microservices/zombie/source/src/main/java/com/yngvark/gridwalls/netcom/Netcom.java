@@ -1,25 +1,25 @@
 package com.yngvark.gridwalls.netcom;
 
-public class Netcom {
-    private final RetryConnecter retryConnecter;
-    private final RpcCaller rpcCaller;
+public class Netcom<T extends ConnectionWrapper> {
+    private final RetryConnecter<T> retryConnecter;
+    private final RpcCaller<T> rpcCaller;
 
-    public Netcom(RetryConnecter retryConnecter, RpcCaller rpcCaller) {
+    public Netcom(RetryConnecter retryConnecter, RpcCaller<T> rpcCaller) {
         this.retryConnecter = retryConnecter;
         this.rpcCaller = rpcCaller;
     }
 
     public RpcResult rpcCall(String rpcQueueName, String message) {
-        ConnectAttempt connectAttempt = retryConnecter.tryToEnsureConnected();
-        if (connectAttempt.succeeded())
-            return rpcCaller.rpcCall(connectAttempt.getConnectionWrapper(), rpcQueueName, message);
+        ConnectStatus<T> connectStatus = retryConnecter.tryToEnsureConnected();
+        if (connectStatus.succeeded())
+            return rpcCaller.rpcCall(connectStatus.getConnectionWrapper(), rpcQueueName, message);
         else
-            return new RpcFailed("Could not connect. Details: " + connectAttempt.getConnectFailedDetails());
+            return new RpcFailed("Could not connect. Details: " + connectStatus.getConnectFailedDetails());
     }
 
     public void publish(String queueName, String message) {
-        ConnectAttempt connectAttempt = retryConnecter.tryToEnsureConnected();
-        if (connectAttempt.succeeded()) {
+        ConnectStatus connectStatus = retryConnecter.tryToEnsureConnected();
+        if (connectStatus.succeeded()) {
 
         } else {
 

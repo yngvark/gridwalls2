@@ -1,7 +1,7 @@
 package com.yngvark.gridwalls.netcom.rabbitmq;
 
-import com.yngvark.gridwalls.netcom.ConnectAttempt;
+import com.yngvark.gridwalls.netcom.ConnectStatus;
 
 public interface BrokerConnecter {
-    ConnectAttempt connect(String host, int timeoutMilliseconds);
+    ConnectStatus connect(String host, int timeoutMilliseconds);
 }

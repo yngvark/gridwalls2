@@ -1,8 +1,8 @@
 package to_be_deleted;
 
 import com.yngvark.gridwalls.microservices.zombie.Config;
-import com.yngvark.gridwalls.netcom.ConnectAttempt;
-import com.yngvark.gridwalls.netcom.ConnectSucceeded;
+import com.yngvark.gridwalls.netcom.ConnectStatus;
+import com.yngvark.gridwalls.netcom.Connected;
 import com.yngvark.gridwalls.netcom.ConnectionWrapper;
 import com.yngvark.gridwalls.netcom.Netcom;
 import com.yngvark.gridwalls.netcom.RetryConnecter;
@@ -36,8 +36,8 @@ public class NetcomTest {
     class MyBrokerConnecter implements BrokerConnecter {
 
         @Override
-        public ConnectAttempt connect(String host, int timeoutMilliseconds) {
-            return new ConnectSucceeded(
+        public ConnectStatus connect(String host, int timeoutMilliseconds) {
+            return new Connected(
                 new MyConnectionWrapper()
             );
         }
