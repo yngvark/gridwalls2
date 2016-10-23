@@ -1,5 +1,12 @@
 package com.yngvark.gridwalls.netcom;
 
+import com.yngvark.gridwalls.netcom.connection.connect_status.ConnectStatus;
+import com.yngvark.gridwalls.netcom.connection.ConnectionWrapper;
+import com.yngvark.gridwalls.netcom.connection.RetryConnecter;
+import com.yngvark.gridwalls.netcom.rpc.RpcCaller;
+import com.yngvark.gridwalls.netcom.rpc.RpcFailed;
+import com.yngvark.gridwalls.netcom.rpc.RpcResult;
+
 public class Netcom<T extends ConnectionWrapper> {
     private final RetryConnecter<T> retryConnecter;
     private final RpcCaller<T> rpcCaller;

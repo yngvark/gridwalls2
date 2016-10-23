@@ -1,5 +1,12 @@
 package com.yngvark.gridwalls.netcom;
 
+import com.yngvark.gridwalls.netcom.connection.connect_status.Connected;
+import com.yngvark.gridwalls.netcom.connection.ConnectionWrapper;
+import com.yngvark.gridwalls.netcom.connection.connect_status.Disconnected;
+import com.yngvark.gridwalls.netcom.connection.RetryConnecter;
+import com.yngvark.gridwalls.netcom.rpc.RpcCaller;
+import com.yngvark.gridwalls.netcom.rpc.RpcResult;
+import com.yngvark.gridwalls.netcom.rpc.RpcSucceeded;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

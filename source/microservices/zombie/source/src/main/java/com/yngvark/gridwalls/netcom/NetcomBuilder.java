@@ -1,7 +1,10 @@
 package com.yngvark.gridwalls.netcom;
 
 import com.yngvark.gridwalls.microservices.zombie.Config;
-import com.yngvark.gridwalls.netcom.rabbitmq.BrokerConnecter;
+import com.yngvark.gridwalls.netcom.connection.BrokerConnecter;
+import com.yngvark.gridwalls.netcom.connection.ConnectionWrapper;
+import com.yngvark.gridwalls.netcom.connection.RetryConnecter;
+import com.yngvark.gridwalls.netcom.rpc.RpcCaller;
 
 public class NetcomBuilder<T extends ConnectionWrapper> {
     private String brokerHostname;

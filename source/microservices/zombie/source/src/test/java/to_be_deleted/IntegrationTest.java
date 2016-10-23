@@ -9,8 +9,8 @@ import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.Envelope;
 import com.yngvark.gridwalls.core.Coordinate;
 import com.yngvark.gridwalls.core.CoordinateSerializer;
-import com.yngvark.gridwalls.microservices.zombie.gamelogic.ZombieMoved;
-import com.yngvark.gridwalls.microservices.zombie.gamelogic.ZombieMovedSerializer;
+import com.yngvark.gridwalls.microservices.zombie.game.ZombieMoved;
+import com.yngvark.gridwalls.microservices.zombie.game.ZombieMovedSerializer;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
