@@ -5,8 +5,8 @@ import com.yngvark.gridwalls.microservices.zombie.game.ZombieMovedSerializer;
 import com.yngvark.gridwalls.netcom.Netcom;
 
 public class ZombieMovedPublisher {
-    private ZombieMovedSerializer zombieMovedSerializer;
-    private Netcom netcom;
+    private final ZombieMovedSerializer zombieMovedSerializer;
+    private final Netcom netcom;
 
     public ZombieMovedPublisher(ZombieMovedSerializer zombieMovedSerializer, Netcom netcom) {
         this.zombieMovedSerializer = zombieMovedSerializer;

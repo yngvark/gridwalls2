@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public class ZombieMovedSerializer {
     private final CoordinateSerializer coordinateSerializer;
-    String prefix = "[" + ZombieMoved.class.getSimpleName() + "] ";
+    private final String prefix = "[" + ZombieMoved.class.getSimpleName() + "] ";
 
     @Inject
     public ZombieMovedSerializer(CoordinateSerializer coordinateSerializer) {

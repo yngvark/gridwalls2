@@ -6,8 +6,6 @@ import com.yngvark.gridwalls.netcom.gameconfig.GameConfigFetcher;
 import java.util.Optional;
 
 public class GameRunner {
-    private static final String RPC_QUEUE_NAME = "rpc_queue";
-
     private final GameConfigFetcher gameConfigFetcher;
     private final GameLoop gameLoop;
 

@@ -1,6 +1,5 @@
 package com.yngvark.gridwalls.microservices.zombie.game.os_process;
 
-import com.google.inject.Inject;
 import com.yngvark.gridwalls.microservices.zombie.game.utils.StackTracePrinter;
 
 import java.util.List;
@@ -10,7 +9,6 @@ import java.util.concurrent.TimeUnit;
 public class ExecutorServiceExiter {
     private final StackTracePrinter stackTracePrinter;
 
-    @Inject
     public ExecutorServiceExiter(StackTracePrinter stackTracePrinter) {
         this.stackTracePrinter = stackTracePrinter;
     }

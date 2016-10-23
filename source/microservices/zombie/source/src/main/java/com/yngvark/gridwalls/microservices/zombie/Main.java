@@ -23,7 +23,7 @@ import com.yngvark.gridwalls.microservices.zombie.game.netcom.rabbitmq.RabbitRpc
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class Main {
+class Main {
     public static void main(String[] args) {
         System.out.println("Starting zombie 0.0.1.alpha");
         createGameRunner();

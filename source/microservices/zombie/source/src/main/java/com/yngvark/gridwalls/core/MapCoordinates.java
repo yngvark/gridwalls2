@@ -17,10 +17,12 @@ public class MapCoordinates {
         );
     }
 
+    @SuppressWarnings("SameReturnValue")
     public int getSouthEdge() {
         return 0;
     }
 
+    @SuppressWarnings("SameReturnValue")
     public int getWestEdge() {
         return 0;
     }

@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class GameErrorHandler {
-    private List<Throwable> throwables = new CopyOnWriteArrayList<>();
+    private final List<Throwable> throwables = new CopyOnWriteArrayList<>();
 
     public void handle(Throwable e) {
         throwables.add(e);
@@ -23,9 +23,5 @@ public class GameErrorHandler {
 
         return stringBuilder.toString();
 
-    }
-
-    public boolean receivedErrors() {
-        return throwables.size() > 0;
     }
 }

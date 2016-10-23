@@ -5,10 +5,10 @@ import org.junit.jupiter.api.BeforeEach;
 public class ZombieTest {
 //    private ZombieMovedSerializer zombieMovedSerializer;
 
-    @BeforeEach
-    public void before() {
+//    @BeforeEach
+//    public void before() {
 //        zombieMovedSerializer = new ZombieMovedSerializer(new CoordinateSerializer());
-    }
+//    }
 //
 //    @Test
 //    public void should_always_change_coordinate_and_never_stand_still_on_next_turn() {

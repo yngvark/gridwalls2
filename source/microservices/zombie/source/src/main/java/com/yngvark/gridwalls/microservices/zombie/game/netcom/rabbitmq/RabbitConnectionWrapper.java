@@ -9,8 +9,7 @@ import java.io.IOException;
 
 public class RabbitConnectionWrapper implements ConnectionWrapper {
     private final StackTracePrinter stackTracePrinter;
-
-    private Connection connection;
+    private final Connection connection;
 
     public RabbitConnectionWrapper(StackTracePrinter stackTracePrinter, Connection connection) {
         this.stackTracePrinter = stackTracePrinter;
