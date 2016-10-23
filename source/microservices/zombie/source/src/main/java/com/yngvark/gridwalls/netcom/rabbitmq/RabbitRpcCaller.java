@@ -10,7 +10,6 @@ import com.yngvark.gridwalls.netcom.RpcSucceeded;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.io.IOException;
-import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
 public class RabbitRpcCaller implements RpcCaller<RabbitConnectionWrapper> {
@@ -29,11 +28,7 @@ public class RabbitRpcCaller implements RpcCaller<RabbitConnectionWrapper> {
             throws IOException, TimeoutException {
         Channel channel = connection.createChannel();
 
-        boolean queueDurable = false;
-        boolean queueExclusive = false;
-        boolean queueAutoDelete = false;
-        Map<String, Object> standardArgs = null;
-        channel.queueDeclare(rpcQueueName, queueDurable, queueExclusive, queueAutoDelete, standardArgs);
+        declareQueue(rpcQueueName, channel);
 
         String exchange = "";
         RpcClient rpcClient = new RpcClient(channel, exchange, rpcQueueName);
@@ -46,6 +41,14 @@ public class RabbitRpcCaller implements RpcCaller<RabbitConnectionWrapper> {
         channel.close();
 
         return new RpcSucceeded(gameConfigTxt);
+    }
+
+    private void declareQueue(String rpcQueueName, Channel channel) throws IOException {
+        channel.queueDeclare(rpcQueueName,
+                false, // queueDurable
+                false, // queueExclusive
+                false, // queueAutoDelete
+                null); // standardArgs
     }
 
 }

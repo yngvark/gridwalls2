@@ -1,6 +1,6 @@
 package com.yngvark.gridwalls.microservices.zombie.gamelogic;
 
-import com.yngvark.gridwalls.microservices.zombie.infrastructure.GameErrorHandler;
+import com.yngvark.gridwalls.core.MapDimensions;
 import com.yngvark.gridwalls.netcom.Publisher;
 
 import java.io.IOException;
@@ -25,13 +25,11 @@ public class ZombiesController {
             initialized = true;
         }
 
-        for (Zombie zombie : zombies) {
-            runNextTurnOn(zombie);
-        }
+        zombies.forEach(this::runNextTurnOn);
     }
 
     private void createZombies() {
-        zombies = zombieFactory.createZombies(10, 10);
+        zombies = zombieFactory.createZombies(new MapDimensions(10, 10));
     }
 
     private void runNextTurnOn(Zombie zombie) {

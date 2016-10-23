@@ -1,8 +1,5 @@
 package com.yngvark.gridwalls.netcom;
 
-import com.yngvark.gridwalls.microservices.zombie.Config;
-import com.yngvark.gridwalls.netcom.rabbitmq.BrokerConnecter;
-import com.yngvark.gridwalls.netcom.rabbitmq.RabbitConnectionWrapper;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

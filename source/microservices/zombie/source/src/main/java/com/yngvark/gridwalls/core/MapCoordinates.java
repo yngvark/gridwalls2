@@ -4,18 +4,16 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class MapCoordinates {
-    private final int width;
-    private final int height;
+    private final MapDimensions mapDimensions;
 
-    public MapCoordinates(int width, int height) {
-        this.width = width;
-        this.height = height;
+    public MapCoordinates(MapDimensions mapDimensions) {
+        this.mapDimensions = mapDimensions;
     }
 
     public Coordinate center() {
         return new Coordinate(
-                Math.floorDiv(width, 2),
-                Math.floorDiv(height, 2)
+                Math.floorDiv(mapDimensions.getWidth(), 2),
+                Math.floorDiv(mapDimensions.getHeight(), 2)
         );
     }
 
@@ -28,18 +26,18 @@ public class MapCoordinates {
     }
 
     public int getEastEdge() {
-        return width - 1;
+        return mapDimensions.getWidth() - 1;
     }
 
     public int getNorthEdge() {
-        return height - 1;
+        return mapDimensions.getHeight() - 1;
     }
 
     public Set<Coordinate> allCoordinates() {
         Set<Coordinate> coords = new HashSet<>();
 
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
+        for (int x = 0; x < mapDimensions.getWidth(); x++) {
+            for (int y = 0; y < mapDimensions.getHeight(); y++) {
                 coords.add(new Coordinate(x, y));
             }
         }

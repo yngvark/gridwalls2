@@ -48,7 +48,32 @@ public class SyncronousExecutorService implements ExecutorService {
     @Override
     public Future<?> submit(Runnable runnable) {
         runnable.run();
-        return null;
+        return new Future<Object>() {
+            @Override
+            public boolean cancel(boolean b) {
+                return false;
+            }
+
+            @Override
+            public boolean isCancelled() {
+                return false;
+            }
+
+            @Override
+            public boolean isDone() {
+                return false;
+            }
+
+            @Override
+            public Object get() throws InterruptedException, ExecutionException {
+                return null;
+            }
+
+            @Override
+            public Object get(long l, TimeUnit timeUnit) throws InterruptedException, ExecutionException, TimeoutException {
+                return null;
+            }
+        };
     }
 
     @Override

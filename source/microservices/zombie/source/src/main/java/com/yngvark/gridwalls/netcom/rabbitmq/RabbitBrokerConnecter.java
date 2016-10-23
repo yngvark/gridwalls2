@@ -4,7 +4,6 @@ import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.yngvark.gridwalls.microservices.zombie.infrastructure.StackTracePrinter;
 import com.yngvark.gridwalls.netcom.ConnectStatus;
-import com.yngvark.gridwalls.netcom.ConnectionWrapper;
 import com.yngvark.gridwalls.netcom.Disconnected;
 import com.yngvark.gridwalls.netcom.Connected;
 import org.apache.commons.lang3.exception.ExceptionUtils;

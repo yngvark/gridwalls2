@@ -9,15 +9,13 @@ public class NetcomBuilder<T extends ConnectionWrapper> {
     private RpcCaller<T> rpcCaller;
 
     public Netcom<T> create() {
-        Netcom<T> netcom = new Netcom<>(
+        return new Netcom<>(
                 new RetryConnecter<>(
                         Config.builder().brokerHostname(brokerHostname).build(),
                         brokerConnecter
                 ),
                 rpcCaller
         );
-
-        return netcom;
     }
 
     public NetcomBuilder<T> setBrokerHostname(String brokerHostname) {

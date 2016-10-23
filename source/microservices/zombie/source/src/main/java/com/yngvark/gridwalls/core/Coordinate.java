@@ -26,9 +26,7 @@ public class Coordinate {
 
         Coordinate that = (Coordinate) o;
 
-        if (x != that.x)
-            return false;
-        return y == that.y;
+        return x == that.x && y == that.y;
     }
 
     @Override

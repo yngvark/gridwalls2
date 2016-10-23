@@ -1,7 +1,5 @@
 package com.yngvark.gridwalls.microservices.zombie;
 
-import com.yngvark.gridwalls.core.CoordinateSerializer;
-import com.yngvark.gridwalls.microservices.zombie.gamelogic.ZombieMovedSerializer;
 import org.junit.jupiter.api.BeforeEach;
 
 public class ZombieTest {
