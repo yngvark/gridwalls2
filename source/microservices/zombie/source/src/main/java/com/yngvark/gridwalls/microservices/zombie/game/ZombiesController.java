@@ -1,22 +1,21 @@
 package com.yngvark.gridwalls.microservices.zombie.game;
 
 import com.yngvark.gridwalls.core.MapDimensions;
-import com.yngvark.gridwalls.microservices.zombie.game.netcom.Publisher;
+import com.yngvark.gridwalls.microservices.zombie.game.netcom.ZombieMovedPublisher;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ZombiesController {
     private final ZombieFactory zombieFactory;
-    private final Publisher publisher;
+    private final ZombieMovedPublisher zombieMovedPublisher;
 
     private List<Zombie> zombies = new ArrayList<>();
     private boolean initialized;
 
-    public ZombiesController(ZombieFactory zombieFactory, Publisher publisher) {
+    public ZombiesController(ZombieFactory zombieFactory, ZombieMovedPublisher zombieMovedPublisher) {
         this.zombieFactory = zombieFactory;
-        this.publisher = publisher;
+        this.zombieMovedPublisher = zombieMovedPublisher;
     }
 
     public void nextTurn() {
@@ -35,10 +34,6 @@ public class ZombiesController {
     private void runNextTurnOn(Zombie zombie) {
         System.out.println("zombie1.nextTurn()");
         ZombieMoved event = zombie.nextTurn();
-        try {
-            publisher.publishEvent(event);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        zombieMovedPublisher.publishEvent(event);
     }
 }

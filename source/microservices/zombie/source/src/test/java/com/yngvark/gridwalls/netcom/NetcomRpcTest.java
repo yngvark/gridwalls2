@@ -20,7 +20,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SuppressWarnings("unchecked")
-public class NetcomTest {
+public class NetcomRpcTest {
     @Test
     public void should_do_rpc_call_when_connected() throws Exception {
         // Given
@@ -30,7 +30,7 @@ public class NetcomTest {
         RpcCaller rpcCaller = mock(RpcCaller.class);
         when(rpcCaller.rpcCall(any(ConnectionWrapper.class), eq("rpc_queue"), eq("hello"))).thenReturn(new RpcSucceeded("my RPC response"));
 
-        Netcom netcom = new Netcom(retryConnecter, rpcCaller);
+        Netcom netcom = new Netcom(retryConnecter, rpcCaller, null);
 
         // When
         RpcResult rpcResult = netcom.rpcCall("rpc_queue", "hello");
@@ -43,11 +43,6 @@ public class NetcomTest {
         assertTrue(rpcResult.getFailedInfo().length() > 0);
         assertEquals("my RPC response", rpcResult.getRpcResponse());
     }
-//
-//    @SuppressWarnings("unchecked") // still needed :( but just once :)
-//    private <T extends ConnectionWrapper> RetryConnecter<T> retryConnecterMock() {
-//        return mock(RetryConnecter.class);
-//    }
 
     @Test
     public void should_return_error_when_unable_to_connect_when_doing_rpc_call() throws Exception {
@@ -58,7 +53,7 @@ public class NetcomTest {
         RpcCaller rpcCaller = mock(RpcCaller.class);
         when(rpcCaller.rpcCall(any(ConnectionWrapper.class), eq("rpc_queue"), eq("hello"))).thenReturn(new RpcSucceeded("my RPC response"));
 
-        Netcom netcom = new Netcom(retryConnecter, rpcCaller);
+        Netcom netcom = new Netcom(retryConnecter, rpcCaller, null);
 
         // When
         RpcResult rpcResult = netcom.rpcCall("rpc_queue", "hello");

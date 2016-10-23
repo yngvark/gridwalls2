@@ -10,11 +10,12 @@ import com.yngvark.gridwalls.microservices.zombie.game.os_process.ExecutorServic
 import com.yngvark.gridwalls.microservices.zombie.game.utils.GameErrorHandler;
 import com.yngvark.gridwalls.microservices.zombie.game.os_process.ProcessRunner;
 import com.yngvark.gridwalls.microservices.zombie.game.utils.StackTracePrinter;
+import com.yngvark.gridwalls.netcom.publish.Publisher;
+import com.yngvark.gridwalls.netcom.connection.RetryConnecter;
 import com.yngvark.gridwalls.netcom.gameconfig.GameConfigDeserializer;
 import com.yngvark.gridwalls.netcom.gameconfig.GameConfigFetcher;
 import com.yngvark.gridwalls.netcom.Netcom;
-import com.yngvark.gridwalls.netcom.NetcomBuilder;
-import com.yngvark.gridwalls.microservices.zombie.game.netcom.Publisher;
+import com.yngvark.gridwalls.microservices.zombie.game.netcom.ZombieMovedPublisher;
 import com.yngvark.gridwalls.microservices.zombie.game.netcom.rabbitmq.RabbitBrokerConnecter;
 import com.yngvark.gridwalls.microservices.zombie.game.netcom.rabbitmq.RabbitConnectionWrapper;
 import com.yngvark.gridwalls.microservices.zombie.game.netcom.rabbitmq.RabbitRpcCaller;
@@ -32,11 +33,14 @@ public class Main {
         ExecutorService executorService = Executors.newCachedThreadPool();
         StackTracePrinter stackTracePrinter = new StackTracePrinter();
 
-        Netcom<RabbitConnectionWrapper> netcom = new NetcomBuilder<RabbitConnectionWrapper>()
-                .setBrokerHostname("rabbithost")
-                .setBrokerConnecter(new RabbitBrokerConnecter(stackTracePrinter))
-                .setRpcCaller(new RabbitRpcCaller())
-                .create();
+        Netcom<RabbitConnectionWrapper> netcom = new Netcom<>(
+                new RetryConnecter<>(
+                        Config.builder().brokerHostname("rabbithost").build(),
+                        new RabbitBrokerConnecter(stackTracePrinter)
+                ),
+                new RabbitRpcCaller(),
+                new Publisher<>()
+        );
 
         ProcessRunner processRunner = new ProcessRunner(
                 executorService,
@@ -51,7 +55,7 @@ public class Main {
                         new GameLoop(
                                 new ZombiesController(
                                         new ZombieFactory(),
-                                        new Publisher(
+                                        new ZombieMovedPublisher(
                                                 new ZombieMovedSerializer(new CoordinateSerializer()),
                                                 netcom)
                                 ),
