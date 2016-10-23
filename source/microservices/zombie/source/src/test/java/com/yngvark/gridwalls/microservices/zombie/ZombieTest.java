@@ -5,11 +5,11 @@ import com.yngvark.gridwalls.microservices.zombie.gamelogic.ZombieMovedSerialize
 import org.junit.jupiter.api.BeforeEach;
 
 public class ZombieTest {
-    private ZombieMovedSerializer zombieMovedSerializer;
+//    private ZombieMovedSerializer zombieMovedSerializer;
 
     @BeforeEach
     public void before() {
-        zombieMovedSerializer = new ZombieMovedSerializer(new CoordinateSerializer());
+//        zombieMovedSerializer = new ZombieMovedSerializer(new CoordinateSerializer());
     }
 //
 //    @Test

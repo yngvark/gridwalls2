@@ -1,6 +1,6 @@
 package com.yngvark.gridwalls.netcom;
 
-public class Disconnected implements ConnectStatus {
+public class Disconnected<T extends ConnectionWrapper> implements ConnectStatus<T> {
     private final String connectFailedDetails;
 
     public Disconnected(String connectFailedDetails) {
@@ -23,7 +23,7 @@ public class Disconnected implements ConnectStatus {
     }
 
     @Override
-    public ConnectionWrapper getConnectionWrapper() {
+    public T getConnectionWrapper() {
         throw new RuntimeException("Cannot get the connection of a failed connection attempt.");
     }
 }

@@ -5,18 +5,18 @@ import com.yngvark.gridwalls.netcom.rabbitmq.BrokerConnecter;
 
 public class RetryConnecter<T extends ConnectionWrapper> {
     private final Config config;
-    private final BrokerConnecter brokerConnecter;
+    private final BrokerConnecter<T> brokerConnecter;
 
-    private ConnectionWrapper connectionWrapper;
+    private T connectionWrapper;
 
-    public RetryConnecter(Config config, BrokerConnecter brokerConnecter) {
+    public RetryConnecter(Config config, BrokerConnecter<T> brokerConnecter) {
         this.config = config;
         this.brokerConnecter = brokerConnecter;
     }
 
     public ConnectStatus<T> tryToEnsureConnected() {
         int attemptCount = 3;
-        ConnectStatus connectStatus;
+        ConnectStatus<T> connectStatus;
 
         for (int i = 0; i < attemptCount; i++) {
             System.out.println("Connecting to " + config.getBrokerHostname() + " (attempt " + i + ")");
@@ -31,7 +31,7 @@ public class RetryConnecter<T extends ConnectionWrapper> {
             }
         }
 
-        return new Disconnected("Could not connect after " + attemptCount + " attempts.");
+        return new Disconnected<>("Could not connect after " + attemptCount + " attempts.");
     }
 
     public void disconnectIfConnected() {

@@ -4,7 +4,7 @@ public class Netcom<T extends ConnectionWrapper> {
     private final RetryConnecter<T> retryConnecter;
     private final RpcCaller<T> rpcCaller;
 
-    public Netcom(RetryConnecter retryConnecter, RpcCaller<T> rpcCaller) {
+    public Netcom(RetryConnecter<T> retryConnecter, RpcCaller<T> rpcCaller) {
         this.retryConnecter = retryConnecter;
         this.rpcCaller = rpcCaller;
     }

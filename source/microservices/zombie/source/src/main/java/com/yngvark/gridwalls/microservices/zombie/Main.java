@@ -16,6 +16,7 @@ import com.yngvark.gridwalls.netcom.Netcom;
 import com.yngvark.gridwalls.netcom.NetcomBuilder;
 import com.yngvark.gridwalls.netcom.Publisher;
 import com.yngvark.gridwalls.netcom.rabbitmq.RabbitBrokerConnecter;
+import com.yngvark.gridwalls.netcom.rabbitmq.RabbitConnectionWrapper;
 import com.yngvark.gridwalls.netcom.rabbitmq.RabbitRpcCaller;
 
 import java.util.concurrent.ExecutorService;
@@ -31,7 +32,7 @@ public class Main {
         ExecutorService executorService = Executors.newCachedThreadPool();
         StackTracePrinter stackTracePrinter = new StackTracePrinter();
 
-        Netcom netcom = new NetcomBuilder()
+        Netcom<RabbitConnectionWrapper> netcom = new NetcomBuilder<RabbitConnectionWrapper>()
                 .setBrokerHostname("rabbithost")
                 .setBrokerConnecter(new RabbitBrokerConnecter(stackTracePrinter))
                 .setRpcCaller(new RabbitRpcCaller())

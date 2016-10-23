@@ -1,9 +1,9 @@
 package com.yngvark.gridwalls.netcom;
 
-public class Connected implements ConnectStatus {
-    private ConnectionWrapper connectionWrapper;
+public class Connected<T extends ConnectionWrapper> implements ConnectStatus<T> {
+    private T connectionWrapper;
 
-    public Connected(ConnectionWrapper connectionWrapper) {
+    public Connected(T connectionWrapper) {
         this.connectionWrapper = connectionWrapper;
     }
 
@@ -23,7 +23,7 @@ public class Connected implements ConnectStatus {
     }
 
     @Override
-    public ConnectionWrapper getConnectionWrapper() {
+    public T getConnectionWrapper() {
         return connectionWrapper;
     }
 }

@@ -1,9 +1,13 @@
 package com.yngvark.gridwalls.netcom;
 
+import com.yngvark.gridwalls.microservices.zombie.Config;
+import com.yngvark.gridwalls.netcom.rabbitmq.BrokerConnecter;
+import com.yngvark.gridwalls.netcom.rabbitmq.RabbitConnectionWrapper;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-import static org.junit.jupiter.api.Assertions.expectThrows;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
@@ -11,6 +15,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@SuppressWarnings("unchecked")
 public class NetcomTest {
     @Test
     public void should_do_rpc_call_when_connected() throws Exception {
@@ -34,6 +39,11 @@ public class NetcomTest {
         assertTrue(rpcResult.getFailedInfo().length() > 0);
         assertEquals("my RPC response", rpcResult.getRpcResponse());
     }
+//
+//    @SuppressWarnings("unchecked") // still needed :( but just once :)
+//    private <T extends ConnectionWrapper> RetryConnecter<T> retryConnecterMock() {
+//        return mock(RetryConnecter.class);
+//    }
 
     @Test
     public void should_return_error_when_unable_to_connect_when_doing_rpc_call() throws Exception {
