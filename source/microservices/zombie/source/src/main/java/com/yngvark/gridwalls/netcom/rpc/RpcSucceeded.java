@@ -16,7 +16,7 @@ public class RpcSucceeded implements RpcResult {
 
     @Override
     public String getFailedInfo() {
-        return "No failure info for a succeeded RPC.";
+        return "No failure info for a connected RPC.";
     }
 
     @Override

@@ -23,7 +23,7 @@ public class RetryConnecter<T extends ConnectionWrapper> {
             System.out.println("Connecting to " + config.getBrokerHostname() + " (attempt " + i + ")");
             connectStatus = brokerConnecter.connect(config.getBrokerHostname(), 5000);
 
-            if (connectStatus.succeeded()) {
+            if (connectStatus.connected()) {
                 System.out.println("Connected.");
                 connectionWrapper = connectStatus.getConnectionWrapper();
                 return connectStatus;

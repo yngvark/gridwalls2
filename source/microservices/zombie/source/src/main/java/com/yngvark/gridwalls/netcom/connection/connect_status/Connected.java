@@ -10,12 +10,12 @@ public class Connected<T extends ConnectionWrapper> implements ConnectStatus<T> 
     }
 
     @Override
-    public boolean succeeded() {
+    public boolean connected() {
         return true;
     }
 
     @Override
-    public boolean failed() {
+    public boolean disconnected() {
         return false;
     }
 

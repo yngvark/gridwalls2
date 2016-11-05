@@ -100,10 +100,6 @@ public class QueueBasedTest {
         assertTrue(event.startsWith("ZombieMoved"));
     }
 
-    altså.. RetryConnecter prøve å connecte _hver_ gang.
-
-
-
     @Test
     public void arne() throws InterruptedException {
         Object a = new Object();

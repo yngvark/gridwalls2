@@ -5,7 +5,6 @@ import com.yngvark.gridwalls.netcom.connection.ConnectionWrapper;
 import com.yngvark.gridwalls.netcom.connection.RetryConnecter;
 import com.yngvark.gridwalls.netcom.publish.PublishFailed;
 import com.yngvark.gridwalls.netcom.publish.PublishResult;
-import com.yngvark.gridwalls.netcom.publish.PublishSucceeded;
 import com.yngvark.gridwalls.netcom.publish.Publisher;
 import com.yngvark.gridwalls.netcom.rpc.RpcCaller;
 import com.yngvark.gridwalls.netcom.rpc.RpcFailed;
@@ -24,7 +23,7 @@ public class Netcom<T extends ConnectionWrapper> {
 
     public RpcResult rpcCall(String rpcQueueName, String message) {
         ConnectStatus<T> connectStatus = retryConnecter.tryToEnsureConnected();
-        if (connectStatus.succeeded())
+        if (connectStatus.connected())
             return rpcCaller.rpcCall(connectStatus.getConnectionWrapper(), rpcQueueName, message);
         else
             return new RpcFailed("Could not connect. Details: " + connectStatus.getConnectFailedDetails());
@@ -32,7 +31,7 @@ public class Netcom<T extends ConnectionWrapper> {
 
     public PublishResult publish(String queueName, String message) {
         ConnectStatus<T> connectStatus = retryConnecter.tryToEnsureConnected();
-        if (connectStatus.succeeded()) {
+        if (connectStatus.connected()) {
             return publisher.publish(connectStatus.getConnectionWrapper(), queueName, message);
         } else {
             return new PublishFailed("Could not publish. Details: " + connectStatus.getConnectFailedDetails());

@@ -25,6 +25,7 @@ public class RabbitBrokerConnecter implements BrokerConnecter<RabbitConnectionWr
         factory.setConnectionTimeout(timeoutMilliseconds);
         factory.setHost(host);
 
+
         try {
             Connection connection = factory.newConnection();
             return new Connected<>(new RabbitConnectionWrapper(stackTracePrinter, connection));
