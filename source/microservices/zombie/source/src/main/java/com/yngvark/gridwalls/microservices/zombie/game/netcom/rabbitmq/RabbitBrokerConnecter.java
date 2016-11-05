@@ -5,8 +5,8 @@ import com.rabbitmq.client.ConnectionFactory;
 import com.yngvark.gridwalls.microservices.zombie.game.utils.StackTracePrinter;
 import com.yngvark.gridwalls.netcom.connection.BrokerConnecter;
 import com.yngvark.gridwalls.netcom.connection.connect_status.ConnectStatus;
-import com.yngvark.gridwalls.netcom.connection.connect_status.Disconnected;
 import com.yngvark.gridwalls.netcom.connection.connect_status.Connected;
+import com.yngvark.gridwalls.netcom.connection.connect_status.Disconnected;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.io.IOException;
@@ -24,7 +24,8 @@ public class RabbitBrokerConnecter implements BrokerConnecter<RabbitConnectionWr
         ConnectionFactory factory = new ConnectionFactory();
         factory.setConnectionTimeout(timeoutMilliseconds);
         factory.setHost(host);
-
+        factory.setRequestedHeartbeat(20);
+        factory.setAutomaticRecoveryEnabled(true);
 
         try {
             Connection connection = factory.newConnection();
