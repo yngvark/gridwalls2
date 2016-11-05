@@ -7,13 +7,16 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class ExecutorServiceExiter {
+    private final ExecutorService executorService;
     private final StackTracePrinter stackTracePrinter;
 
-    public ExecutorServiceExiter(StackTracePrinter stackTracePrinter) {
+    public ExecutorServiceExiter(ExecutorService executorService,
+            StackTracePrinter stackTracePrinter) {
+        this.executorService = executorService;
         this.stackTracePrinter = stackTracePrinter;
     }
 
-    public synchronized void exitGracefully(ExecutorService executorService) {
+    public synchronized void exitGracefully() {
         System.out.println("Shutdownhook: Exiting gracefully.");
 
         if (executorService.isShutdown()) {

@@ -7,6 +7,8 @@ public class GameLoop {
     private final ZombiesController zombiesController;
     private final GameErrorHandler gameErrorHandler;
 
+    private boolean runLoop = true;
+
     public GameLoop(ZombiesController zombiesController, GameErrorHandler gameErrorHandler) {
         this.zombiesController = zombiesController;
         this.gameErrorHandler = gameErrorHandler;
@@ -14,7 +16,7 @@ public class GameLoop {
 
     public void run(GameConfig gameConfig) {
         int i = 0;
-        while (i < 10) {
+        while (i < 10 && runLoop) {
             i++;
             try {
                 zombiesController.nextTurn();
@@ -24,5 +26,9 @@ public class GameLoop {
                 break;
             }
         }
+    }
+
+    public void stop() {
+        runLoop = false;
     }
 }

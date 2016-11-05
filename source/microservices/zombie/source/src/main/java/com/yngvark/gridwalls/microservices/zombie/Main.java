@@ -3,6 +3,7 @@ package com.yngvark.gridwalls.microservices.zombie;
 import com.yngvark.gridwalls.core.CoordinateSerializer;
 import com.yngvark.gridwalls.microservices.zombie.game.GameLoop;
 import com.yngvark.gridwalls.microservices.zombie.game.GameRunner;
+import com.yngvark.gridwalls.microservices.zombie.game.ProcessStopper;
 import com.yngvark.gridwalls.microservices.zombie.game.ZombieFactory;
 import com.yngvark.gridwalls.microservices.zombie.game.ZombieMovedSerializer;
 import com.yngvark.gridwalls.microservices.zombie.game.ZombiesController;
@@ -11,8 +12,7 @@ import com.yngvark.gridwalls.microservices.zombie.game.os_process.ExecutorServic
 import com.yngvark.gridwalls.microservices.zombie.game.utils.GameErrorHandler;
 import com.yngvark.gridwalls.microservices.zombie.game.os_process.ProcessRunner;
 import com.yngvark.gridwalls.microservices.zombie.game.utils.StackTracePrinter;
-import com.yngvark.gridwalls.netcom.publish.Publisher;
-import com.yngvark.gridwalls.netcom.connection.RetryConnecter;
+import com.yngvark.gridwalls.netcom.connection.BrokerConnecterHolder;
 import com.yngvark.gridwalls.netcom.gameconfig.GameConfigDeserializer;
 import com.yngvark.gridwalls.netcom.gameconfig.GameConfigFetcher;
 import com.yngvark.gridwalls.netcom.Netcom;
@@ -35,7 +35,7 @@ class Main {
         StackTracePrinter stackTracePrinter = new StackTracePrinter();
 
         Netcom<RabbitConnectionWrapper> netcom = new Netcom<>(
-                new RetryConnecter<>(
+                new BrokerConnecterHolder<>(
                         Config.builder().brokerHostname("rabbithost").build(),
                         new RabbitBrokerConnecter(stackTracePrinter)
                 ),
@@ -43,9 +43,16 @@ class Main {
                 new RabbitPublisher()
         );
 
+        GameLoop gameLoop = new GameLoop(
+                new ZombiesController(
+                        new ZombieFactory(),
+                        new ZombieMovedPublisher(
+                                new ZombieMovedSerializer(new CoordinateSerializer()),
+                                netcom)
+                ),
+                new GameErrorHandler());
+
         ProcessRunner processRunner = new ProcessRunner(
-                executorService,
-                new ExecutorServiceExiter(stackTracePrinter),
                 new GameRunner(
                         new GameConfigFetcher(
                                 executorService,
@@ -53,16 +60,9 @@ class Main {
                                 netcom,
                                 new GameConfigDeserializer()
                         ),
-                        new GameLoop(
-                                new ZombiesController(
-                                        new ZombieFactory(),
-                                        new ZombieMovedPublisher(
-                                                new ZombieMovedSerializer(new CoordinateSerializer()),
-                                                netcom)
-                                ),
-                                new GameErrorHandler())
+                        gameLoop
                 ),
-                netcom
+                new ProcessStopper(gameLoop, netcom, new ExecutorServiceExiter(executorService, stackTracePrinter))
         );
 
         processRunner.run();

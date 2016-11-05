@@ -2,7 +2,7 @@ package com.yngvark.gridwalls.netcom.connection.connect_status;
 
 import com.yngvark.gridwalls.netcom.connection.ConnectionWrapper;
 
-public class Disconnected<T extends ConnectionWrapper> implements ConnectStatus<T> {
+public class Disconnected<T extends ConnectionWrapper> implements ConnectionStatus<T> {
     private final String connectFailedDetails;
 
     public Disconnected(String connectFailedDetails) {
