@@ -1,5 +1,6 @@
 package com.yngvark.gridwalls.netcom;
 
+import com.rabbitmq.client.ShutdownSignalException;
 import com.yngvark.gridwalls.netcom.connection.connect_status.ConnectionStatus;
 import com.yngvark.gridwalls.netcom.connection.ConnectionWrapper;
 import com.yngvark.gridwalls.netcom.connection.BrokerConnecterHolder;
@@ -9,6 +10,8 @@ import com.yngvark.gridwalls.netcom.publish.Publisher;
 import com.yngvark.gridwalls.netcom.rpc.RpcCaller;
 import com.yngvark.gridwalls.netcom.rpc.RpcFailed;
 import com.yngvark.gridwalls.netcom.rpc.RpcResult;
+
+import java.util.concurrent.CancellationException;
 
 public class Netcom<T extends ConnectionWrapper> {
     private final BrokerConnecterHolder<T> brokerConnecterHolder;
@@ -27,6 +30,7 @@ public class Netcom<T extends ConnectionWrapper> {
             return rpcCaller.rpcCall(connectionStatus.getConnectionWrapper(), rpcQueueName, message);
         else
             return new RpcFailed("Could not connect. Details: " + connectionStatus.getConnectFailedDetails());
+
     }
 
     public PublishResult publish(String queueName, String message) {
@@ -39,6 +43,7 @@ public class Netcom<T extends ConnectionWrapper> {
     }
 
     public void disconnectAndDisableReconnect() {
+        System.out.println("Netcom disconnectAndDisableReconnect");
         brokerConnecterHolder.disconnectAndDisableReconnect();
     }
 }

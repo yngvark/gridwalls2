@@ -22,6 +22,5 @@ public class GameErrorHandler {
         }
 
         return stringBuilder.toString();
-
     }
 }

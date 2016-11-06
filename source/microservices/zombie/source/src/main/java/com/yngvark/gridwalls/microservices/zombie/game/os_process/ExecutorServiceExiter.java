@@ -28,7 +28,7 @@ public class ExecutorServiceExiter {
 
         boolean terminatedBeforeTimeout;
         try {
-            terminatedBeforeTimeout = executorService.awaitTermination(2, TimeUnit.SECONDS);
+            terminatedBeforeTimeout = executorService.awaitTermination(3, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             stackTracePrinter.print("Interrupted while awaiting termination. Cannot exit gracefully. Exiting.", e);
             return;

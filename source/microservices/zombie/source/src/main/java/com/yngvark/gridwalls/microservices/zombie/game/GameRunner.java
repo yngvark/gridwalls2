@@ -7,11 +7,11 @@ import java.util.Optional;
 
 public class GameRunner {
     private final GameConfigFetcher gameConfigFetcher;
-    private final GameLoop gameLoop;
+    private final GameRunnerLoop gameRunnerLoop;
 
-    public GameRunner(GameConfigFetcher gameConfigFetcher, GameLoop gameLoop) {
+    public GameRunner(GameConfigFetcher gameConfigFetcher, GameRunnerLoop gameRunnerLoop) {
         this.gameConfigFetcher = gameConfigFetcher;
-        this.gameLoop = gameLoop;
+        this.gameRunnerLoop = gameRunnerLoop;
     }
 
     public void run() {
@@ -23,6 +23,6 @@ public class GameRunner {
 
         GameConfig gameConfig = gameConfigOptional.get();
 
-        gameLoop.run(gameConfig);
+        gameRunnerLoop.run(gameConfig);
     }
 }

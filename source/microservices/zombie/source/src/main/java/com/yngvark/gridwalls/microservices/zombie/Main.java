@@ -1,7 +1,8 @@
 package com.yngvark.gridwalls.microservices.zombie;
 
 import com.yngvark.gridwalls.core.CoordinateSerializer;
-import com.yngvark.gridwalls.microservices.zombie.game.GameLoop;
+import com.yngvark.gridwalls.microservices.zombie.game.GameLoopFactory;
+import com.yngvark.gridwalls.microservices.zombie.game.GameRunnerLoop;
 import com.yngvark.gridwalls.microservices.zombie.game.GameRunner;
 import com.yngvark.gridwalls.microservices.zombie.game.ProcessStopper;
 import com.yngvark.gridwalls.microservices.zombie.game.ZombieFactory;
@@ -11,6 +12,7 @@ import com.yngvark.gridwalls.microservices.zombie.game.netcom.rabbitmq.RabbitPub
 import com.yngvark.gridwalls.microservices.zombie.game.os_process.ExecutorServiceExiter;
 import com.yngvark.gridwalls.microservices.zombie.game.utils.GameErrorHandler;
 import com.yngvark.gridwalls.microservices.zombie.game.os_process.ProcessRunner;
+import com.yngvark.gridwalls.microservices.zombie.game.utils.Sleeper;
 import com.yngvark.gridwalls.microservices.zombie.game.utils.StackTracePrinter;
 import com.yngvark.gridwalls.netcom.connection.BrokerConnecterHolder;
 import com.yngvark.gridwalls.netcom.gameconfig.GameConfigDeserializer;
@@ -23,6 +25,7 @@ import com.yngvark.gridwalls.microservices.zombie.game.netcom.rabbitmq.RabbitRpc
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
 
 class Main {
     public static void main(String[] args) {
@@ -42,15 +45,18 @@ class Main {
                 new RabbitRpcCaller(),
                 new RabbitPublisher()
         );
-/*
-        GameLoop gameLoop = new GameLoop(
-                new ZombiesController(
-                        new ZombieFactory(),
-                        new ZombieMovedPublisher(
-                                new ZombieMovedSerializer(new CoordinateSerializer()),
-                                netcom)
+        GameRunnerLoop gameRunnerLoop = new GameRunnerLoop(
+                new GameLoopFactory(
+                        new ZombiesController(
+                                new ZombieFactory(),
+                                new ZombieMovedPublisher(
+                                        new ZombieMovedSerializer(new CoordinateSerializer()),
+                                        netcom)
+                        )
                 ),
-                new GameErrorHandler());
+                new GameErrorHandler(),
+                new Sleeper(500),
+                new LinkedBlockingQueue());
 
         ProcessRunner processRunner = new ProcessRunner(
                 new GameRunner(
@@ -60,12 +66,12 @@ class Main {
                                 netcom,
                                 new GameConfigDeserializer()
                         ),
-                        gameLoop
+                        gameRunnerLoop
                 ),
-                new ProcessStopper(gameLoop, netcom, new ExecutorServiceExiter(executorService, stackTracePrinter))
+                new ProcessStopper(gameRunnerLoop, netcom, new ExecutorServiceExiter(executorService, stackTracePrinter))
         );
 
-        processRunner.run();*/
+        processRunner.run();
     }
 
 }
