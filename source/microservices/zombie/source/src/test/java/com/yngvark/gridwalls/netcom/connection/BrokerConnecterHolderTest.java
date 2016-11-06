@@ -21,7 +21,7 @@ public class BrokerConnecterHolderTest {
     // Trenger i så fall en måte å si til retryconnecter at nå er den disconnecta.
 
     @Test
-    public void should_connect_if_not_connected() { // TODO: Put this in integration test instead...?
+    public void should_connect_if_not_connected() {
         // Given
         BrokerConnecter brokerConnecter = mock(BrokerConnecter.class);
         when(brokerConnecter.connect(eq("someHost"), any(Integer.class))).thenReturn(connected());

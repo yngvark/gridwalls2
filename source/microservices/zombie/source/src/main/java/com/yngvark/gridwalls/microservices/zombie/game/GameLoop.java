@@ -10,7 +10,7 @@ public class GameLoop {
     private final GameErrorHandler gameErrorHandler;
     private final Sleeper sleeper;
 
-    private boolean runLoop;
+    private boolean runLoop = true;
 
     public GameLoop(GameConfig gameConfig, ZombiesController zombiesController,
             GameErrorHandler gameErrorHandler, Sleeper sleeper) {
