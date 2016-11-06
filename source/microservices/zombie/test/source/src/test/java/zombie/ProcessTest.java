@@ -1,9 +1,9 @@
 package zombie;
 
 import org.junit.jupiter.api.Test;
-import zombie.lib.ProcessKiller;
-import zombie.lib.ProcessStarter;
-import zombie.lib.InputStreamListener;
+import util.lib.ProcessKiller;
+import util.lib.ProcessStarter;
+import util.lib.InputStreamListener;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;

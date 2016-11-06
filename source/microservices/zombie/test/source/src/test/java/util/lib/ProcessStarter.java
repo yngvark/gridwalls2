@@ -1,4 +1,4 @@
-package zombie.lib;
+package util.lib;
 
 import java.io.IOException;
 
