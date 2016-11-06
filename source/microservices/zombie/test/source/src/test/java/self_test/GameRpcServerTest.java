@@ -5,10 +5,11 @@ import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.RpcClient;
 import com.yngvark.gridwalls.netcom.GameRpcServer;
-import com.yngvark.gridwalls.netcom.ThreadedRunner;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeoutException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -26,16 +27,19 @@ public class GameRpcServerTest {
         // Listen for GameInfo RPC-calls from client.
         String serverResponse = "Hey this is server";
         GameRpcServer gameInfoRequestHandler = new GameRpcServer(connection, rpcQueueName, (String request) -> serverResponse);
-        ThreadedRunner threadedGameInfoRequestHandler = new ThreadedRunner(gameInfoRequestHandler);
-        threadedGameInfoRequestHandler.runInNewThread();
+
+        ExecutorService executorService = Executors.newCachedThreadPool();
+        executorService.submit(() -> gameInfoRequestHandler.run());
 
         // When
         String actualResponse = doRpcFromClient();
 
         // Then
-        connection.close();
-
         assertEquals(serverResponse, actualResponse);
+
+        gameInfoRequestHandler.stop();
+        connection.close();
+        executorService.shutdown();
     }
 
     private String doRpcFromClient() throws IOException, TimeoutException {

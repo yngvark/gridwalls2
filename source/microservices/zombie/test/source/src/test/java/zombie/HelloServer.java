@@ -5,6 +5,7 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.StringRpcServer;
+import org.junit.jupiter.api.Test;
 
 public class HelloServer {
     public static void main(String[] args) {
@@ -31,5 +32,17 @@ public class HelloServer {
             ex.printStackTrace();
             System.exit(1);
         }
+    }
+
+
+    @Test
+    public void arne() throws InterruptedException {
+        Object a = new Object();
+        long start = System.nanoTime();
+        synchronized (a) {
+            a.wait(500);
+        }
+        long end = System.nanoTime();
+        System.out.println("Wait time: " + (end - start) + " " + ((end - start) / Math.pow(10, 9)));
     }
 }
