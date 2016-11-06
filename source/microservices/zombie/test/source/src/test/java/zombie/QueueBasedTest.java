@@ -8,14 +8,14 @@ import com.rabbitmq.client.Consumer;
 import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.Envelope;
 import com.yngvark.gridwalls.netcom.GameRpcServer;
-import com.yngvark.gridwalls.netcom.ThreadedRunner;
 import org.junit.jupiter.api.Test;
+import zombie.lib.InputStreamListener;
 import zombie.lib.ProcessKiller;
 import zombie.lib.ProcessStarter;
-import zombie.lib.InputStreamListener;
 
 import java.io.IOException;
-import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -25,8 +25,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class QueueBasedTest {
@@ -92,8 +90,8 @@ public class QueueBasedTest {
         stdoutListener.waitFor("Receiving game config.", 5, TimeUnit.SECONDS);
 
         // Read queue.
-        System.out.println("Waiting for zombie move event.");
-        for (int i = 0; i < 10; i++) {
+        System.out.println("Waiting for a few zombie move events.");
+        for (int i = 0; i < 2; i++) {
             String event = blockingBrokerQueue.poll(1200, TimeUnit.MILLISECONDS);
             System.out.println("Processing event (" + i + "): " + event);
             if (event == null)
@@ -205,4 +203,13 @@ public class QueueBasedTest {
 //
 //        ProcessKiller.waitForExitAndAssertExited(process, 3, TimeUnit.SECONDS);
 //    }
+
+    @Test
+    public void aren() throws InterruptedException {
+        String time = LocalDateTime.now().format(DateTimeFormatter.ofPattern("H:m:s.n"));
+        String time2 = LocalDateTime.now().format(DateTimeFormatter.ofPattern("H:m:s.S"));
+
+        System.out.println(time);
+        System.out.println(time2);
+    }
 }

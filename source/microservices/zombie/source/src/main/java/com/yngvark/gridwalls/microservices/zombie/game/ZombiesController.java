@@ -32,7 +32,6 @@ public class ZombiesController {
     }
 
     private void runNextTurnOn(Zombie zombie) {
-        System.out.println("zombie1.nextTurn()");
         ZombieMoved event = zombie.nextTurn();
         zombieMovedPublisher.publishEvent(event);
     }

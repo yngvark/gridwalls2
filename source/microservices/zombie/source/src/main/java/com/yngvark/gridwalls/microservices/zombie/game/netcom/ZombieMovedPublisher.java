@@ -15,8 +15,6 @@ public class ZombieMovedPublisher {
 
     public void publishEvent(ZombieMoved event) {
         String zombieMovedEvent = zombieMovedSerializer.serialize(event);
-        System.out.println("Sending message: " + zombieMovedEvent);
-
         netcom.publish("ZombieMoved", zombieMovedEvent);
     }
 }
