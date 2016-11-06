@@ -88,10 +88,12 @@ public class QueueBasedTest {
 
         // Read queue.
         System.out.println("Waiting for zombie move event.");
-        String event = blockingBrokerQueue.take(); // TODO putt i tråd med timeout
+        String event = blockingBrokerQueue.take(); // TODO putt i tråd med timeout, evt use poll.
         System.out.println("Event: " + event);
 
         // Finally
+        System.out.println("Stopping test.");
+
         threadedGameInfoRequestHandler.stop();
         connection.close();
         ProcessKiller.killUnixProcess(process);

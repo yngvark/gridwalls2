@@ -27,7 +27,7 @@ public class ProcessStopper {
             return;
         stopped = true;
 
-        gameLoop.stop();
+        gameLoop.stopLoopAndWaitUntilItCompletes();
         executorServiceExiter.exitGracefully();
         netcom.disconnectAndDisableReconnect();
 

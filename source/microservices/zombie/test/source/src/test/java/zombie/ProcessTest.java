@@ -18,8 +18,10 @@ public class ProcessTest {
 
         InputStreamListener inputStreamListener = new InputStreamListener();
         inputStreamListener.listenInNewThreadOn(process.getInputStream());
-        inputStreamListener.listenInNewThreadOn(process.getErrorStream());
         inputStreamListener.waitFor("Receiving game config.", 2, TimeUnit.SECONDS);
+
+        InputStreamListener stderrListener = new InputStreamListener();
+        stderrListener.listenInNewThreadOn(process.getErrorStream());
 
         // When
         ProcessKiller.killUnixProcess(process);

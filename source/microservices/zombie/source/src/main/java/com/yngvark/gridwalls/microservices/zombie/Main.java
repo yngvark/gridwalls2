@@ -42,7 +42,7 @@ class Main {
                 new RabbitRpcCaller(),
                 new RabbitPublisher()
         );
-
+/*
         GameLoop gameLoop = new GameLoop(
                 new ZombiesController(
                         new ZombieFactory(),
@@ -65,7 +65,7 @@ class Main {
                 new ProcessStopper(gameLoop, netcom, new ExecutorServiceExiter(executorService, stackTracePrinter))
         );
 
-        processRunner.run();
+        processRunner.run();*/
     }
 
 }
