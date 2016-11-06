@@ -3,6 +3,7 @@ package com.yngvark.gridwalls.microservices.zombie.game.netcom.rabbitmq;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.RpcClient;
+import com.rabbitmq.client.ShutdownSignalException;
 import com.yngvark.gridwalls.netcom.rpc.RpcCaller;
 import com.yngvark.gridwalls.netcom.rpc.RpcFailed;
 import com.yngvark.gridwalls.netcom.rpc.RpcResult;
@@ -34,7 +35,12 @@ public class RabbitRpcCaller implements RpcCaller<RabbitConnectionWrapper> {
         RpcClient rpcClient = new RpcClient(channel, exchange, rpcQueueName);
 
         System.out.println("Receiving game config.");
-        String gameConfigTxt = rpcClient.stringCall(message);
+        String gameConfigTxt;
+        try {
+            gameConfigTxt = rpcClient.stringCall(message);
+        } catch (ShutdownSignalException e) {
+            return new RpcFailed("RPC call aborted due to shut down signal. Details: " + e.getMessage());
+        }
         System.out.println("Response: " + gameConfigTxt);
 
         rpcClient.close();
