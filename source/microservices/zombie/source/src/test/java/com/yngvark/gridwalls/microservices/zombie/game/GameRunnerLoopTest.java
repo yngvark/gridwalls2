@@ -19,7 +19,7 @@ public class GameRunnerLoopTest {
         // Given
         GameLoopFactory gameLoopFactory = mock(GameLoopFactory.class);
         BlockingQueue blockingQueue = spy(LinkedBlockingQueue.class);
-        GameRunnerLoop gameRunnerLoop = new GameRunnerLoop(gameLoopFactory, null, null, blockingQueue);
+        GameRunnerLoop gameRunnerLoop = new GameRunnerLoop(gameLoopFactory, blockingQueue);
         gameRunnerLoop.stopLoopAndWaitUntilItCompletes();
 
         // When
@@ -38,26 +38,25 @@ public class GameRunnerLoopTest {
         when(gameLoopFactory.create(any())).thenReturn(gameLoop);
 
         BlockingQueue blockingQueue = spy(LinkedBlockingQueue.class);
-        Sleeper sleeper = mock(Sleeper.class);
 
-        GameRunnerLoop gameRunnerLoop = new GameRunnerLoop(gameLoopFactory, null, sleeper, blockingQueue);
+        GameRunnerLoop gameRunnerLoop = new GameRunnerLoop(gameLoopFactory, blockingQueue);
 
         doCallRealMethod().when(blockingQueue).poll(any(Long.class), any(TimeUnit.class));
 
         doAnswer((invocationOnMock -> {
-            System.out.println("Game loop has exited");
+            System.out.println("Game loop has exited.");
             return invocationOnMock.callRealMethod();
         })).when(blockingQueue).put(any());
 
-        BlockingQueue waitForSleepHasBeenCalled = new LinkedBlockingQueue();
+        BlockingQueue waitForLoopRun = new LinkedBlockingQueue();
         doAnswer(invocationOnMock -> {
-            waitForSleepHasBeenCalled.put("Sleep has been called");
+            waitForLoopRun.put("Game loop has been run.");
             return Void.TYPE;
-        }).when(sleeper).sleep();
+        }).when(gameLoop).loop();
 
         ExecutorService executorService = Executors.newCachedThreadPool();
         Future gameLoopFuture = executorService.submit(() -> gameRunnerLoop.run(GameConfig.builder().build()));
-        Object called = waitForSleepHasBeenCalled.poll(3, TimeUnit.SECONDS);
+        Object called = waitForLoopRun.poll(3, TimeUnit.SECONDS);
         if (called == null) throw new RuntimeException("Sleeper was never called");
 
         // When

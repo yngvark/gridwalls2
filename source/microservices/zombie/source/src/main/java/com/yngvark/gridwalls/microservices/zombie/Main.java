@@ -52,10 +52,10 @@ class Main {
                                 new ZombieMovedPublisher(
                                         new ZombieMovedSerializer(new CoordinateSerializer()),
                                         netcom)
-                        )
-                ),
-                new GameErrorHandler(),
-                new Sleeper(500),
+                        ),
+                        new GameErrorHandler(),
+                        new Sleeper(500)
+                        ),
                 new LinkedBlockingQueue());
 
         ProcessRunner processRunner = new ProcessRunner(

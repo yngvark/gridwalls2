@@ -1,7 +1,5 @@
 package com.yngvark.gridwalls.microservices.zombie.game;
 
-import com.yngvark.gridwalls.microservices.zombie.game.utils.GameErrorHandler;
-import com.yngvark.gridwalls.microservices.zombie.game.utils.Sleeper;
 import com.yngvark.gridwalls.netcom.gameconfig.GameConfig;
 
 import java.util.concurrent.BlockingQueue;
@@ -9,22 +7,19 @@ import java.util.concurrent.TimeUnit;
 
 public class GameRunnerLoop {
     private final GameLoopFactory gameLoopFactory;
-    private final GameErrorHandler gameErrorHandler;
-    private final Sleeper sleeper;
     private final BlockingQueue blockingQueue;
 
-    private boolean runLoop = true;
     private boolean runLoopStarted = false;
+    private boolean shouldStartRunloop = true;
+    private GameLoop gameLoop;
 
-    public GameRunnerLoop(GameLoopFactory gameLoopFactory, GameErrorHandler gameErrorHandler, Sleeper sleeper, BlockingQueue blockingQueue) {
+    public GameRunnerLoop(GameLoopFactory gameLoopFactory, BlockingQueue blockingQueue) {
         this.gameLoopFactory = gameLoopFactory;
-        this.gameErrorHandler = gameErrorHandler;
-        this.sleeper = sleeper;
         this.blockingQueue = blockingQueue;
     }
 
     public void run(GameConfig gameConfig) {
-        if (!runLoop) {
+        if (!shouldStartRunloop) {
             System.out.println("Not running game loop.");
             return;
         }
@@ -32,20 +27,8 @@ public class GameRunnerLoop {
         System.out.println("Starting game loop.");
         runLoopStarted = true;
 
-        GameLoop gameLoop = gameLoopFactory.create(gameConfig);
-        int i = 0;
-        while (i < 100 && runLoop) {
-            i++;
-            try {
-                gameLoop.nextTurn();
-            } catch (Throwable e) {
-                gameErrorHandler.handle(e);
-                System.out.println("Aborting due to errors. Details: " + gameErrorHandler.getErrors());
-                break;
-            }
-
-            sleeper.sleep();
-        }
+        gameLoop = gameLoopFactory.create(gameConfig);
+        gameLoop.loop();
 
         signalDone();
         System.out.println("GameLoop stopped.");
@@ -62,7 +45,10 @@ public class GameRunnerLoop {
 
     public void stopLoopAndWaitUntilItCompletes() {
         System.out.println("Stopping game loop");
-        runLoop = false;
+        shouldStartRunloop = false;
+
+        if (gameLoop != null)
+            gameLoop.stopLoop();
 
         if (runLoopStarted)
             waitForDoneSignal();
