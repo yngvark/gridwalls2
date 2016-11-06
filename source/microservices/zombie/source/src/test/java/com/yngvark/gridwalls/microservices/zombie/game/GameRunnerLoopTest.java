@@ -1,6 +1,5 @@
 package com.yngvark.gridwalls.microservices.zombie.game;
 
-import com.yngvark.gridwalls.microservices.zombie.game.utils.Sleeper;
 import com.yngvark.gridwalls.netcom.gameconfig.GameConfig;
 import org.junit.Test;
 
@@ -11,8 +10,16 @@ import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doCallRealMethod;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+@SuppressWarnings("unchecked")
 public class GameRunnerLoopTest {
     @Test
     public void should_not_run_loop_if_loop_stopped_before_starting() throws Exception {

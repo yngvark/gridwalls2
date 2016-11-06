@@ -6,8 +6,15 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class RabbitPublisherTest {
     @Test
@@ -34,7 +41,6 @@ public class RabbitPublisherTest {
         RabbitPublisher rabbitPublisher = new RabbitPublisher();
 
         RabbitConnectionWrapper connectionWrapper = mock(RabbitConnectionWrapper.class);
-        Channel channel = mock(Channel.class);
 
         doThrow(new IOException("ChannelFailure"))
                 .when(connectionWrapper).getChannelForExchange(eq("my_queue"));

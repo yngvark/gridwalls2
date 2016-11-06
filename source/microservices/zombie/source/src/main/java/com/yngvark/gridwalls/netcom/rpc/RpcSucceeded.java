@@ -1,7 +1,5 @@
 package com.yngvark.gridwalls.netcom.rpc;
 
-import com.yngvark.gridwalls.netcom.rpc.RpcResult;
-
 public class RpcSucceeded implements RpcResult {
     private final String rpcResponse;
 

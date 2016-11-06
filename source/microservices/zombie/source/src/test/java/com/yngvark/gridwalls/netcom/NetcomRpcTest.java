@@ -1,9 +1,9 @@
 package com.yngvark.gridwalls.netcom;
 
-import com.yngvark.gridwalls.netcom.connection.connect_status.Connected;
-import com.yngvark.gridwalls.netcom.connection.ConnectionWrapper;
-import com.yngvark.gridwalls.netcom.connection.connect_status.Disconnected;
 import com.yngvark.gridwalls.netcom.connection.BrokerConnecterHolder;
+import com.yngvark.gridwalls.netcom.connection.ConnectionWrapper;
+import com.yngvark.gridwalls.netcom.connection.connect_status.Connected;
+import com.yngvark.gridwalls.netcom.connection.connect_status.Disconnected;
 import com.yngvark.gridwalls.netcom.rpc.RpcCaller;
 import com.yngvark.gridwalls.netcom.rpc.RpcResult;
 import com.yngvark.gridwalls.netcom.rpc.RpcSucceeded;

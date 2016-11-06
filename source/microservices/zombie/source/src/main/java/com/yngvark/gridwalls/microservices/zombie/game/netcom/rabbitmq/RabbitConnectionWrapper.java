@@ -14,7 +14,7 @@ public class RabbitConnectionWrapper implements ConnectionWrapper {
     private final StackTracePrinter stackTracePrinter;
     private final Connection connection;
 
-    private Map<String, Channel> exchangeChannnels = new HashMap<>();
+    private final Map<String, Channel> exchangeChannnels = new HashMap<>();
 
     public RabbitConnectionWrapper(StackTracePrinter stackTracePrinter, Connection connection) {
         this.stackTracePrinter = stackTracePrinter;

@@ -4,8 +4,8 @@ import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.yngvark.gridwalls.microservices.zombie.game.utils.StackTracePrinter;
 import com.yngvark.gridwalls.netcom.connection.BrokerConnecter;
-import com.yngvark.gridwalls.netcom.connection.connect_status.ConnectionStatus;
 import com.yngvark.gridwalls.netcom.connection.connect_status.Connected;
+import com.yngvark.gridwalls.netcom.connection.connect_status.ConnectionStatus;
 import com.yngvark.gridwalls.netcom.connection.connect_status.Disconnected;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 

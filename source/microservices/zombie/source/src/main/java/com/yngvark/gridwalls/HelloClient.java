@@ -5,6 +5,7 @@ import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.RpcClient;
 
+@SuppressWarnings("WeakerAccess")
 public class HelloClient {
     public static void main(String[] args) {
         try {

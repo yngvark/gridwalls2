@@ -1,7 +1,6 @@
 package com.yngvark.gridwalls.microservices.zombie;
 
-import org.junit.jupiter.api.BeforeEach;
-
+@SuppressWarnings({ "WeakerAccess", "unused" })
 public class ZombieTest {
 //    private ZombieMovedSerializer zombieMovedSerializer;
 

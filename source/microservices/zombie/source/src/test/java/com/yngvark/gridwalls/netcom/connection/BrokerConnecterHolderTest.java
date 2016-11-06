@@ -1,9 +1,8 @@
 package com.yngvark.gridwalls.netcom.connection;
 
 import com.yngvark.gridwalls.microservices.zombie.Config;
-import com.yngvark.gridwalls.netcom.connection.connect_status.ConnectionStatus;
 import com.yngvark.gridwalls.netcom.connection.connect_status.Connected;
-import com.yngvark.gridwalls.netcom.connection.connect_status.Disconnected;
+import com.yngvark.gridwalls.netcom.connection.connect_status.ConnectionStatus;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -16,6 +15,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@SuppressWarnings("unchecked")
 public class BrokerConnecterHolderTest {
     // TEST: Retryconnecter skal ikke retrye når den allerede er connecta. Må huske at den er det.
     // Trenger i så fall en måte å si til retryconnecter at nå er den disconnecta.

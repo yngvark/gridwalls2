@@ -4,8 +4,12 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertSame;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class RabbitConnectionWrapperTest {
     @Test

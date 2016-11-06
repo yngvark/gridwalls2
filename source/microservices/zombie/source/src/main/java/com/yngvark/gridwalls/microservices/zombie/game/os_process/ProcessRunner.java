@@ -3,8 +3,6 @@ package com.yngvark.gridwalls.microservices.zombie.game.os_process;
 import com.yngvark.gridwalls.microservices.zombie.game.GameRunner;
 import com.yngvark.gridwalls.microservices.zombie.game.ProcessStopper;
 
-import java.util.concurrent.ExecutorService;
-
 public class ProcessRunner {
     private final GameRunner gameRunner;
     private final ProcessStopper processStopper;

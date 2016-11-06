@@ -7,13 +7,13 @@ import java.util.concurrent.TimeUnit;
 
 public class GameRunnerLoop {
     private final GameLoopFactory gameLoopFactory;
-    private final BlockingQueue blockingQueue;
+    private final BlockingQueue<String> blockingQueue;
 
     private boolean runLoopStarted = false;
     private boolean shouldStartRunloop = true;
     private GameLoop gameLoop;
 
-    public GameRunnerLoop(GameLoopFactory gameLoopFactory, BlockingQueue blockingQueue) {
+    public GameRunnerLoop(GameLoopFactory gameLoopFactory, BlockingQueue<String> blockingQueue) {
         this.gameLoopFactory = gameLoopFactory;
         this.blockingQueue = blockingQueue;
     }

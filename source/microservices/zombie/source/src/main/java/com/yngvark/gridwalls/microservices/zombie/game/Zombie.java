@@ -1,11 +1,11 @@
 package com.yngvark.gridwalls.microservices.zombie.game;
 
-import java.util.Random;
-import java.util.UUID;
-
 import com.yngvark.gridwalls.core.Coordinate;
 import com.yngvark.gridwalls.core.CoordinateFactory;
 import com.yngvark.gridwalls.core.Direction;
+
+import java.util.Random;
+import java.util.UUID;
 
 class Zombie {
     private final CoordinateFactory coordinateFactory;
