@@ -3,7 +3,7 @@ package com.yngvark.gridwalls.microservices.zombie;
 import com.yngvark.gridwalls.core.CoordinateSerializer;
 import com.yngvark.gridwalls.microservices.zombie.game.GameLoopFactory;
 import com.yngvark.gridwalls.microservices.zombie.game.GameRunner;
-import com.yngvark.gridwalls.microservices.zombie.game.GameRunnerLoop;
+import com.yngvark.gridwalls.microservices.zombie.game.GameLoopRunner;
 import com.yngvark.gridwalls.microservices.zombie.game.ProcessStopper;
 import com.yngvark.gridwalls.microservices.zombie.game.ZombieFactory;
 import com.yngvark.gridwalls.microservices.zombie.game.ZombieMovedSerializer;
@@ -45,7 +45,7 @@ class Main {
                 new RabbitRpcCaller(),
                 new RabbitPublisher()
         );
-        GameRunnerLoop gameRunnerLoop = new GameRunnerLoop(
+        GameLoopRunner gameRunnerLoop = new GameLoopRunner(
                 new GameLoopFactory(
                         new ZombiesController(
                                 new ZombieFactory(),

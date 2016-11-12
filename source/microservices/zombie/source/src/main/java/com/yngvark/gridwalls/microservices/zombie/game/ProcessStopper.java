@@ -4,13 +4,13 @@ import com.yngvark.gridwalls.microservices.zombie.game.os_process.ExecutorServic
 import com.yngvark.gridwalls.netcom.Netcom;
 
 public class ProcessStopper {
-    private final GameRunnerLoop gameRunnerLoop;
+    private final GameLoopRunner gameRunnerLoop;
     private final Netcom netcom;
     private final ExecutorServiceExiter executorServiceExiter;
 
     private boolean stopped = false;
 
-    public ProcessStopper(GameRunnerLoop gameRunnerLoop, Netcom netcom,
+    public ProcessStopper(GameLoopRunner gameRunnerLoop, Netcom netcom,
             ExecutorServiceExiter executorServiceExiter) {
         this.gameRunnerLoop = gameRunnerLoop;
         this.netcom = netcom;

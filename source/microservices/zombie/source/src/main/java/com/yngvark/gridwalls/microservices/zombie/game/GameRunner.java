@@ -7,9 +7,9 @@ import java.util.Optional;
 
 public class GameRunner {
     private final GameConfigFetcher gameConfigFetcher;
-    private final GameRunnerLoop gameRunnerLoop;
+    private final GameLoopRunner gameRunnerLoop;
 
-    public GameRunner(GameConfigFetcher gameConfigFetcher, GameRunnerLoop gameRunnerLoop) {
+    public GameRunner(GameConfigFetcher gameConfigFetcher, GameLoopRunner gameRunnerLoop) {
         this.gameConfigFetcher = gameConfigFetcher;
         this.gameRunnerLoop = gameRunnerLoop;
     }

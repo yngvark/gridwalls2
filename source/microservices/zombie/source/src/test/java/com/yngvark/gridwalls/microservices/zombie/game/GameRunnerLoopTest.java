@@ -26,7 +26,7 @@ public class GameRunnerLoopTest {
         // Given
         GameLoopFactory gameLoopFactory = mock(GameLoopFactory.class);
         BlockingQueue blockingQueue = spy(LinkedBlockingQueue.class);
-        GameRunnerLoop gameRunnerLoop = new GameRunnerLoop(gameLoopFactory, blockingQueue);
+        GameLoopRunner gameRunnerLoop = new GameLoopRunner(gameLoopFactory, blockingQueue);
         gameRunnerLoop.stopLoopAndWaitUntilItCompletes();
 
         // When
@@ -46,7 +46,7 @@ public class GameRunnerLoopTest {
 
         BlockingQueue blockingQueue = spy(LinkedBlockingQueue.class);
 
-        GameRunnerLoop gameRunnerLoop = new GameRunnerLoop(gameLoopFactory, blockingQueue);
+        GameLoopRunner gameRunnerLoop = new GameLoopRunner(gameLoopFactory, blockingQueue);
 
         doCallRealMethod().when(blockingQueue).poll(any(Long.class), any(TimeUnit.class));
 

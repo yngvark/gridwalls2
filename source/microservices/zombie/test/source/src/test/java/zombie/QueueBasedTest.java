@@ -18,7 +18,7 @@ public class QueueBasedTest {
 
         // Then
         testHelper.waitForProcessOutput("Receiving game config.", 5, TimeUnit.SECONDS);
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 3; i++) {
             String event = testHelper.getEvent(1200, TimeUnit.MILLISECONDS);
             assertTrue(event.startsWith("[ZombieMoved]"));
         }

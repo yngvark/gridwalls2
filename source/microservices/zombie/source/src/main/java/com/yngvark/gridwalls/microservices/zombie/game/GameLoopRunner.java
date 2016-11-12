@@ -5,7 +5,7 @@ import com.yngvark.gridwalls.netcom.gameconfig.GameConfig;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-public class GameRunnerLoop {
+public class GameLoopRunner {
     private final GameLoopFactory gameLoopFactory;
     private final BlockingQueue<String> blockingQueue;
 
@@ -13,7 +13,7 @@ public class GameRunnerLoop {
     private boolean shouldStartRunloop = true;
     private GameLoop gameLoop;
 
-    public GameRunnerLoop(GameLoopFactory gameLoopFactory, BlockingQueue<String> blockingQueue) {
+    public GameLoopRunner(GameLoopFactory gameLoopFactory, BlockingQueue<String> blockingQueue) {
         this.gameLoopFactory = gameLoopFactory;
         this.blockingQueue = blockingQueue;
     }
