@@ -1,6 +1,7 @@
 package zombie;
 
 import org.junit.jupiter.api.Test;
+import test_helper.Config;
 import util.lib.ProcessKiller;
 import util.lib.ProcessStarter;
 import util.lib.InputStreamListener;

@@ -1,4 +1,4 @@
-package zombie;
+package test_helper;
 
 import com.yngvark.gridwalls.netcom.GameRpcServer;
 import com.yngvark.gridwalls.netcom.RpcRequestHandler;

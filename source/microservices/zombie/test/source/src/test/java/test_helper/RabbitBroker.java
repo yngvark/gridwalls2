@@ -1,4 +1,4 @@
-package zombie;
+package test_helper;
 
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;

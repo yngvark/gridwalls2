@@ -1,4 +1,4 @@
-package zombie;
+package test_helper;
 
 import com.yngvark.gridwalls.netcom.GameRpcServer;
 import util.lib.InputStreamListener;

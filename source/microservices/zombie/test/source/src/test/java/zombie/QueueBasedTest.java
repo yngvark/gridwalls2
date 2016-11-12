@@ -1,6 +1,8 @@
 package zombie;
 
 import org.junit.jupiter.api.Test;
+import test_helper.RabbitBroker;
+import test_helper.TestHelper;
 
 import java.util.concurrent.TimeUnit;
 
@@ -10,7 +12,7 @@ public class QueueBasedTest {
     @Test
     public void should_produe_zombie_moves_after_receiving_gameconfig() throws Exception {
         // Given
-        TestHelper testHelper = new TestHelper();
+        TestHelper testHelper = new TestHelper(new RabbitBroker());
         testHelper.startTest();
 
         // When
