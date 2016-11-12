@@ -3,8 +3,6 @@ package com.yngvark.gridwalls.microservices.zombie.game;
 import com.yngvark.gridwalls.netcom.gameconfig.GameConfig;
 import com.yngvark.gridwalls.netcom.gameconfig.GameConfigFetcher;
 
-import java.util.Optional;
-
 public class GameRunner {
     private final GameConfigFetcher gameConfigFetcher;
     private final GameLoopRunner gameRunnerLoop;
@@ -15,14 +13,7 @@ public class GameRunner {
     }
 
     public void run() {
-        Optional<GameConfig> gameConfigOptional = gameConfigFetcher.getGameConfigFromServer();
-        if (!gameConfigOptional.isPresent()) {
-            System.out.println("Could not get game configuration.");
-            return;
-        }
-
-        GameConfig gameConfig = gameConfigOptional.get();
-
+        GameConfig gameConfig = gameConfigFetcher.getGameConfigFromServer();
         gameRunnerLoop.run(gameConfig);
     }
 }

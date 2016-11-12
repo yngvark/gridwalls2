@@ -1,10 +1,8 @@
 package com.yngvark.gridwalls.netcom.gameconfig;
 
-import com.yngvark.gridwalls.microservices.zombie.game.utils.StackTracePrinter;
 import com.yngvark.gridwalls.netcom.Netcom;
 import com.yngvark.gridwalls.netcom.rpc.RpcResult;
 
-import java.util.Optional;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -16,22 +14,16 @@ public class GameConfigFetcher {
     private static final String RPC_QUEUE_NAME = "rpc_queue";
 
     private final ExecutorService executorService;
-    private final StackTracePrinter stackTracePrinter;
     private final Netcom netcom;
-    private final GameConfigDeserializer gameConfigDeserializer;
+    private final Deserializer deserializer;
 
-    public GameConfigFetcher(
-            ExecutorService executorService,
-            StackTracePrinter stackTracePrinter,
-            Netcom netcom,
-            GameConfigDeserializer gameConfigDeserializer) {
+    public GameConfigFetcher(ExecutorService executorService, Netcom netcom, Deserializer deserializer) {
         this.executorService = executorService;
-        this.stackTracePrinter = stackTracePrinter;
         this.netcom = netcom;
-        this.gameConfigDeserializer = gameConfigDeserializer;
+        this.deserializer = deserializer;
     }
 
-    public Optional<GameConfig> getGameConfigFromServer() {
+    public GameConfig getGameConfigFromServer() {
         Future<RpcResult> rpcFuture = executorService.submit(() -> netcom.rpcCall(RPC_QUEUE_NAME, "getGameConfig"));
 
         RpcResult gameConfigRpcResult;
@@ -39,18 +31,16 @@ public class GameConfigFetcher {
             System.out.println("Fetching game configuration.");
             gameConfigRpcResult = rpcFuture.get(10, TimeUnit.SECONDS);
         } catch (InterruptedException | ExecutionException | CancellationException | TimeoutException e) {
-            stackTracePrinter.print("Error while getting game configuration. Exiting", e);
-            return Optional.empty();
+            throw new RuntimeException("Error while getting game configuration. Exiting", e);
         }
 
         if (!gameConfigRpcResult.succeeded()) {
-            System.out.println("RPC call for game configuration failed. Details: " + gameConfigRpcResult.getFailedInfo());
-            return Optional.empty();
+            throw new RuntimeException("RPC call for game configuration failed. Details: " + gameConfigRpcResult.getFailedInfo());
         }
 
         String gameConfigRespose = gameConfigRpcResult.getRpcResponse();
-        GameConfig gameConfig = gameConfigDeserializer.deserialize(gameConfigRespose);
+        GameConfig gameConfig = deserializer.deserialize(gameConfigRespose);
 
-        return Optional.of(gameConfig);
+        return gameConfig;
     }
 }

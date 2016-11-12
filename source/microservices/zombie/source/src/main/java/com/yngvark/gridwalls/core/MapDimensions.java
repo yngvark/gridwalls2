@@ -1,5 +1,8 @@
 package com.yngvark.gridwalls.core;
 
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode
 public class MapDimensions {
     private final int width;
     private final int height;

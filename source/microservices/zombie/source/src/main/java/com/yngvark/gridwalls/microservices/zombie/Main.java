@@ -20,7 +20,7 @@ import com.yngvark.gridwalls.microservices.zombie.game.utils.Sleeper;
 import com.yngvark.gridwalls.microservices.zombie.game.utils.StackTracePrinter;
 import com.yngvark.gridwalls.netcom.Netcom;
 import com.yngvark.gridwalls.netcom.connection.BrokerConnecterHolder;
-import com.yngvark.gridwalls.netcom.gameconfig.GameConfigDeserializer;
+import com.yngvark.gridwalls.netcom.gameconfig.Deserializer;
 import com.yngvark.gridwalls.netcom.gameconfig.GameConfigFetcher;
 
 import java.util.concurrent.ExecutorService;
@@ -53,18 +53,16 @@ class Main {
                                         new ZombieMovedSerializer(new CoordinateSerializer()),
                                         netcom)
                         ),
-                        new GameErrorHandler(),
-                        new Sleeper()
-                        ),
+                        new GameErrorHandler()
+                ),
                 new LinkedBlockingQueue<>());
 
         ProcessRunner processRunner = new ProcessRunner(
                 new GameRunner(
                         new GameConfigFetcher(
                                 executorService,
-                                stackTracePrinter,
                                 netcom,
-                                new GameConfigDeserializer()
+                                new Deserializer()
                         ),
                         gameRunnerLoop
                 ),

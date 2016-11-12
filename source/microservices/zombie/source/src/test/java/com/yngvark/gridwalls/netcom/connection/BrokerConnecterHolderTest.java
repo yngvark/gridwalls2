@@ -1,6 +1,7 @@
 package com.yngvark.gridwalls.netcom.connection;
 
 import com.yngvark.gridwalls.microservices.zombie.Config;
+import com.yngvark.gridwalls.netcom.TestConnectionWrapper;
 import com.yngvark.gridwalls.netcom.connection.connect_status.Connected;
 import com.yngvark.gridwalls.netcom.connection.connect_status.ConnectionStatus;
 import org.junit.jupiter.api.Test;
@@ -17,9 +18,6 @@ import static org.mockito.Mockito.when;
 
 @SuppressWarnings("unchecked")
 public class BrokerConnecterHolderTest {
-    // TEST: Retryconnecter skal ikke retrye når den allerede er connecta. Må huske at den er det.
-    // Trenger i så fall en måte å si til retryconnecter at nå er den disconnecta.
-
     @Test
     public void should_connect_if_not_connected() {
         // Given
@@ -54,11 +52,6 @@ public class BrokerConnecterHolderTest {
     private ConnectionStatus connected() {
         ConnectionWrapper connectionWrapperToReturn = new TestConnectionWrapper();
         return new Connected(connectionWrapperToReturn);
-    }
-
-    class TestConnectionWrapper implements ConnectionWrapper {
-        @Override
-        public void disconnectIfConnected() { }
     }
 
     @Test
