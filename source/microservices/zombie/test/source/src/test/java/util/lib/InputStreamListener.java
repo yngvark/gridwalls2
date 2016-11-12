@@ -59,14 +59,14 @@ public class InputStreamListener {
         }
     }
 
-    public void waitFor(String logText, long time, TimeUnit timeUnit) throws InterruptedException {
-        System.out.println("Waiting for text.");
-        logTextToWaitFor = logText;
+    public void waitFor(String logTextToWaitFor, long time, TimeUnit timeUnit) throws InterruptedException {
+        System.out.println("Waiting for process output: " + logTextToWaitFor);
+        this.logTextToWaitFor = logTextToWaitFor;
         waitForLogText = true;
 
         Object result = blockingQueue.poll(time, timeUnit);
         if (result == null)
-            throw new RuntimeException("Did not receive text in time: " + logText);
+            throw new RuntimeException("Did not receive text in time: " + logTextToWaitFor);
 
         System.out.println("Found text! Continuing.");
     }

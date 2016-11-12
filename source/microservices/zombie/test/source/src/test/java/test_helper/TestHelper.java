@@ -20,6 +20,9 @@ public class TestHelper {
     private BlockingQueue<String> eventsFromClient;
     private Process process;
 
+    InputStreamListener stdoutListener;
+    InputStreamListener stderrListener;
+
     public TestHelper(Broker broker) {
         this.broker = broker;
     }
@@ -36,14 +39,16 @@ public class TestHelper {
 
     public void startProcess() throws IOException {
         process = ProcessStarter.startProcess(Config.PATH_TO_APP);
+
+        stdoutListener = new InputStreamListener();
+        stdoutListener.listenInNewThreadOn(process.getInputStream());
+
+        stderrListener = new InputStreamListener();
+        stderrListener.listenInNewThreadOn(process.getErrorStream());
     }
 
     public void waitForProcessOutput(String logText, long time, TimeUnit timeUnit) throws InterruptedException {
-        InputStreamListener stdoutListener = new InputStreamListener();
-        stdoutListener.listenInNewThreadOn(process.getInputStream());
-
-        InputStreamListener stderrListener = new InputStreamListener();
-        stderrListener.listenInNewThreadOn(process.getErrorStream());
+        stdoutListener.waitFor(logText, time, timeUnit);
     }
 
     public String getEvent(int timeout, TimeUnit timeUnit) throws InterruptedException {
