@@ -18,27 +18,46 @@ import java.util.concurrent.TimeoutException;
 
 public class RabbitBroker implements Broker {
     private Connection connection;
+    private Channel serverMessages;
 
     @Override
     public void connect() throws IOException, TimeoutException {
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost("rabbithost");
         connection = factory.newConnection();
+        setupServerQueue();
+    }
+
+    private void setupServerQueue() throws IOException {
+        serverMessages = connection.createChannel();
+
+        boolean exchangeDurable = false;
+        boolean exchangeAutoDelete = true;
+        Map<String, Object> standardArgs = null;
+
+        serverMessages.exchangeDeclare("ServerMessages", "fanout", exchangeDurable, exchangeAutoDelete, standardArgs);
+
+        boolean queueDurable = false;
+        boolean queueExclusive = false;
+        boolean queueAutoDelete = true;
+
+        serverMessages.queueDeclare("server_messages", queueDurable, queueExclusive, queueAutoDelete, standardArgs);
+        serverMessages.queueBind("server_messages", "ServerMessages", "");
     }
 
     @Override
     public BlockingQueue<String> consumeEventsFromClient() throws IOException {
         boolean exchangeDurable = false;
         boolean exchangeAutoDelete = true;
-
-        boolean queueDurable = false;
-        boolean queueExclusive = false;
-        boolean queueAutoDelete = true;
         Map<String, Object> standardArgs = null;
 
         String zombieMovedQueueName = "zombie_moved_queue";
         Channel eventsFromClientChannel = connection.createChannel();
         eventsFromClientChannel.exchangeDeclare("ZombieMoved", "fanout", exchangeDurable, exchangeAutoDelete, standardArgs);
+
+        boolean queueDurable = false;
+        boolean queueExclusive = false;
+        boolean queueAutoDelete = true;
         eventsFromClientChannel.queueDeclare(zombieMovedQueueName, queueDurable, queueExclusive, queueAutoDelete, standardArgs);
         eventsFromClientChannel.queueBind(zombieMovedQueueName, "ZombieMoved", "");
 
@@ -71,5 +90,10 @@ public class RabbitBroker implements Broker {
     @Override
     public void close() throws IOException {
         connection.close();
+    }
+
+    @Override
+    public void publishServerMessage(String msg) throws IOException {
+        serverMessages.basicPublish("ServerMessages", "", null, msg.getBytes());
     }
 }

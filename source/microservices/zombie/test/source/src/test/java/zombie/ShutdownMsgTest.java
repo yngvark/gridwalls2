@@ -8,9 +8,7 @@ import test_helper.TestHelper;
 
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-public class ZombieTest {
+public class ShutdownMsgTest {
     private TestHelper testHelper;
 
     @BeforeEach
@@ -24,19 +22,19 @@ public class ZombieTest {
     }
 
     @Test
-    public void should_produe_zombie_moves_after_receiving_gameconfig() throws Exception {
+    public void should_shutdown_when_receiving_kill_message_from_server() throws Exception {
         // Given
         testHelper.startTest(10);
+        testHelper.startProcess();
+        testHelper.waitForProcessOutputOrTimeout("Sending message", 3, TimeUnit.SECONDS);
+        for (int i = 0; i < 3; i++) {
+            testHelper.getEventOrTimeoutAfter(500, TimeUnit.MILLISECONDS);
+        }
 
         // When
-        testHelper.startProcess();
+        testHelper.publishServerMessage("shutdown");
 
         // Then
-        testHelper.waitForProcessOutputOrTimeout("Receiving game config.", 3, TimeUnit.SECONDS);
-
-        for (int i = 0; i < 3; i++) {
-            String event = testHelper.getEventOrTimeoutAfter(500, TimeUnit.MILLISECONDS);
-            assertTrue(event.startsWith("[ZombieMoved]"));
-        }
+        testHelper.waitForProcessExitOr(3, TimeUnit.SECONDS);
     }
 }

@@ -88,4 +88,21 @@ public class TestHelper {
     public List<String> getProcessOutput() {
         return stdoutListener.getProcessOutput();
     }
+
+    public void waitForProcessExitOr(int timeout, TimeUnit timeUnit) throws InterruptedException, IOException, ExecutionException {
+        if (!testStarted || testStopped)
+            throw new RuntimeException("testStarted=" + testStarted + " - testStopped=" + testStopped);
+
+        ProcessKiller.waitForExitAndAssertExited(process, timeout, timeUnit);
+
+        rpcServer.stop();
+        executorService.shutdown();
+        broker.close();
+        stdOutListenFuture.get();
+    }
+
+    public void publishServerMessage(String msg) throws IOException {
+        System.out.println("Publish server message: " + msg);
+        broker.publishServerMessage(msg);
+    }
 }

@@ -15,4 +15,6 @@ public interface Broker {
     GameRpcServer createRpcServer(String queueName, RpcRequestHandler requestHandler);
 
     void close() throws IOException;
+
+    void publishServerMessage(String msg) throws IOException;
 }
