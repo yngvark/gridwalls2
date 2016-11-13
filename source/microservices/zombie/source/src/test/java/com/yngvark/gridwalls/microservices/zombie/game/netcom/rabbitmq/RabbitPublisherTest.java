@@ -2,9 +2,13 @@ package com.yngvark.gridwalls.microservices.zombie.game.netcom.rabbitmq;
 
 import com.rabbitmq.client.Channel;
 import com.yngvark.gridwalls.netcom.publish.PublishResult;
-import org.junit.Test;
+import org.junit.Ignore;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -63,7 +67,7 @@ public class RabbitPublisherTest {
         Channel channel = mock(Channel.class);
         when(connectionWrapper.getChannelForExchange("my_queue")).thenReturn(channel);
 
-        doThrow(new IOException("Could not open connection."))
+        doThrow(new IOException("Error when sending output."))
                 .when(channel).basicPublish(eq("my_queue"), eq(""), any(), eq("hello".getBytes()));
 
         // When
@@ -72,7 +76,14 @@ public class RabbitPublisherTest {
         // Then
         verify(channel).basicPublish(eq("my_queue"), eq(""), any(), eq("hello".getBytes()));
         assertFalse(publishResult.succeeded());
-        assertEquals("Could not publish message. Details: Could not open connection.", publishResult.getFailedInfo());
+        assertEquals("Could not publish message, because publish failure. Details: Error when sending output.", publishResult.getFailedInfo());
+    }
+
+    @Test
+    @Ignore
+    public void test_time_format() {
+        String time = LocalTime.now().format(DateTimeFormatter.ofPattern("kk:mm:ss.SSS"));
+        System.out.println(time);
     }
 
 }

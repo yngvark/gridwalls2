@@ -4,10 +4,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 public class InputStreamListener {
@@ -19,8 +22,9 @@ public class InputStreamListener {
     private boolean waitForLogText = false;
     private String logTextToWaitFor = "";
     private BlockingQueue blockingQueue = new ArrayBlockingQueue(1);
+    private List<String> processOutput = new ArrayList<>();
 
-    public synchronized void listenInNewThreadOn(InputStream inputStream) {
+    public synchronized Future listenInNewThreadOn(InputStream inputStream) {
         if (listening)
             throw new RuntimeException("Can onle be called once.");
         listening = true;
@@ -29,9 +33,11 @@ public class InputStreamListener {
         BufferedReader appOutStream = new BufferedReader(new InputStreamReader(inputStream));
         executorService = Executors.newCachedThreadPool();
 
-        executorService.submit(() -> {
+        Future future = executorService.submit(() -> {
             readFrom(appOutStream);
         });
+
+        return future;
     }
 
     private void readFrom(BufferedReader appOutStream) {
@@ -46,7 +52,7 @@ public class InputStreamListener {
             if (line == null)
                 return;
 
-            if (waitForLogText && line.equals(logTextToWaitFor)) {
+            if (waitForLogText && line.contains(logTextToWaitFor)) {
                 waitForLogText = false;
                 try {
                     blockingQueue.put(new Object());
@@ -73,11 +79,16 @@ public class InputStreamListener {
 
     private void log(String line) {
         System.out.println("[PROCESS] \"" + line + "\"");
+        processOutput.add(line);
     }
 
     public void stopListening() {
         continueReading = false;
         executorService.shutdown();
         System.out.println("Listening on inputstream has shut down.");
+    }
+
+    public List<String> getProcessOutput() {
+        return new ArrayList<>(processOutput);
     }
 }

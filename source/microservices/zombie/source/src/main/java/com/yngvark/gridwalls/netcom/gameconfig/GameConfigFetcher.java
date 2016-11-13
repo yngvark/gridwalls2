@@ -29,7 +29,7 @@ public class GameConfigFetcher {
         RpcResult gameConfigRpcResult;
         try {
             System.out.println("Fetching game configuration.");
-            gameConfigRpcResult = rpcFuture.get(10, TimeUnit.SECONDS);
+            gameConfigRpcResult = rpcFuture.get(3, TimeUnit.SECONDS);
         } catch (InterruptedException | ExecutionException | CancellationException | TimeoutException e) {
             throw new RuntimeException("Error while getting game configuration. Exiting", e);
         }

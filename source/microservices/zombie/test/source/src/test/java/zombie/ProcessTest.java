@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ProcessTest {
     @Test
-    public void should_be_able_to_kill_process_within_3_seconds() throws IOException, InterruptedException, NoSuchFieldException, IllegalAccessException {
+    public void should_be_able_to_kill_process_within_5_seconds() throws IOException, InterruptedException, NoSuchFieldException, IllegalAccessException {
         // Given
         Process process = ProcessStarter.startProcess(Config.PATH_TO_APP);
 
@@ -28,7 +28,7 @@ public class ProcessTest {
         ProcessKiller.killUnixProcess(process);
 
         // Then
-        ProcessKiller.waitForExitAndAssertExited(process, 3, TimeUnit.SECONDS);
+        ProcessKiller.waitForExitAndAssertExited(process, 5, TimeUnit.SECONDS);
         inputStreamListener.stopListening();
     }
 }

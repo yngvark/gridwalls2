@@ -9,6 +9,7 @@ import com.yngvark.gridwalls.netcom.publish.Publisher;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 public class RabbitPublisher implements Publisher<RabbitConnectionWrapper> {
@@ -23,7 +24,7 @@ public class RabbitPublisher implements Publisher<RabbitConnectionWrapper> {
         }
 
         try {
-            String time = LocalDateTime.now().format(DateTimeFormatter.ofPattern("H:mm:s.n"));
+            String time = LocalTime.now().format(DateTimeFormatter.ofPattern("kk:mm:ss.SSS"));
             System.out.println(SafeMessageFormatter.format("[{0}] Sending message: {1}", time, message));
             channel.basicPublish(queue, "", null, message.getBytes());
         } catch (IOException e) {
