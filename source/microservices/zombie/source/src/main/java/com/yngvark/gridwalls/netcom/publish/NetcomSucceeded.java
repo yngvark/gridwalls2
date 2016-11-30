@@ -1,6 +1,6 @@
 package com.yngvark.gridwalls.netcom.publish;
 
-public class PublishSucceeded implements PublishResult {
+public class NetcomSucceeded implements NetcomResult {
     @Override
     public boolean succeeded() {
         return true;

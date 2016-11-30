@@ -30,7 +30,7 @@ public class NetcomRpcTest {
         RpcCaller rpcCaller = mock(RpcCaller.class);
         when(rpcCaller.rpcCall(any(ConnectionWrapper.class), eq("rpc_queue"), eq("hello"))).thenReturn(new RpcSucceeded("my RPC response"));
 
-        Netcom netcom = new Netcom(brokerConnecterHolder, rpcCaller, null);
+        Netcom netcom = new Netcom(brokerConnecterHolder, rpcCaller, null, null);
 
         // When
         RpcResult rpcResult = netcom.rpcCall("rpc_queue", "hello");
@@ -52,7 +52,7 @@ public class NetcomRpcTest {
         RpcCaller rpcCaller = mock(RpcCaller.class);
         when(rpcCaller.rpcCall(any(ConnectionWrapper.class), eq("rpc_queue"), eq("hello"))).thenReturn(new RpcSucceeded("my RPC response"));
 
-        Netcom netcom = new Netcom(brokerConnecterHolder, rpcCaller, null);
+        Netcom netcom = new Netcom(brokerConnecterHolder, rpcCaller, null, null);
 
         // When
         RpcResult rpcResult = netcom.rpcCall("rpc_queue", "hello");

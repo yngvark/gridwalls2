@@ -3,8 +3,11 @@ package com.yngvark.gridwalls.netcom;
 import com.yngvark.gridwalls.netcom.connection.BrokerConnecterHolder;
 import com.yngvark.gridwalls.netcom.connection.ConnectionWrapper;
 import com.yngvark.gridwalls.netcom.connection.connect_status.ConnectionStatus;
-import com.yngvark.gridwalls.netcom.publish.PublishFailed;
-import com.yngvark.gridwalls.netcom.publish.PublishResult;
+import com.yngvark.gridwalls.netcom.consume.ConsumeHandler;
+import com.yngvark.gridwalls.netcom.consume.Consumer;
+import com.yngvark.gridwalls.netcom.publish.NetcomFailed;
+import com.yngvark.gridwalls.netcom.publish.NetcomResult;
+import com.yngvark.gridwalls.netcom.publish.NetcomSucceeded;
 import com.yngvark.gridwalls.netcom.publish.Publisher;
 import com.yngvark.gridwalls.netcom.rpc.RpcCaller;
 import com.yngvark.gridwalls.netcom.rpc.RpcFailed;
@@ -14,11 +17,14 @@ public class Netcom<T extends ConnectionWrapper> {
     private final BrokerConnecterHolder<T> brokerConnecterHolder;
     private final RpcCaller<T> rpcCaller;
     private final Publisher<T> publisher;
+    private final Consumer consumer;
 
-    public Netcom(BrokerConnecterHolder<T> brokerConnecterHolder, RpcCaller<T> rpcCaller, Publisher<T> publisher) {
+    public Netcom(BrokerConnecterHolder<T> brokerConnecterHolder, RpcCaller<T> rpcCaller, Publisher<T> publisher,
+            Consumer consumer) {
         this.brokerConnecterHolder = brokerConnecterHolder;
         this.rpcCaller = rpcCaller;
         this.publisher = publisher;
+        this.consumer = consumer;
     }
 
     public RpcResult rpcCall(String rpcQueueName, String message) {
@@ -30,12 +36,21 @@ public class Netcom<T extends ConnectionWrapper> {
 
     }
 
-    public PublishResult publish(String queueName, String message) {
+    public NetcomResult publish(String queueName, String message) {
         ConnectionStatus<T> connectionStatus = brokerConnecterHolder.connectIfNotConnected();
         if (connectionStatus.connected()) {
             return publisher.publish(connectionStatus.getConnectionWrapper(), queueName, message);
         } else {
-            return new PublishFailed("Could not publish. Details: " + connectionStatus.getConnectFailedDetails());
+            return new NetcomFailed("Could not publish. Details: " + connectionStatus.getConnectFailedDetails());
+        }
+    }
+
+    public NetcomResult startConsume(ConsumeHandler handler) {
+        ConnectionStatus<T> connectionStatus = brokerConnecterHolder.connectIfNotConnected();
+        if (connectionStatus.connected()) {
+            return consumer.startConsume(handler);
+        } else {
+            return new NetcomFailed("Could not consume. Details: " + connectionStatus.getConnectFailedDetails());
         }
     }
 

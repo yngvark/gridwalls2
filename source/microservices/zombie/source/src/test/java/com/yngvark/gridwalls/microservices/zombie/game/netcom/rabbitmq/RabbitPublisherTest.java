@@ -1,12 +1,11 @@
 package com.yngvark.gridwalls.microservices.zombie.game.netcom.rabbitmq;
 
 import com.rabbitmq.client.Channel;
-import com.yngvark.gridwalls.netcom.publish.PublishResult;
+import com.yngvark.gridwalls.netcom.publish.NetcomResult;
 import org.junit.Ignore;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
@@ -31,12 +30,12 @@ public class RabbitPublisherTest {
         when(connectionWrapper.getChannelForExchange("my_queue")).thenReturn(channel);
 
         // When
-        PublishResult publishResult = rabbitPublisher.publish(connectionWrapper, "my_queue", "hello");
+        NetcomResult netcomResult = rabbitPublisher.publish(connectionWrapper, "my_queue", "hello");
 
         // Then
         verify(channel).basicPublish(eq("my_queue"), eq(""), any(), eq("hello".getBytes()));
-        assertTrue(publishResult.succeeded());
-        assertTrue(publishResult.getFailedInfo().length() > 0);
+        assertTrue(netcomResult.succeeded());
+        assertTrue(netcomResult.getFailedInfo().length() > 0);
     }
 
     @Test
@@ -50,12 +49,12 @@ public class RabbitPublisherTest {
                 .when(connectionWrapper).getChannelForExchange(eq("my_queue"));
 
         // When
-        PublishResult publishResult = rabbitPublisher.publish(connectionWrapper, "my_queue", "hello");
+        NetcomResult netcomResult = rabbitPublisher.publish(connectionWrapper, "my_queue", "hello");
 
         // Then
         verify(connectionWrapper).getChannelForExchange(eq("my_queue"));
-        assertFalse(publishResult.succeeded());
-        assertEquals("Could not publish message, because channel initialization failure. Details: ChannelFailure", publishResult.getFailedInfo());
+        assertFalse(netcomResult.succeeded());
+        assertEquals("Could not publish message, because channel initialization failure. Details: ChannelFailure", netcomResult.getFailedInfo());
     }
 
     @Test
@@ -71,12 +70,12 @@ public class RabbitPublisherTest {
                 .when(channel).basicPublish(eq("my_queue"), eq(""), any(), eq("hello".getBytes()));
 
         // When
-        PublishResult publishResult = rabbitPublisher.publish(connectionWrapper, "my_queue", "hello");
+        NetcomResult netcomResult = rabbitPublisher.publish(connectionWrapper, "my_queue", "hello");
 
         // Then
         verify(channel).basicPublish(eq("my_queue"), eq(""), any(), eq("hello".getBytes()));
-        assertFalse(publishResult.succeeded());
-        assertEquals("Could not publish message, because publish failure. Details: Error when sending output.", publishResult.getFailedInfo());
+        assertFalse(netcomResult.succeeded());
+        assertEquals("Could not publish message, because publish failure. Details: Error when sending output.", netcomResult.getFailedInfo());
     }
 
     @Test

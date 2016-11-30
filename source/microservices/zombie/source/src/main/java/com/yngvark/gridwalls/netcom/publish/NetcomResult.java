@@ -1,6 +1,6 @@
 package com.yngvark.gridwalls.netcom.publish;
 
-public interface PublishResult {
+public interface NetcomResult {
     boolean succeeded();
     String getFailedInfo();
 }

@@ -11,6 +11,7 @@ import com.yngvark.gridwalls.microservices.zombie.game.ZombiesController;
 import com.yngvark.gridwalls.microservices.zombie.game.netcom.ZombieMovedPublisher;
 import com.yngvark.gridwalls.microservices.zombie.game.netcom.rabbitmq.RabbitBrokerConnecter;
 import com.yngvark.gridwalls.microservices.zombie.game.netcom.rabbitmq.RabbitConnectionWrapper;
+import com.yngvark.gridwalls.microservices.zombie.game.netcom.rabbitmq.RabbitConsumer;
 import com.yngvark.gridwalls.microservices.zombie.game.netcom.rabbitmq.RabbitPublisher;
 import com.yngvark.gridwalls.microservices.zombie.game.netcom.rabbitmq.RabbitRpcCaller;
 import com.yngvark.gridwalls.microservices.zombie.game.os_process.ExecutorServiceExiter;
@@ -43,7 +44,8 @@ class Main {
                         new RabbitBrokerConnecter(stackTracePrinter)
                 ),
                 new RabbitRpcCaller(),
-                new RabbitPublisher()
+                new RabbitPublisher(),
+                new RabbitConsumer()
         );
         GameLoopRunner gameRunnerLoop = new GameLoopRunner(
                 new GameLoopFactory(

@@ -18,7 +18,9 @@ public class GameRunner implements ICanStop {
     }
 
     private void startConsumingEvents() {
-
+//        netcom.startConsume((msg) -> {
+//
+//        });
     }
 
     private void startProducingEvents() {

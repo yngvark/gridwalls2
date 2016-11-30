@@ -1,9 +1,9 @@
 package com.yngvark.gridwalls.netcom.publish;
 
-public class PublishFailed implements PublishResult {
+public class NetcomFailed implements NetcomResult {
     private final String failedInfo;
 
-    public PublishFailed(String failedInfo) {
+    public NetcomFailed(String failedInfo) {
         this.failedInfo = failedInfo;
     }
 
