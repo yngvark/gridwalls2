@@ -8,8 +8,6 @@ public class ProcessStopper {
     private final Netcom netcom;
     private final ExecutorServiceExiter executorServiceExiter;
 
-    private boolean stopped = false;
-
     public ProcessStopper(GameLoopRunner gameRunnerLoop, Netcom netcom,
             ExecutorServiceExiter executorServiceExiter) {
         this.gameRunnerLoop = gameRunnerLoop;
@@ -21,17 +19,9 @@ public class ProcessStopper {
      * Stops the game. Runs only once, even when called from multiple threads.
      */
     public synchronized void stop() {
-        System.out.println("Stopping process. Already stopped: " + stopped);
-
-        if (stopped)
-            return;
-        stopped = true;
-
-        gameRunnerLoop.stopLoopAndWaitUntilItCompletes();
         executorServiceExiter.exitGracefully();
         netcom.disconnectAndDisableReconnect();
 
-        System.out.println("Stopping process done.");
     }
 
 }

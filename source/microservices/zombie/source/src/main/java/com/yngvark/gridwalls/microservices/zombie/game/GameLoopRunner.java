@@ -5,7 +5,7 @@ import com.yngvark.gridwalls.netcom.gameconfig.GameConfig;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-public class GameLoopRunner {
+public class GameLoopRunner implements ICanStop {
     private final GameLoopFactory gameLoopFactory;
     private final BlockingQueue<String> blockingQueue;
 
@@ -43,7 +43,8 @@ public class GameLoopRunner {
         }
     }
 
-    public void stopLoopAndWaitUntilItCompletes() {
+    @Override
+    public void stopAndWaitUntilStopped() {
         System.out.println("Stopping game loop");
         shouldStartRunloop = false;
 

@@ -27,7 +27,7 @@ public class GameRunnerLoopTest {
         GameLoopFactory gameLoopFactory = mock(GameLoopFactory.class);
         BlockingQueue blockingQueue = spy(LinkedBlockingQueue.class);
         GameLoopRunner gameRunnerLoop = new GameLoopRunner(gameLoopFactory, blockingQueue);
-        gameRunnerLoop.stopLoopAndWaitUntilItCompletes();
+        gameRunnerLoop.stopAndWaitUntilStopped();
 
         // When
         gameRunnerLoop.run(null);
@@ -67,7 +67,7 @@ public class GameRunnerLoopTest {
         if (called == null) throw new RuntimeException("Sleeper was never called");
 
         // When
-        gameRunnerLoop.stopLoopAndWaitUntilItCompletes();
+        gameRunnerLoop.stopAndWaitUntilStopped();
 
         // Then
         System.out.println("Doing assert.");
