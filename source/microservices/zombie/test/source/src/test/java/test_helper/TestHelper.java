@@ -82,7 +82,7 @@ public class TestHelper {
         broker.close();
         ProcessKiller.killUnixProcess(process);
         ProcessKiller.waitForExitAndAssertExited(process, 3, TimeUnit.SECONDS);
-        stdOutListenFuture.get();
+        stdOutListenFuture.get(); // Catches exceptions from the Future.
     }
 
     public List<String> getProcessOutput() {
