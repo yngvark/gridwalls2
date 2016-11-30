@@ -1,6 +1,7 @@
 package test_helper;
 
 import com.rabbitmq.client.AMQP;
+import com.rabbitmq.client.AlreadyClosedException;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
@@ -89,7 +90,11 @@ public class RabbitBroker implements Broker {
 
     @Override
     public void close() throws IOException {
-        connection.close();
+        try {
+            connection.close();
+        } catch (AlreadyClosedException exception) {
+            System.out.println("Connection already closed.");
+        }
     }
 
     @Override

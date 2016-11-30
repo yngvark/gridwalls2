@@ -22,7 +22,7 @@ public class RabbitConnectionWrapperTest {
         RabbitConnectionWrapper rabbitConnectionWrapper = new RabbitConnectionWrapper(null, connection);
 
         // When
-        Channel channel = rabbitConnectionWrapper.getChannelForExchange("my_queue");
+        Channel channel = rabbitConnectionWrapper.getChannelForQueue("my_queue");
 
         // Then
         assertSame(channelMock, channel);

@@ -36,7 +36,7 @@ public class RabbitConnectionWrapper implements ConnectionWrapper {
         }
     }
 
-    public Channel getChannelForExchange(String queue) throws IOException {
+    public Channel getChannelForQueue(String queue) throws IOException {
         if (exchangeChannnels.get(queue) == null) {
             Channel channel = connection.createChannel();
             exchangeChannnels.put(queue, channel);

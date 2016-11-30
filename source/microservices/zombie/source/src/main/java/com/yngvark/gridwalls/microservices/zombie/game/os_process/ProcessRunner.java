@@ -1,38 +1,36 @@
 package com.yngvark.gridwalls.microservices.zombie.game.os_process;
 
+import com.yngvark.gridwalls.microservices.zombie.game.GameCleanup;
 import com.yngvark.gridwalls.microservices.zombie.game.GameRunner;
-import com.yngvark.gridwalls.microservices.zombie.game.ProcessStopper;
+import com.yngvark.gridwalls.microservices.zombie.game.ServerMessagesConsumer;
 
 public class ProcessRunner {
+    private final ShutdownHook shutdownHook;
+    private final ServerMessagesConsumer serverMessagesConsumer;
     private final GameRunner gameRunner;
-    private final ProcessStopper processStopper;
+    private final GameCleanup gameCleanup;
 
-    private boolean stopped = false;
-
-    public ProcessRunner(GameRunner gameRunner, ProcessStopper processStopper) {
+    public ProcessRunner(ShutdownHook shutdownHook, ServerMessagesConsumer serverMessagesConsumer,
+            GameRunner gameRunner, GameCleanup gameCleanup) {
+        this.shutdownHook = shutdownHook;
+        this.serverMessagesConsumer = serverMessagesConsumer;
         this.gameRunner = gameRunner;
-        this.processStopper = processStopper;
+        this.gameCleanup = gameCleanup;
     }
 
     public void run() {
         initShutdownhook();
+        serverMessagesConsumer.startConsumingEvents();
         gameRunner.run();
-        processStopper.stop();
+        gameCleanup.cleanupAfterGameComplete();
     }
 
     private void initShutdownhook() {
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
             public void run() {
-                System.out.println("Stopping process. Already stopped: " + stopped);
-                if (stopped)
-                    return;
-                stopped = true;
-
-                gameRunner.stopAndWaitUntilStopped();
-
-                processStopper.stop();
-                System.out.println("Stopping process done.");
+                System.out.println("Shutdownhook called from outside process.");
+                shutdownHook.shutdown();
             }
         });
     }

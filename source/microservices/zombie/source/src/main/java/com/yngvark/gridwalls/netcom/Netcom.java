@@ -7,7 +7,6 @@ import com.yngvark.gridwalls.netcom.consume.ConsumeHandler;
 import com.yngvark.gridwalls.netcom.consume.Consumer;
 import com.yngvark.gridwalls.netcom.publish.NetcomFailed;
 import com.yngvark.gridwalls.netcom.publish.NetcomResult;
-import com.yngvark.gridwalls.netcom.publish.NetcomSucceeded;
 import com.yngvark.gridwalls.netcom.publish.Publisher;
 import com.yngvark.gridwalls.netcom.rpc.RpcCaller;
 import com.yngvark.gridwalls.netcom.rpc.RpcFailed;
@@ -45,10 +44,10 @@ public class Netcom<T extends ConnectionWrapper> {
         }
     }
 
-    public NetcomResult startConsume(ConsumeHandler handler) {
+    public NetcomResult startConsume(String queueName, ConsumeHandler handler) {
         ConnectionStatus<T> connectionStatus = brokerConnecterHolder.connectIfNotConnected();
         if (connectionStatus.connected()) {
-            return consumer.startConsume(handler);
+            return consumer.startConsume(connectionStatus.getConnectionWrapper(), queueName, handler);
         } else {
             return new NetcomFailed("Could not consume. Details: " + connectionStatus.getConnectFailedDetails());
         }

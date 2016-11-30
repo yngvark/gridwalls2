@@ -8,7 +8,6 @@ import com.yngvark.gridwalls.netcom.consume.ConsumeHandler;
 import com.yngvark.gridwalls.netcom.consume.Consumer;
 import com.yngvark.gridwalls.netcom.publish.NetcomResult;
 import com.yngvark.gridwalls.netcom.publish.NetcomSucceeded;
-import com.yngvark.gridwalls.netcom.publish.Publisher;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -31,15 +30,15 @@ public class NetcomConsumeTest {
 
         Consumer consumer = mock(Consumer.class);
         ConsumeHandler consumeHandler = mock(ConsumeHandler.class);
-        when(consumer.startConsume(eq(consumeHandler))).thenReturn(new NetcomSucceeded());
+        when(consumer.startConsume(any(ConnectionWrapper.class), eq("my_queue"), eq(consumeHandler))).thenReturn(new NetcomSucceeded());
 
         Netcom netcom = new Netcom(brokerConnecterHolder, null, null, consumer);
 
         // When
-        NetcomResult startConsumeResult = netcom.startConsume(consumeHandler);
+        NetcomResult startConsumeResult = netcom.startConsume("my_queue", consumeHandler);
 
         // Then
-        verify(consumer).startConsume(eq(consumeHandler));
+        verify(consumer).startConsume(any(ConnectionWrapper.class), eq("my_queue"), eq(consumeHandler));
 
         assertTrue(startConsumeResult.succeeded());
         assertTrue(startConsumeResult.getFailedInfo().length() > 0);
@@ -55,10 +54,11 @@ public class NetcomConsumeTest {
         Netcom netcom = new Netcom(brokerConnecterHolder, null, null, consumer);
 
         // When
-        NetcomResult startConsumeResult = netcom.startConsume(mock(ConsumeHandler.class));
+        NetcomResult startConsumeResult = netcom.startConsume("my_queue", mock(ConsumeHandler.class));
 
         // Then
-        verify(consumer, times(0)).startConsume(any(ConsumeHandler.class));
+        verify(consumer, times(0)).startConsume(any(ConnectionWrapper.class), any(String.class), any(ConsumeHandler.class));
+
 
         assertFalse(startConsumeResult.succeeded());
         assertEquals("Could not consume. Details: Could not contact host.", startConsumeResult.getFailedInfo());

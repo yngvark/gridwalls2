@@ -17,7 +17,7 @@ public class RabbitPublisher implements Publisher<RabbitConnectionWrapper> {
         Channel channel;
 
         try {
-            channel = connectionWrapper.getChannelForExchange(queue);
+            channel = connectionWrapper.getChannelForQueue(queue);
         } catch (IOException e) {
             return new NetcomFailed("Could not publish message, because channel initialization failure. Details: " + e.getMessage());
         }

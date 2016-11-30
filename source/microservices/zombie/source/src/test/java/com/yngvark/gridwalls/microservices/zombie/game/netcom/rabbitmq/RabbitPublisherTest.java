@@ -27,7 +27,7 @@ public class RabbitPublisherTest {
 
         RabbitConnectionWrapper connectionWrapper = mock(RabbitConnectionWrapper.class);
         Channel channel = mock(Channel.class);
-        when(connectionWrapper.getChannelForExchange("my_queue")).thenReturn(channel);
+        when(connectionWrapper.getChannelForQueue("my_queue")).thenReturn(channel);
 
         // When
         NetcomResult netcomResult = rabbitPublisher.publish(connectionWrapper, "my_queue", "hello");
@@ -46,13 +46,13 @@ public class RabbitPublisherTest {
         RabbitConnectionWrapper connectionWrapper = mock(RabbitConnectionWrapper.class);
 
         doThrow(new IOException("ChannelFailure"))
-                .when(connectionWrapper).getChannelForExchange(eq("my_queue"));
+                .when(connectionWrapper).getChannelForQueue(eq("my_queue"));
 
         // When
         NetcomResult netcomResult = rabbitPublisher.publish(connectionWrapper, "my_queue", "hello");
 
         // Then
-        verify(connectionWrapper).getChannelForExchange(eq("my_queue"));
+        verify(connectionWrapper).getChannelForQueue(eq("my_queue"));
         assertFalse(netcomResult.succeeded());
         assertEquals("Could not publish message, because channel initialization failure. Details: ChannelFailure", netcomResult.getFailedInfo());
     }
@@ -64,7 +64,7 @@ public class RabbitPublisherTest {
 
         RabbitConnectionWrapper connectionWrapper = mock(RabbitConnectionWrapper.class);
         Channel channel = mock(Channel.class);
-        when(connectionWrapper.getChannelForExchange("my_queue")).thenReturn(channel);
+        when(connectionWrapper.getChannelForQueue("my_queue")).thenReturn(channel);
 
         doThrow(new IOException("Error when sending output."))
                 .when(channel).basicPublish(eq("my_queue"), eq(""), any(), eq("hello".getBytes()));

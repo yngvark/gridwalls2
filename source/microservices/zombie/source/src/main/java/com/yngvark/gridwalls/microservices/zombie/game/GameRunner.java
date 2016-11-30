@@ -13,14 +13,7 @@ public class GameRunner implements ICanStop {
     }
 
     public void run() {
-        startConsumingEvents();
         startProducingEvents();
-    }
-
-    private void startConsumingEvents() {
-//        netcom.startConsume((msg) -> {
-//
-//        });
     }
 
     private void startProducingEvents() {
