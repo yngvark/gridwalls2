@@ -67,7 +67,7 @@ public class TestHelper {
         if (event == null)
             throw new RuntimeException("Timeout while waiting for event from client.");
 
-        System.out.println("-> " + event);
+        System.out.println("<- " + event);
         return event;
     }
 

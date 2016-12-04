@@ -21439,8 +21439,8 @@ Transaction.prototype.commit = function (callback) {
 
 module.exports = Transaction;
 
-}).call(this,{"isBuffer":require("../../../../../usr/lib/node_modules/browserify/node_modules/is-buffer/index.js")})
-},{"../../../../../usr/lib/node_modules/browserify/node_modules/is-buffer/index.js":155,"./ACL.js":39,"./ConnectionManager.js":40,"./CreateMode.js":42,"./Exception.js":44,"./Path.js":47,"./jute":52,"assert":75}],51:[function(require,module,exports){
+}).call(this,{"isBuffer":require("../../../../../../../usr/lib/node_modules/browserify/node_modules/is-buffer/index.js")})
+},{"../../../../../../../usr/lib/node_modules/browserify/node_modules/is-buffer/index.js":155,"./ACL.js":39,"./ConnectionManager.js":40,"./CreateMode.js":42,"./Exception.js":44,"./Path.js":47,"./jute":52,"assert":75}],51:[function(require,module,exports){
 /**
  * Copyright (c) 2013 Yahoo! Inc. All rights reserved.
  *

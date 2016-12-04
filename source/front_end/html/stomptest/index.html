@@ -9,7 +9,27 @@
 	        font-family: Tahoma, Verdana, Arial, sans-serif;
 	    }
 	</style>
-	
+	<script src="node_modules/stompjs/lib/stomp.js"></script>
+	<script>
+	    var ws = new WebSocket('ws://127.0.0.1:15674/ws');
+		//var client = Stomp.client(ws);
+	    var client = Stomp.over(ws);
+
+	    var on_connect = function() {
+	        console.log('connected');
+	    	client.send('/queue/test', {"content-type":"text/plain"}, "Hello from klient");
+	    	client.disconnect(function() {
+	    		console.log("Disocnnected! Cya");
+	    	});
+
+	    };
+	    var on_error =  function() {
+	        console.log('error');
+	    };
+	    client.connect('guest', 'guest', on_connect, on_error, '/');
+
+
+    </script>
 </head>
 <body>
 <h1>Welcome to nginx! HEY</h1>
