@@ -52,6 +52,10 @@ dependencies {
 
 }
 
+junitPlatform {
+    platformVersion = "1.0.0-M2"
+}
+
 idea {
     module {
         downloadJavadoc = true
