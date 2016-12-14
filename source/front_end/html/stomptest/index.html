@@ -17,30 +17,43 @@
 
 	    var on_connect = function() {
 	        console.log('connected');
-	    	client.send('/queue/test', {"content-type":"text/plain"}, "Hello from klient");
+	        var subscription = client.subscribe("/queue/rpc_queue", function (msg) {
+	        	console.log("RPC incoming:");
+	        	console.log(msg);
+	        	console.log(msg.headers);
+	        	if (msg.body === "getGameConfig") {
+	        		//var replyQueue = msg.headers.reply-to.substring(35);
+	        		console.log("Reply queue: " + msg.headers["reply-to"]);
+	    			client.send(msg.headers["reply-to"], {"content-type":"text/plain"}, "GAME CONFIG ANSWER");
+	        	}
+	        }, {
+	        	"durable": false,
+	        	"auto-delete": false,
+	        	"exclusive": false
+	        });
+
+	    	client.send('/queue/test', {"content-type":"text/plain"}, "Hello from front end");
+	    };
+
+	    var on_error = function(error) {
+	        console.log('error:');
+	        console.log(error);
+	    };
+
+	    function disconnect() {
 	    	client.disconnect(function() {
 	    		console.log("Disocnnected! Cya");
 	    	});
+	    }
 
-	    };
-	    var on_error =  function() {
-	        console.log('error');
-	    };
 	    client.connect('guest', 'guest', on_connect, on_error, '/');
-
-
     </script>
 </head>
 <body>
-<h1>Welcome to nginx! HEY</h1>
-<p>If you see this page, the nginx web server is successfully installed and
-working. Further configuration is required.</p>
+<h1>Consume test</h1>
 
-<p>For online documentation and support please refer to
-<a href="http://nginx.org/">nginx.org</a>.<br/>
-Commercial support is available at
-<a href="http://nginx.com/">nginx.com</a>.</p>
+Se console log.
+<button onclick="disconnect()">Disconnect</button>
 
-<p><em>Thank you for using nginx.</em></p>
 </body>
 </html>
