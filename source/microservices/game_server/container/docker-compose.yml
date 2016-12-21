@@ -1,0 +1,17 @@
+version: '2'
+
+services:
+
+  zombie:
+    image: java:8-jre
+    external_links:
+      - rabbitmq:rabbithost
+    volumes:
+      - ./app:/app
+    command:
+      "/app/bin/zombie"
+
+networks:
+  default:
+    external:
+      name: containers_rabbit

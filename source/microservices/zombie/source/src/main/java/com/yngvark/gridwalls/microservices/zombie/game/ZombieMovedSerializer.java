@@ -1,6 +1,5 @@
 package com.yngvark.gridwalls.microservices.zombie.game;
 
-import com.google.inject.Inject;
 import com.yngvark.gridwalls.core.Coordinate;
 import com.yngvark.gridwalls.core.CoordinateSerializer;
 
@@ -10,7 +9,6 @@ public class ZombieMovedSerializer {
     private final CoordinateSerializer coordinateSerializer;
     private final String prefix = "[" + ZombieMoved.class.getSimpleName() + "] ";
 
-    @Inject
     public ZombieMovedSerializer(CoordinateSerializer coordinateSerializer) {
         this.coordinateSerializer = coordinateSerializer;
     }
