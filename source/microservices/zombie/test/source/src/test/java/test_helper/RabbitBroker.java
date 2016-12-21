@@ -8,8 +8,6 @@ import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.Consumer;
 import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.Envelope;
-import com.yngvark.gridwalls.netcom.GameRpcServer;
-import com.yngvark.gridwalls.netcom.RpcRequestHandler;
 
 import java.io.IOException;
 import java.util.Map;

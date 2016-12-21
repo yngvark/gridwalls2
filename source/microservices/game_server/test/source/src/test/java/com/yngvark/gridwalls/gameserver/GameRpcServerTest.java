@@ -1,4 +1,4 @@
-package self_test;
+package com.yngvark.gridwalls.gameserver;
 
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;

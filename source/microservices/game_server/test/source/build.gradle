@@ -7,7 +7,7 @@
  * user guide available at https://docs.gradle.org/2.14.1/userguide/tutorial_java_projects.html
  */
 
-group = "com.yngvark.gridwalls.gameserver"
+group = "YK"
 version = "0.1"
 
 buildscript {
@@ -15,6 +15,9 @@ buildscript {
         mavenCentral()
         // The following is only necessary if you want to use SNAPSHOT releases.
         // maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+        maven {
+            url "../../source/build/distributions"
+        }
     }
     dependencies {
         classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0-M2'
@@ -37,6 +40,7 @@ dependencies {
     // The production code uses the SLF4J logging API at compile time
     compile 'org.slf4j:slf4j-api:1.7.21'
     compile 'com.rabbitmq:amqp-client:3.6.3'
+    compile 'com.yngvark.gridwalls.gameserver:gameserver:0.1'
 
     // Declare the dependency for your favourite test framework you want to use in your tests.
     // TestNG is also supported by the Gradle Test task. Just change the
@@ -75,4 +79,4 @@ jar {
     }
 }
 
-apply from: '../../../build_scripts/dist.gradle'
+apply from: '../../../../build_scripts/dist.gradle'

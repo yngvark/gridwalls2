@@ -68,3 +68,5 @@ jar {
                    'Class-Path': configurations.runtime.files.collect {"$it.name"}.join(' ')
     }
 }
+
+apply from: '../../../../build_scripts/dist.gradle'

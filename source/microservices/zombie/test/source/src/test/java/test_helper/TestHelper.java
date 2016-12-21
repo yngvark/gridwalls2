@@ -1,6 +1,5 @@
 package test_helper;
 
-import com.yngvark.gridwalls.netcom.GameRpcServer;
 import util.lib.InputStreamListener;
 import util.lib.ProcessKiller;
 import util.lib.ProcessStarter;
