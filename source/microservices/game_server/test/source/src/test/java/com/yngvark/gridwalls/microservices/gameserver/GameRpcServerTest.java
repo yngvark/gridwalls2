@@ -1,10 +1,10 @@
-package com.yngvark.gridwalls.gameserver;
+package com.yngvark.gridwalls.microservices.gameserver;
 
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.RpcClient;
-import com.yngvark.gridwalls.netcom.GameRpcServer;
+import com.yngvark.gridwalls.gameserver.GameRpcServer;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -16,9 +16,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class GameRpcServerTest {
     String rpcQueueName = "rpcqueue";
+    public static int i = 0;
 
     @Test
     public void game_rpc_server_should_return_game_info() throws IOException, TimeoutException, InterruptedException {
+        i++;
+        System.out.println("------------------ RUN: " + i);
         // Given
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost("rabbithost");
