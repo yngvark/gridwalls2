@@ -1,4 +1,4 @@
-package com.yngvark.gridwalls.gameserver;
+package com.yngvark.gridwalls.microservices.gameserver;
 
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;

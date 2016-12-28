@@ -32,7 +32,7 @@ public class RabbitRpcCaller implements RpcCaller<RabbitConnectionWrapper> {
         declareQueue(rpcQueueName, channel);
 
         String exchange = "";
-        RpcClient rpcClient = new RpcClient(channel, exchange, rpcQueueName);
+        RpcClient rpcClient = new RpcClient(channel, exchange, rpcQueueName, 6000);
 
         System.out.println("Receiving game config.");
         String gameConfigTxt;
@@ -40,6 +40,8 @@ public class RabbitRpcCaller implements RpcCaller<RabbitConnectionWrapper> {
             gameConfigTxt = rpcClient.stringCall(message);
         } catch (ShutdownSignalException e) {
             return new RpcFailed("RPC call aborted due to shut down signal. Details: " + e.getMessage());
+        } catch (TimeoutException e) {
+            return new RpcFailed("RPC call timed out. Details: " + e.getMessage());
         }
         System.out.println("Response: " + gameConfigTxt);
 

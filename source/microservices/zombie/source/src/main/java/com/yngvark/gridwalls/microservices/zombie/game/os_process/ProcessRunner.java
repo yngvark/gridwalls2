@@ -20,9 +20,15 @@ public class ProcessRunner {
 
     public void run() {
         initShutdownhook();
-        serverMessagesConsumer.startConsumingEvents();
-        gameRunner.run();
-        gameCleanup.cleanupAfterGameComplete();
+
+        try {
+            serverMessagesConsumer.startConsumingEvents();
+            gameRunner.run();
+            gameCleanup.cleanupAfterGameComplete();
+        } catch (Throwable t) {
+            System.out.println("Got exception. Shutting down.");
+            shutdownHook.shutdown();
+        }
     }
 
     private void initShutdownhook() {

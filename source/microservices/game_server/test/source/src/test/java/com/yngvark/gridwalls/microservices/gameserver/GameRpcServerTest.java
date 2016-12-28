@@ -20,8 +20,6 @@ public class GameRpcServerTest {
 
     @Test
     public void game_rpc_server_should_return_game_info() throws IOException, TimeoutException, InterruptedException {
-        i++;
-        System.out.println("------------------ RUN: " + i);
         // Given
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost("rabbithost");

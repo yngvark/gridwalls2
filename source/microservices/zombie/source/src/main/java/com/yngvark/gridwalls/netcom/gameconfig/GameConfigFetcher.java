@@ -27,15 +27,8 @@ public class GameConfigFetcher implements ICanStop {
     }
 
     public GameConfig getGameConfigFromServer() {
-        rpcFuture = executorService.submit(() -> netcom.rpcCall(RPC_QUEUE_NAME, "getGameConfig"));
-
-        RpcResult gameConfigRpcResult;
-        try {
-            System.out.println("Fetching game configuration.");
-            gameConfigRpcResult = rpcFuture.get(3, TimeUnit.SECONDS);
-        } catch (InterruptedException | ExecutionException | CancellationException | TimeoutException e) {
-            throw new RuntimeException("Error while getting game configuration. Exiting", e);
-        }
+        System.out.println("Fetching game configuration.");
+        RpcResult gameConfigRpcResult = netcom.rpcCall(RPC_QUEUE_NAME, "getGameConfig");
 
         if (!gameConfigRpcResult.succeeded()) {
             throw new RuntimeException("RPC call for game configuration failed. Details: " + gameConfigRpcResult.getFailedInfo());

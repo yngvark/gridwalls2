@@ -32,7 +32,6 @@ public class Netcom<T extends ConnectionWrapper> {
             return rpcCaller.rpcCall(connectionStatus.getConnectionWrapper(), rpcQueueName, message);
         else
             return new RpcFailed("Could not connect. Details: " + connectionStatus.getConnectFailedDetails());
-
     }
 
     public NetcomResult publish(String queueName, String message) {
