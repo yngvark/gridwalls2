@@ -7,7 +7,7 @@ services:
     hostname: rabbithost
     ports:
       - "8080:15672"
-      - 15674:15674
+      - 15674:l15674
     networks:
       rabbit:
         aliases:

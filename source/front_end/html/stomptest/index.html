@@ -17,6 +17,7 @@
 
 	    var on_connect = function() {
 	        console.log('connected');
+/*
 	        var subscription = client.subscribe("/queue/rpc_queue", function (msg) {
 	        	console.log("RPC incoming:");
 	        	console.log(msg);
@@ -31,8 +32,14 @@
 	        	"auto-delete": false,
 	        	"exclusive": false
 	        });
+*/
 
-	    	client.send('/queue/test', {"content-type":"text/plain"}, "Hello from front end");
+//	    	client.send('/queue/test', {"content-type":"text/plain"}, "Hello from front end");
+
+			var subscription = client.subscribe("/exchange/ZombieMoved", function(msg) {
+				console.log("INCOMING ZOmbieMoved: ");
+				console.log(msg);
+			});
 	    };
 
 	    var on_error = function(error) {
