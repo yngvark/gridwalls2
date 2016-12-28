@@ -27,6 +27,7 @@ public class ProcessRunner {
             gameCleanup.cleanupAfterGameComplete();
         } catch (Throwable t) {
             System.out.println("Got exception. Shutting down.");
+            t.printStackTrace();
             shutdownHook.shutdown();
         }
     }

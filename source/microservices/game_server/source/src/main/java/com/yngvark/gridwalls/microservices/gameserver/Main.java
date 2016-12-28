@@ -12,7 +12,7 @@ public class Main {
 
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost("rabbithost");
-        Connection connection = null;
+        Connection connection =  null;
         try {
             connection = factory.newConnection();
         } catch (IOException e) {
@@ -21,7 +21,7 @@ public class Main {
             e.printStackTrace();
         }
 
-        String serverResponse = "Hey this is server";
+        String serverResponse = "[GameInfo] mapWidth=10 mapWidth=10 sleepTimeMillisBetweenTurns=1200";
         GameRpcServer gameRpcServer = new GameRpcServer(connection, rpcQueueName, (String request) -> serverResponse);
         gameRpcServer.run();
 
