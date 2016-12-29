@@ -1,0 +1,15 @@
+{
+    "compilerOptionns": {
+        "outFile": "game.js",
+        "target": "es5"
+    },
+    "include": [
+        "./src/**/*"
+    ],
+    "exclude": [
+        "./npm"
+    ],
+    "files": [
+        "./npm/node_modules/phaser/typescript/phaser.d.ts"   
+    ]
+}

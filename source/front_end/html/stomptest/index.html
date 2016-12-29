@@ -17,27 +17,8 @@
 
 	    var on_connect = function() {
 	        console.log('connected');
-/*
-	        var subscription = client.subscribe("/queue/rpc_queue", function (msg) {
-	        	console.log("RPC incoming:");
-	        	console.log(msg);
-	        	console.log(msg.headers);
-	        	if (msg.body === "getGameConfig") {
-	        		//var replyQueue = msg.headers.reply-to.substring(35);
-	        		console.log("Reply queue: " + msg.headers["reply-to"]);
-	    			client.send(msg.headers["reply-to"], {"content-type":"text/plain"}, "GAME CONFIG ANSWER");
-	        	}
-	        }, {
-	        	"durable": false,
-	        	"auto-delete": false,
-	        	"exclusive": false
-	        });
-*/
-
-//	    	client.send('/queue/test', {"content-type":"text/plain"}, "Hello from front end");
 
 			var subscription = client.subscribe("/exchange/ZombieMoved", function(msg) {
-				console.log("INCOMING ZOmbieMoved: ");
 				console.log(msg);
 			});
 	    };
@@ -49,7 +30,7 @@
 
 	    function disconnect() {
 	    	client.disconnect(function() {
-	    		console.log("Disocnnected! Cya");
+	    		console.log("Disconnected! Cya.");
 	    	});
 	    }
 
