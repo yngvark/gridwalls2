@@ -16,19 +16,6 @@ services:
     command:
       - /app/intellij/bin/idea.sh
 
-  sublime:
-    build: sublime
-    volumes:
-      - /tmp/.X11-unix:/tmp/.X11-unix
-      - ./sublime/home:/home/developer
-      - ../gridwalls2:/mnt/src
-    environment:
-      - DISPLAY=$DISPLAY
-    tty: true
-    command:
-     - "/usr/src/sublime_text/sublime_text"
-     - "-w"
-
   front_end:
     build: front_end
     image: front_end
