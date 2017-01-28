@@ -5,7 +5,7 @@
     "command": "tsc",
     "isShellCommand": true,
     "args": ["-p", "lib", "--out", "lib/game.js"],
-    "showOutput": "silent",
+    "showOutput": "always",
     "problemMatcher": "$tsc",
     "echoCommand": true
 }

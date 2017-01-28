@@ -22,7 +22,7 @@ public class GameLoop {
 
     public void loop() {
         int i = 0;
-        while (i < 10 && runLoop) {
+        while (i < 200 && runLoop) {
             i++;
             try {
                 zombiesController.nextTurn();

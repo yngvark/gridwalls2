@@ -10,6 +10,7 @@
 	    }
 	</style>
 	<script type="text/javascript" src="lib/npm/node_modules/phaser/build/phaser.min.js"></script>
+	<script type="text/javascript" src="lib/npm/node_modules/stompjs/lib/stomp.js"></script>
 	<script src="lib/game.js"></script>
 </head>
 <body>
@@ -19,6 +20,20 @@
 
 Se console log.
 <button onclick="disconnect()">Disconnect</button>
+
+<script>
+
+var main = new Main();
+
+window.onload = () => {
+    main.run();
+};
+
+function disconnect() {
+	main.disconnect();
+}
+
+</script>
 
 </body>
 </html>

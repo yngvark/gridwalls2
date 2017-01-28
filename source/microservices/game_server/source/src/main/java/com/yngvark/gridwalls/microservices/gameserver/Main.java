@@ -21,7 +21,7 @@ public class Main {
             e.printStackTrace();
         }
 
-        String serverResponse = "[GameInfo] mapWidth=10 mapWidth=10 sleepTimeMillisBetweenTurns=1200";
+        String serverResponse = "[GameInfo] mapWidth=10 mapWidth=10 sleepTimeMillisBetweenTurns=600";
         GameRpcServer gameRpcServer = new GameRpcServer(connection, rpcQueueName, (String request) -> serverResponse);
         gameRpcServer.run();
 
