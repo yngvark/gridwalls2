@@ -1,0 +1,17 @@
+version: '2'
+
+services:
+
+  gradle:
+    build: .
+    image: gradle
+    volumes:
+      - ../../gridwalls2:/mnt/src
+      - ./home:/root/.gradle
+    command:
+      - /bin/bash
+
+networks:
+  default:
+    external:
+      name: containers_rabbit

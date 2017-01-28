@@ -1,0 +1,56 @@
+version: '2'
+
+services:
+
+  intellij:
+    build: intellij
+    image: intellij
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - ./intellij/home:/home/developer
+      - ../gridwalls2:/mnt/src
+    external_links:
+      - concourse-web #doesn't work, probably because of networking
+    environment:
+      - DISPLAY=$DISPLAY
+    command:
+      - /app/intellij/bin/idea.sh
+
+  sublime:
+    build: sublime
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - ./sublime/home:/home/developer
+      - ../gridwalls2:/mnt/src
+    environment:
+      - DISPLAY=$DISPLAY
+    tty: true
+    command:
+     - "/usr/src/sublime_text/sublime_text"
+     - "-w"
+
+  front_end:
+    build: front_end
+    image: front_end
+    volumes:
+      - ../gridwalls2:/mnt/src
+
+  vcode:
+    build: front_end
+    image: front_end
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - ./front_end/vcode_home:/home/developer
+      - ../gridwalls2:/mnt/src
+    environment:
+      - DISPLAY=$DISPLAY
+    command:
+      - "/usr/share/code/code"
+      - "--disable-gpu"
+
+networks:
+  default:
+    external:
+      name: containers_rabbit
+    #external:
+    #  name: buildserver_concourse

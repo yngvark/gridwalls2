@@ -1,0 +1,7 @@
+client/home/*
+backend/home/*
+git_kraken
+intellij/fly
+intellij/*.zip
+.IntelliJIdea2016.1
+app/*
