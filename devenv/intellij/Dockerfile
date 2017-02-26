@@ -60,7 +60,7 @@ ENV TERM xterm
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - IntelliJ START
 
-ENV TARFILE ideaIU-2016.3.1.tar.gz
+ENV TARFILE ideaIU-2016.3.4.tar.gz
 
 RUN mkdir --parents /app/intellij && \
 	mkdir --parents /app/tmp

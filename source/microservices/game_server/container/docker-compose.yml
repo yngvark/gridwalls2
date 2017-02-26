@@ -9,7 +9,7 @@ services:
     volumes:
       - ./app:/app
     command:
-      "/app/bin/zombie"
+      "/app/bin/gameserver"
 
 networks:
   default:

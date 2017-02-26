@@ -8,7 +8,7 @@ services:
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
       - ./intellij/home:/home/developer
-      - ../gridwalls2:/mnt/src
+      - ../..:/mnt/src
     external_links:
       - concourse-web #doesn't work, probably because of networking
     environment:
