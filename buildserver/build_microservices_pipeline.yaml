@@ -1,0 +1,48 @@
+# To update:
+# fly set-pipeline -t lite -c build_microservices_pipeline.yaml -p build_microservices --non-interactive
+resources:
+  - name: repo
+    type: git
+    source:
+      uri: https://yngvark@bitbucket.org/yngvark/game_server.git
+      branch: master
+      username: yngvark
+      password: "*zAbQ3B8gxtY5@qp%%%D7l&8K#S6ER#&ExuV2OwdNijnHJnz^i*tb%NZZk3j0DUGWZne*LTw%709k6*pB$OqZ55RqVyRCjonstkx"
+
+jobs:
+- name: build_microservices_simple
+  public: true
+  plan:
+  - get: repo
+  - task: build
+    #file: build_microservices_task.yml
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source: 
+          repository: frekele/gradle
+          tag: '3.4-jdk8'
+      inputs:
+        - name: repo
+      #- name: game_server
+      #- path: game_server
+      outputs:
+        - name: some_war
+      run:
+        #path: ./game_server/build.sh
+        #path: echo
+        #args:
+          #- hello world
+        path: sh
+        args:
+          - -exc
+          - repo/build.sh
+          #- |
+          #  ls -lrt
+          #  cd source_code/source
+          #  ls -lrt
+          #  gradle build
+
+
+

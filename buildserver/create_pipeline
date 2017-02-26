@@ -1,0 +1,1 @@
+fly set-pipeline -t lite -c simple2_pipeline.yml --pipeline mytestapp --non-interactive

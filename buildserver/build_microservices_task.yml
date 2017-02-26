@@ -1,0 +1,14 @@
+platform: linux
+image_resource:
+  type: docker-image
+  source: {repository: frekele/gradle:3.4-jdk8}
+inputs:
+  - source_code
+#- name: game_server
+#- path: game_server
+run:
+  #path: ./game_server/build.sh
+  path: echo
+  args:
+    - hello world
+

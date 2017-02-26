@@ -1,0 +1,1 @@
+passordet står i docker-compose.yml environment
