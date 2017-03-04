@@ -19,7 +19,7 @@ USER developer
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Gradle START
 
-ENV GRADLE_VERSION 3.2.1
+ENV GRADLE_VERSION 3.4
 
 WORKDIR /tmp
 

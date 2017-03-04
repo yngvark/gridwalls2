@@ -1,0 +1,2 @@
+Set docker images dir manually: http://stackoverflow.com/a/42379183/915441
+
