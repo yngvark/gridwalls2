@@ -7,7 +7,7 @@ resources:
       uri: https://yngvark@bitbucket.org/yngvark/game_server.git
       branch: master
       username: yngvark
-      password: "*zAbQ3B8gxtY5@qp%%%D7l&8K#S6ER#&ExuV2OwdNijnHJnz^i*tb%NZZk3j0DUGWZne*LTw%709k6*pB$OqZ55RqVyRCjonstkx"
+      password: {{bitbucket_password}}
 
 jobs:
 - name: build_microservices_simple
