@@ -1,5 +1,5 @@
 # To update:
-# fly set-pipeline -t lite -c build_microservices_pipeline.yaml -p build_microservices --non-interactive
+# fly set-pipeline -t lite -c build_microservices_pipeline.yaml -p build_microservices --non-interactive --var "bitbucket_password=mypassword"
 resources:
   - name: repo
     type: git
@@ -37,12 +37,8 @@ jobs:
         path: sh
         args:
           - -exc
-          - repo/build.sh
-          #- |
-          #  ls -lrt
-          #  cd source_code/source
-          #  ls -lrt
-          #  gradle build
-
-
-
+          #- repo/build.sh
+          - |
+            ls -lrt
+            ls -lrt repo/source
+            gradle build -p repo/source
