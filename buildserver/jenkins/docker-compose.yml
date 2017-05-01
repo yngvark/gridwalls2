@@ -3,9 +3,15 @@ version: '2'
 services:
 
   jenkins:
-    image: jenkinsci/jenkins:2.49
+    image: jenkinsci/jenkins:2.32.3
+    #build: image
+    #image: jenkins
     ports:
       - "8082:8080"
       - "50000:50000"
     volumes:
         - ./jenkins_home:/var/jenkins_home
+        - /var/run/docker.sock:/var/run/docker.sock
+        - /usr/bin/docker:/usr/bin/docker
+
+
