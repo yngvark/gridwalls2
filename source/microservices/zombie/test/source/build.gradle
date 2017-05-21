@@ -14,7 +14,7 @@ buildscript {
         // maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     }
     dependencies {
-        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0-M2'
+        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0-M4'
     }
 }
 
@@ -40,10 +40,10 @@ dependencies {
 
     // Needed for running JUnit5 tests in Intellij.
     // Not needed for running "gradle test"
-    testCompile("org.junit.platform:junit-platform-runner:1.0.0-M2")
+    testCompile("org.junit.platform:junit-platform-runner:1.0.0-M4")
 
-    testCompile("org.junit.jupiter:junit-jupiter-api:5.0.0-M2")
-    testRuntime("org.junit.jupiter:junit-jupiter-engine:5.0.0-M2")
+    testCompile("org.junit.jupiter:junit-jupiter-api:5.0.0-M4")
+    testRuntime("org.junit.jupiter:junit-jupiter-engine:5.0.0-M4")
 }
 
 idea {
