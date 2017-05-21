@@ -5,8 +5,8 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.expectThrows;
 
 public class DeserializerTest {
     @Test
@@ -34,7 +34,7 @@ public class DeserializerTest {
         String serialized = "[GameInfo] mapWidth=10";
 
         // When
-        Throwable exception = expectThrows(RuntimeException.class,  () -> deserializer.deserialize(serialized));
+        Throwable exception = assertThrows(RuntimeException.class,  () -> deserializer.deserialize(serialized));
 
         // Then
         System.out.println(exception);
@@ -48,7 +48,7 @@ public class DeserializerTest {
         String serialized = "[GameInfo] mapHeight=10";
 
         // When
-        Throwable exception = expectThrows(RuntimeException.class,  () -> deserializer.deserialize(serialized));
+        Throwable exception = assertThrows(RuntimeException.class,  () -> deserializer.deserialize(serialized));
 
         // Then
         System.out.println(exception);
@@ -62,7 +62,7 @@ public class DeserializerTest {
         String serialized = "[GameInfo] mapHeight=10 mapWidth=10";
 
         // When
-        Throwable exception = expectThrows(RuntimeException.class,  () -> deserializer.deserialize(serialized));
+        Throwable exception = assertThrows(RuntimeException.class,  () -> deserializer.deserialize(serialized));
 
         // Then
         System.out.println(exception);

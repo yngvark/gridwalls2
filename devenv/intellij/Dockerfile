@@ -19,7 +19,7 @@ USER developer
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Gradle START
 
-ENV GRADLE_VERSION 3.4
+ENV GRADLE_VERSION 3.5
 
 WORKDIR /tmp
 
@@ -60,7 +60,7 @@ ENV TERM xterm
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - IntelliJ START
 
-ENV TARFILE ideaIU-2016.3.4.tar.gz
+ENV TARFILE ideaIU-2017.1.2.tar.gz
 
 RUN mkdir --parents /app/intellij && \
 	mkdir --parents /app/tmp
