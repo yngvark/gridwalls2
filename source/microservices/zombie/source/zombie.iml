@@ -232,26 +232,26 @@
     <orderEntry type="module-library" scope="TEST">
       <library>
         <CLASSES>
-          <root url="jar:///home/developer/.gradle/caches/modules-2/files-2.1/org.junit.platform/junit-platform-runner/1.0.0-M2/cd83cbb3172350ff02cd3c62a29b131c53d765b/junit-platform-runner-1.0.0-M2.jar!/"/>
+          <root url="jar:///home/developer/.gradle/caches/modules-2/files-2.1/org.junit.platform/junit-platform-runner/1.0.0-M4/8e7235e28eda64f8216c0c055bd881f07e46e1b9/junit-platform-runner-1.0.0-M4.jar!/"/>
         </CLASSES>
         <JAVADOC>
-          <root url="jar:///home/developer/.gradle/caches/modules-2/files-2.1/org.junit.platform/junit-platform-runner/1.0.0-M2/47941facb5a4764824f662290dcb4ae65eb04065/junit-platform-runner-1.0.0-M2-javadoc.jar!/"/>
+          <root url="jar:///home/developer/.gradle/caches/modules-2/files-2.1/org.junit.platform/junit-platform-runner/1.0.0-M4/968fedcdb0f0938bc799a00f55b5a1c08b06e41c/junit-platform-runner-1.0.0-M4-javadoc.jar!/"/>
         </JAVADOC>
         <SOURCES>
-          <root url="jar:///home/developer/.gradle/caches/modules-2/files-2.1/org.junit.platform/junit-platform-runner/1.0.0-M2/38b6c890ddbdeeac4d67b695eb9ec7f888617f74/junit-platform-runner-1.0.0-M2-sources.jar!/"/>
+          <root url="jar:///home/developer/.gradle/caches/modules-2/files-2.1/org.junit.platform/junit-platform-runner/1.0.0-M4/76b623ed3ead6d68250e6c9aa14b7ea2b421d226/junit-platform-runner-1.0.0-M4-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" scope="TEST">
       <library>
         <CLASSES>
-          <root url="jar:///home/developer/.gradle/caches/modules-2/files-2.1/org.junit.jupiter/junit-jupiter-api/5.0.0-M2/8227f1e8ce8c1badea96a58fd3e9fc266c674487/junit-jupiter-api-5.0.0-M2.jar!/"/>
+          <root url="jar:///home/developer/.gradle/caches/modules-2/files-2.1/org.junit.jupiter/junit-jupiter-api/5.0.0-M4/50f95d68c674a30374c5f50e6ad5212d2c1a3cec/junit-jupiter-api-5.0.0-M4.jar!/"/>
         </CLASSES>
         <JAVADOC>
-          <root url="jar:///home/developer/.gradle/caches/modules-2/files-2.1/org.junit.jupiter/junit-jupiter-api/5.0.0-M2/dd518395be73a90e391fd71ee167cf431eb86ef7/junit-jupiter-api-5.0.0-M2-javadoc.jar!/"/>
+          <root url="jar:///home/developer/.gradle/caches/modules-2/files-2.1/org.junit.jupiter/junit-jupiter-api/5.0.0-M4/f870fab765b828f48b8b898689bea33203d33387/junit-jupiter-api-5.0.0-M4-javadoc.jar!/"/>
         </JAVADOC>
         <SOURCES>
-          <root url="jar:///home/developer/.gradle/caches/modules-2/files-2.1/org.junit.jupiter/junit-jupiter-api/5.0.0-M2/674fde8fef523ea3978f1e00f2d10f2f27b49ef6/junit-jupiter-api-5.0.0-M2-sources.jar!/"/>
+          <root url="jar:///home/developer/.gradle/caches/modules-2/files-2.1/org.junit.jupiter/junit-jupiter-api/5.0.0-M4/656f7dcf3024258397d7ffdf88f0c909cd7caf11/junit-jupiter-api-5.0.0-M4-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -271,13 +271,26 @@
     <orderEntry type="module-library" scope="TEST">
       <library>
         <CLASSES>
-          <root url="jar:///home/developer/.gradle/caches/modules-2/files-2.1/org.junit.platform/junit-platform-launcher/1.0.0-M2/2c7f203cd470023891184a6e52d9562c9cc729bc/junit-platform-launcher-1.0.0-M2.jar!/"/>
+          <root url="jar:///home/developer/.gradle/caches/modules-2/files-2.1/org.junit.platform/junit-platform-launcher/1.0.0-M4/d4e3657bc7cf204d6b9b55f0387fedc6eaad55fa/junit-platform-launcher-1.0.0-M4.jar!/"/>
         </CLASSES>
         <JAVADOC>
-          <root url="jar:///home/developer/.gradle/caches/modules-2/files-2.1/org.junit.platform/junit-platform-launcher/1.0.0-M2/7dd990d500f3e2dc8d8b28e25ab0d47757130eef/junit-platform-launcher-1.0.0-M2-javadoc.jar!/"/>
+          <root url="jar:///home/developer/.gradle/caches/modules-2/files-2.1/org.junit.platform/junit-platform-launcher/1.0.0-M4/1c81f2e067ba306f5d1b4b399743ce86526f61cd/junit-platform-launcher-1.0.0-M4-javadoc.jar!/"/>
         </JAVADOC>
         <SOURCES>
-          <root url="jar:///home/developer/.gradle/caches/modules-2/files-2.1/org.junit.platform/junit-platform-launcher/1.0.0-M2/fd0898b4cb93b12293807870b689e6eeacec0ae7/junit-platform-launcher-1.0.0-M2-sources.jar!/"/>
+          <root url="jar:///home/developer/.gradle/caches/modules-2/files-2.1/org.junit.platform/junit-platform-launcher/1.0.0-M4/e154c5cc87be7575afe3c82d2d576af124ab6ecc/junit-platform-launcher-1.0.0-M4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///home/developer/.gradle/caches/modules-2/files-2.1/org.junit.platform/junit-platform-suite-api/1.0.0-M4/b68868db955435ca2e2900f5590879463ceb2a72/junit-platform-suite-api-1.0.0-M4.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///home/developer/.gradle/caches/modules-2/files-2.1/org.junit.platform/junit-platform-suite-api/1.0.0-M4/374f4e69165e6da727eb99a92c7d168e7b4ddff/junit-platform-suite-api-1.0.0-M4-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///home/developer/.gradle/caches/modules-2/files-2.1/org.junit.platform/junit-platform-suite-api/1.0.0-M4/bf3c575cef6ddc801fb72eb5a32b52d13d316aa5/junit-platform-suite-api-1.0.0-M4-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -297,39 +310,39 @@
     <orderEntry type="module-library" scope="TEST">
       <library>
         <CLASSES>
-          <root url="jar:///home/developer/.gradle/caches/modules-2/files-2.1/org.opentest4j/opentest4j/1.0.0-M1/b091255eafd515995a5c5fa042cd8db6f4860bf6/opentest4j-1.0.0-M1.jar!/"/>
+          <root url="jar:///home/developer/.gradle/caches/modules-2/files-2.1/org.opentest4j/opentest4j/1.0.0-M2/e2caa64702a83336d3dd32c7f69c1f092156df6d/opentest4j-1.0.0-M2.jar!/"/>
         </CLASSES>
         <JAVADOC>
-          <root url="jar:///home/developer/.gradle/caches/modules-2/files-2.1/org.opentest4j/opentest4j/1.0.0-M1/fa1ad4e999c42924933c97db9d8c4bf57f948980/opentest4j-1.0.0-M1-javadoc.jar!/"/>
+          <root url="jar:///home/developer/.gradle/caches/modules-2/files-2.1/org.opentest4j/opentest4j/1.0.0-M2/daf253a56fd88f646b566019aa5aca412650db9c/opentest4j-1.0.0-M2-javadoc.jar!/"/>
         </JAVADOC>
         <SOURCES>
-          <root url="jar:///home/developer/.gradle/caches/modules-2/files-2.1/org.opentest4j/opentest4j/1.0.0-M1/fe6d496a6a0c8a6ed9a2cdeaab4a0bb43ed52a9b/opentest4j-1.0.0-M1-sources.jar!/"/>
+          <root url="jar:///home/developer/.gradle/caches/modules-2/files-2.1/org.opentest4j/opentest4j/1.0.0-M2/f173f98507075e37c14e384b1d6b5e0b86999cee/opentest4j-1.0.0-M2-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" scope="TEST">
       <library>
         <CLASSES>
-          <root url="jar:///home/developer/.gradle/caches/modules-2/files-2.1/org.junit.platform/junit-platform-commons/1.0.0-M2/a6f1f88b10512623ed14e8b93be10b7590f74c11/junit-platform-commons-1.0.0-M2.jar!/"/>
+          <root url="jar:///home/developer/.gradle/caches/modules-2/files-2.1/org.junit.platform/junit-platform-commons/1.0.0-M4/359eb461814bd7356de541d131d45473d394a168/junit-platform-commons-1.0.0-M4.jar!/"/>
         </CLASSES>
         <JAVADOC>
-          <root url="jar:///home/developer/.gradle/caches/modules-2/files-2.1/org.junit.platform/junit-platform-commons/1.0.0-M2/42bcae28203bde511c5c7115b3ac8c6e040a3f83/junit-platform-commons-1.0.0-M2-javadoc.jar!/"/>
+          <root url="jar:///home/developer/.gradle/caches/modules-2/files-2.1/org.junit.platform/junit-platform-commons/1.0.0-M4/fe2ec7315b0bd76dade332b5fecdd7cf4532d3bb/junit-platform-commons-1.0.0-M4-javadoc.jar!/"/>
         </JAVADOC>
         <SOURCES>
-          <root url="jar:///home/developer/.gradle/caches/modules-2/files-2.1/org.junit.platform/junit-platform-commons/1.0.0-M2/9b8e5ae60ac6bfa83795e6117a5443e4c67a322d/junit-platform-commons-1.0.0-M2-sources.jar!/"/>
+          <root url="jar:///home/developer/.gradle/caches/modules-2/files-2.1/org.junit.platform/junit-platform-commons/1.0.0-M4/baf9c8a387ddf6626c893c5ba2012f461eff3621/junit-platform-commons-1.0.0-M4-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" scope="TEST">
       <library>
         <CLASSES>
-          <root url="jar:///home/developer/.gradle/caches/modules-2/files-2.1/org.junit.platform/junit-platform-engine/1.0.0-M2/fe36ee348295ec740b068b3dd46ec5c733134eb5/junit-platform-engine-1.0.0-M2.jar!/"/>
+          <root url="jar:///home/developer/.gradle/caches/modules-2/files-2.1/org.junit.platform/junit-platform-engine/1.0.0-M4/5e65bdd2d623dfc6a405911a6449f2c60808b0af/junit-platform-engine-1.0.0-M4.jar!/"/>
         </CLASSES>
         <JAVADOC>
-          <root url="jar:///home/developer/.gradle/caches/modules-2/files-2.1/org.junit.platform/junit-platform-engine/1.0.0-M2/e74f5745eedcc5333530deaa789976c64999d2bb/junit-platform-engine-1.0.0-M2-javadoc.jar!/"/>
+          <root url="jar:///home/developer/.gradle/caches/modules-2/files-2.1/org.junit.platform/junit-platform-engine/1.0.0-M4/16f12939f4f9bdc5f40a401f56c6f231295add2b/junit-platform-engine-1.0.0-M4-javadoc.jar!/"/>
         </JAVADOC>
         <SOURCES>
-          <root url="jar:///home/developer/.gradle/caches/modules-2/files-2.1/org.junit.platform/junit-platform-engine/1.0.0-M2/f5d500a78355875859fbf48de2baa57bfae7d5e0/junit-platform-engine-1.0.0-M2-sources.jar!/"/>
+          <root url="jar:///home/developer/.gradle/caches/modules-2/files-2.1/org.junit.platform/junit-platform-engine/1.0.0-M4/5d586950a3ff70a8e064b726b7e22fb8a5f3f12d/junit-platform-engine-1.0.0-M4-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -349,13 +362,13 @@
     <orderEntry type="module-library" scope="TEST">
       <library>
         <CLASSES>
-          <root url="jar:///home/developer/.gradle/caches/modules-2/files-2.1/org.junit.jupiter/junit-jupiter-engine/5.0.0-M2/2e6493b9e7a1b7954c365065b393bc44f4008d84/junit-jupiter-engine-5.0.0-M2.jar!/"/>
+          <root url="jar:///home/developer/.gradle/caches/modules-2/files-2.1/org.junit.jupiter/junit-jupiter-engine/5.0.0-M4/10e0dc41a4e9c1817c2b729c3a7c48b1ddfed17/junit-jupiter-engine-5.0.0-M4.jar!/"/>
         </CLASSES>
         <JAVADOC>
-          <root url="jar:///home/developer/.gradle/caches/modules-2/files-2.1/org.junit.jupiter/junit-jupiter-engine/5.0.0-M2/5fe3e7d694d6ee7ec48b5c0fcdfabda6e3090f9e/junit-jupiter-engine-5.0.0-M2-javadoc.jar!/"/>
+          <root url="jar:///home/developer/.gradle/caches/modules-2/files-2.1/org.junit.jupiter/junit-jupiter-engine/5.0.0-M4/99ca5b7030d7488b61e5a47c9ceee67519df2f0e/junit-jupiter-engine-5.0.0-M4-javadoc.jar!/"/>
         </JAVADOC>
         <SOURCES>
-          <root url="jar:///home/developer/.gradle/caches/modules-2/files-2.1/org.junit.jupiter/junit-jupiter-engine/5.0.0-M2/c8b358413bd606e9e5cfc4cde02a0e4f93377bf1/junit-jupiter-engine-5.0.0-M2-sources.jar!/"/>
+          <root url="jar:///home/developer/.gradle/caches/modules-2/files-2.1/org.junit.jupiter/junit-jupiter-engine/5.0.0-M4/dbb25d923cb576435c492859d2b5dd92a3b9a07a/junit-jupiter-engine-5.0.0-M4-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
