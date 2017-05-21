@@ -25,10 +25,10 @@ public class NetcomPublishTest {
     public void should_publish_message_when_connected() throws Exception {
         // Given
         BrokerConnecterHolder brokerConnecterHolder = mock(BrokerConnecterHolder.class);
-        when(brokerConnecterHolder.connectIfNotConnected()).thenReturn(new Connected(mock(ConnectionWrapper.class)));
+        ConnectionWrapper connectionWrapper = mock(ConnectionWrapper.class);
+        when(brokerConnecterHolder.connectIfNotConnected()).thenReturn(new Connected(connectionWrapper));
 
         Publisher publisher = mock(Publisher.class);
-        ConnectionWrapper connectionWrapper = mock(ConnectionWrapper.class);
         when(publisher.publish(eq(connectionWrapper), eq("weather"), eq("it's raining"))).thenReturn(new NetcomSucceeded());
 
         Netcom netcom = new Netcom(brokerConnecterHolder, null, publisher, null);
@@ -37,7 +37,7 @@ public class NetcomPublishTest {
         NetcomResult publishResult = netcom.publish("weather", "it's raining");
 
         // Then
-        verify(publisher).publish(connectionWrapper, eq("weather"), eq("it's raining"));
+        verify(publisher).publish(eq(connectionWrapper), eq("weather"), eq("it's raining"));
         assertTrue(publishResult.succeeded());
         assertTrue(publishResult.getFailedInfo().length() > 0);
     }
