@@ -1,0 +1,387 @@
+TODO
+---------------------------------------------------------------
+
+[ ] Fiks byggesystem så full bygging og kjøring av appen min blir smooth sailing
+	[ ] Fiks bygging av microservices
+		[x] For å bygge: ms/build.sh
+		[ ] For å teste: kjør microservice_git_repo/test.sh
+	[ ] Fiks så jeg kan gjenbruke en pipeline ("microservices.pipeline") for flere micro services.
+[ ] neste microservice
+	[ ] Skriv kun til å bruke stdin og stdout.
+[ ] Få til fungerende bygg av alle microservices
+[x] Har nå laga det mye enklere å legge til standardprogs (dropbox, cryfs, sublime, double commander) på VirtualbBox.
+[ ] Få det opp på nett
+[x] Lage webklient som consumer events
+[ ] Logger i stedet for System.out.println. Sjekk sl4j ikke statisk mulighet.
+
+LANGITDS
+---------------------------------------------------------------
+[ ] ytelsestester
+	[ ] MS til MS
+	[ ] MS til clientient
+	[ ] Client til MS
+
+GAMMELT
+---------------------------------------------------------------
+Hvordan skal spillet funke
+[ ] Saving
+	PersistenceMS lagrer alle verifiserte events.
+		1 ManMoved 5,6
+		2 ZombieMoved id=abcd 1,3
+		3 ManMoved 5,7
+		4 CorrectOrder 1, 2, 3
+		persistEvents(1, 2, 3, 4)
+[ ] Loading
+	PersistenceMS (eller en annen MS) putter ut alle events som er lagret.
+		ZombieMS mottar følgende ved oppstart:
+			GameLoaded start
+			ManMoved 5,6
+			ZombieMoved id=abcd 1,3
+			ManMoved 5,7
+			ZombieMoved id=qwer 4,7
+			GameLoaded end
+
+		ZombieMS vil da bygge opp Zombie-objekter med state, men aldri sende ut nye events. (Og for å spare arbeid ikke gjøre gamelogikk heller, kun bygge opp state.)
+
+		ZombieMS tar ansvar for alle Zombier, slik at man slipper p2p-synching av hvilken MS som tar hvilken Zombie (= ueffektivt hvis mange Zombier.)
+			(For senere kan MS-en supporte clustering ved å synche hvilke Zombier MS1 tar ansvar for, og hvilke Zombier MS2 tar ansvar for, feks)
+[ ] Se replays
+	Events må være timestampet, tidsdiffet, slik at de kan spilles av i riktig tempo.
+	Kan lage en MS som sørger for å sende ut eventene i samme hastighet som de ble recordet.
+	Når client mottar disse eventene, vil replay vises på riktig måte.
+[ ] Klientkræsj	(og Loading?)
+[ ] Serverkræsj
+[ ] Hastighet på spillet
+[ ] Pause
+
+Litt mer rotete notater om hvordan spillet skal funke
+[ ] Hastighet på spillet
+
+[ ] Nettverksmodell - drit i ordering
+	Bare bruk straight forward: En exchange per eventType, + fanout. La heller MSene justere seg i forhold til eventene slik de ser de. Ikke så farlig om de kommer i perfekt rekkefølge.
+		Forøvrig vil events innenfor en eventtype være ordered.
+
+	Ang client kræsj: La Rabbit sørge for redeliviery av beskjeder som ikke ble acket av MSen.
+		La MSen selv lagre beskjeder som den selv har gjort noe med. Disse kan brukes til å gjenopprette state, for så å kunne fortsette eventpublishing.
+
+	Ang serverkræsj: MSene bør (men må ikke) retransmitte alle beskjeder som ikke er ACKet fra broker.
+
+	Ang loading: MSene holder selv på state.
+		MS1: I'm here, include me in GameManager updates.
+		MS2: I'm here, include me in GameManager updates.
+		GameManager: LoadGame
+		MS1: * Hente opp state fra eget persistenslager *
+		MS1: LoadGame OK.
+		MS2: * Hente opp state fra eget persistenslager *
+		MS2: LoadGame OK.
+		GameManager: StartGame
+
+	La en GameManager sende ut et LoadGame event. Da vil alle MSer gjenopprette state basert på sin persistence, og svare med Så sier GameManager.
+
+	Con:
+		Får ikke trent meg helt på real life utfordringer. Joda Hvis ordering mellom MS-er er essensielt, må jeg lage applikasjonslogikk for dette.
+		MSene ser ikke events som skjedde før de ble med for første gang. Kan bøte på dette med en MSPersistence.
+
+[x] Nettverksmodell - forkastet
+	Det må være lett å skrive MS-er! Ikke lag NetCom-biblioteket vanskelig. Det skal ikke engang være nødvendig.
+
+	Jeg har også lyst å støtte low-latency, og teste ut eventual consistency i stedet for strikt konsistens hele tiden.
+
+	Klientkræsj
+		MS Z -kræsjer
+		MS Z starter å lytte på ManMoved
+		MS Z spør MS Persistence om alle ManMoved events
+			Nei MS Z åpner en strøm som forteller om alle verifiserte events
+
+			Fra MS EventFasit - reliable
+			1
+			2
+			3
+
+			4
+			5
+			6
+
+			Fra lytter - unreliable
+			1
+			2
+			3
+			4
+
+			6
+			5
+
+			Dette vil ikke funke med mange microservices. Den unreliable streamen vil sannsyneligvis alltid bli forskjellig fra den reliable, noe som fører til masse tull.
+
+			Dessuten, man kan ikke publishe events basert på unreliable events, for man kan jo ikke kansellere de. Det kan føre til butterfly effect, kanskje. OK kan kanskje unggås.
+
+
+			trenger nettverkstopologi:
+				Server og broker i ett
+					hm det stod noe om at snapshots kom fra en annen klient. lUrer på om det var når reactors ble introdusert.
+
+
+
+
+
+[ ] Lurer på om jeg skal drite i real time
+	Eller drite i Rabbit.
+	Det jeg trenger er at alle lytter på en event store, slik at de ser samme rekkefølge på events.
+	Så kan man gjøre noen justeringer for å fikse slik at en consumer kun ser eller tar tak i events han subscriber på.
+
+[ ] Hvordan håndtere failures og evt. duplikate meldinger?
+	Klientkræsj
+		Ved loading
+			Anta at MS-en har fått actet på alle events som kommer som loade-events.
+		Ved kræsj
+			Load fra start eller snapshot, men få også liste over missed events.
+				actUpon(missedEvents)
+
+
+
+		Alt 1
+			ZombieMS oppstart
+				netCom.subscribeTo("ManMoved", (msg))
+				Topic manMovedSubscription = netCom.getSubscription("ManMoved")
+
+				ManMoved[] manMovedEvents = manMovedSubscription.getAllMessages()
+				Man man = recreateManFrom(manMovedEvents)
+				ZombeMoved[] = zombieMovedEvents netCom.listAllEventsFor("ZombieMoved")
+				Zombie[] zombies = recreateZombieFrom(zombieMovedEvents)
+
+
+				decideToDoAnythingWith(events)
+
+				Consumer = new DefaultConsumer() {
+					void handleMsg(String msg) {
+
+					}
+				}
+
+				topic.consume(consumer);
+						
+		Duplikater:
+			Simpel: Hver klient kan lage en liste over alle mottate events (GUID-ene deres feks), og sjekke mot den listen.
+			Ha autoack på, hvis ikke blir det mye vanskeligere å erstatte Rabbit med annen kommunikasjon.
+
+			Så hvis MS-Zombie går ned, må noen (docker?) starte den opp igjen. Da må den starte opp igjen, det blir som å loade et game og finne ut av staten.
+
+				a
+				MS-Zombie kan hente alle events (den subscriber på) siden start fra MS-Persistence.
+
+				b
+				Når MS-Zombie starter opp, og subscriber på .. det blir som loading. Ide: Ved oppstart, får ZombieMS alle persisterte (som er verifiserte) events ():
+					1 ManMoved ...
+					2 ZombieMoved ...
+					3 ManMoved ...
+
+				c
+				MS-en sørger selv for å persistere events den lytter på og har behandlet.
+					Hvordan skal MS-en få tak i events den har gått glipp av mens den har vært nede? Må jo bli noe samme som loading.
+
+		
+	Serverkræsj
+
+
+[x] Må tenke og finne ut av hva jeg trenger av
+	[x] sikre at alle microservices, inkludert guiet/client, ser eventene i samme rekkefølge, eller i alle fall, får oppdatert virkelighet kontinuerlig (jeg gikk for den siste)
+		løsning:
+			sende snapshots av staten kontinuerlig
+			fasit: serveren. Den som har RabbitMQ-instans kjørende. Denne må også ha en eventlagrings-MS kjørende. Dette lageret blir fasiten.
+
+			Agh, hvordan skal client løse forslaget under? Samme som for andre MS-er. [CURRENT: Hvordan displaye events vs verifiserte events]
+				Eksempel. Client mottar
+					1 ZombieMoved a->b
+					2 ZombieMoved b->c
+					3 CorrectOrder 1, 2
+					4 ZombieMoved c->d
+					5 ZombieMoved f->g
+					6 ZombieMoved d->e
+					7 CorrectOrder 4, 6, 5
+				For ytelse, vis alle events umiddelbart. Kanskje til og med implementer prediction som viser d->e.
+					Fasit. ZombieLocation = g
+				Evenet 7: Aa shit. Client har vist feil. Hvordan fikse? Må lagre state for hver event. Blir samme som for andre MS-er. Logikk
+					1 persist state: Zombie.location = b
+						events = 1
+					2 persist state: Zombie.location = c
+						events = 1, 2
+					3 persist correctOrder 1, 2
+						events = []
+					4 persist state: Zombie.location = d
+						events = 4
+					5 persist state: Zombie.location = g
+						events = 4, 5
+					6 persist state: Zombie.location = e
+						events = 4, 5, 6
+					7 persist correctOrder 4, 6, 5
+						compare events to correctOrder
+							Agh! Diff! Intersection = 4
+								load state 4 (Zombie.location = d)
+								replay 6, 5
+									6 Zombie.location = e
+									5 Zombie.location = g
+								showUpdatesToGui(Zombie);
+
+
+			For å spare trafikk, trenger en MS kun state for events den subscriber på. Gir det mening?
+				Zombie MS1 subscriber på ManMoved, men ikke på WeatherChanged
+				Dermed får MS1 følgende state fra server
+					Hm... Server vet jo ikke noe om domenet. Men OK:
+					DataFromServer: [FORKASTET]
+						Snapshot
+						ManMoved
+
+						Går ikke, server vite om domenet for å kunne fortelle hva et snapshote, som har state, skal inneholde.
+						Kan feks ikke fortelle at ManPosition=2,5.
+						Men, server kan fortelle fasiten til ordering av events. Feks
+							ManMoved 1,2
+							ManMoved 1,3
+							Mens MS1 kan ha observert 
+								ManMoved 1,3
+								ManMoved 1,2
+						Men hvor mange events skal server fortelle fasitrekkefølge til? Siste turn? Alle events for siste sekund? Ja bedre med siste, da kan justere frekvensen.
+
+						Hvordan skal logikken i en MS håndtere dette?
+							1) Den kan ignoreres. Kan føre til glitches, men pytt sann.
+							2) "Smart" løsning: [CURRENT: Hvordan synche rekkefølge rekkefølgen på events?]
+								Lag snapshots av staten. Eks. for ZombieMS.
+									Først kommer det events inn.
+									1 ManMoved ...
+									2 ManMoved ...
+									3 ManMoved ...
+
+									Så kommer server med fasit-rekkefølge i form av en event:
+									CorrectOrder: 1, 2
+										Kan CorrectOrder-events komme i feil rekkefølge? Nei, for de kommer på samme kø, og RabbitMQ garanterer order her.
+
+									OK, ingen diff, [1, 2] == [1, 2] alt bra. Da lagrer vi snapshot SN1 av state slik den var etter event 1 og 2.
+										Åssen skal vi få det til? Det kan jo imens ha kommet en ny 3 ManMoved som server ikke har mottatt. En løsning kan være å lagre state etter hver eneste event. Ser ikke noe problem med det.
+
+									Så kommer
+									4 ManMoved ...
+									5 ManMoved ...
+									6 ManMoved ...
+
+									Så kommer server med fasit-rekkefølge
+									CorrectOrder: 3, 5, 4
+
+									Ops, diff. Vi har mottatt 3, 4, 5, 6, men server mottok 3, 5, 4.
+									Da skal vi egentlig opprette state basert på snapshot state etter at 2 er applyet. Så replayer vi 3, 5, 4 og så 6.
+
+									Hvis man ser fra server at 4 skulle kommet før 3, dvs
+									4 ManMoved ...
+									3 ManMoved ...
+									så sletter man all state (Zombi(er)), og gjenoppretter Zombie(er) fra SN1, og applyer events ev4 og ev3.
+
+									MSen kan kun lagre snapshots av state som bygd opp av events som kommer som fasit fra server ("verifiserte events").
+
+									Hvor mange snapshots skal lagres (i minne/på disk)? Like lenge som timeout til server, feks.
+
+
+	[x] reliability - dekket av utbroderingen over
+		[x] Kan jeg få ordering? Hvordan i så fall?
+			Ordering funker. Rabbit sørger for det. Se http://stackoverflow.com/questions/22387275/
+		[ ] Hvordan funker dette ack greiene? Er så mye lesestoff spredt rundt omkring...
+
+	[x] persistens
+		Ønsket funksjonalitet
+			Saving og Loading
+			Se replays av et game
+		Løsning
+			Lage en MS som lagrer events med verifisert rekkefølge.
+			Loading:
+				MS-Persistence (eller en annen MS) putter ut alle events som er lagret.
+
+				ZombieMS mottar følgende ved oppstart:
+					GameLoaded start
+					ManMoved 5,6
+					ZombieMoved id=abcd 1,3
+					ManMoved 5,7
+					ZombieMoved id=qwer 4,7
+					GameLoaded end
+
+				ZombieMS vil da bygge opp Zombie-objekter med state, men aldri sende ut nye events. (Og for å spare arbeid ikke gjøre gamelogikk heller, kun bygge opp state.)
+
+				ZombieMS tar ansvar for alle Zombier, slik at man slipper p2p-synching av hvilken MS som tar hvilken Zombie (= ueffektivt hvis mange Zombier.)
+					(For senere kan MS-en supporte clustering ved å synche hvilke Zombier MS1 tar ansvar for, og hvilke Zombier MS2 tar ansvar for, feks)
+
+			Replays:
+				Events må være timestampet, tidsdiffet, slik at de kan spilles av i riktig tempo.
+				Når client mottar disse eventene, vil replay vises på riktig måte.
+	[x] Hvordan skal jeg klare å putte en ZombieMoved event til flere consumere? Dvs alle som vil ha den? Ved å bruke flere køer, en per consumer. Nei, fanout. Se "Implementasjon" lengre ned.
+
+
+
+kommunikasjon:
+	client1 -> mainLog (via web_stomp plugin)
+	client2 -> mainLog (via web_stomp plugin)
+
+	ms1 -> mainLog
+	ms2 -> mainLog
+
+	mainLog -> ms1
+	mainLog -> ms2
+
+	mainLog -> client1
+	mainLog -> client2
+
+	subscribe til event types..
+
+
+ms1:
+	[ZombieThinking] I want to go to the ZombieSpawn.
+ms2:
+	[ZombieThinking] Mee too. Starting walking.
+	[ZombieMoved] [Client] 1,2
+ms1:
+	[ZombieMoved] [Client] 66,16
+
+Rabbit:
+	exchange: main
+	Zombie MS 1:
+		subscribeTo GeneralExchange
+		
+		Routing:
+			subscribeTo [ManMovedQueue] [PetMovedQueue]
+			publishTo [ZombieMovedQueue] [ZombieThinkingQueue]
+	client1:
+		subscribeTo [ManMovedQueue] [PetMovedQueue] <And so on...>
+
+	Implementasjon:
+		Direct queue type. En kø per EventType. Nei funker ikke, ZombieMoved kan ha mange lyttere/subscribers.
+		Fanout, en exchange per EventType.
+			ex1: ZombieMoved
+				fanout til 5 køer, 2 clienter, 3 MS-er
+			ex2: ZombieThinking
+				fanout til 3 MS-er
+
+Client
+	Input fra brukeren, museklikk og tastaturklikk, fører til feks følgende events
+		ManMoved 2,5
+
+	Hvordan kan vi få rekkefølge til å garanteres riktig her, slik at replayability blir korrekt?
+
+GAMLE WILDNOTES
+---------------------------------------------------------------
+[ ] SÅ jeg ikke glemmer kunnskapen: 
+        echo --- Creating pipes for testing. ---
+        rm -f container/app/in_pipe
+        rm -f container/app/out_pipe
+        mkfifo container/app/in_pipe
+        mkfifo container/app/out_pipe
+
+        [x] Hvordan pipe inn til applikasjonen.
+		Bruk
+			mkfifo zombiepipe
+			metode 1:
+			echo 
+			
+			metode 2:
+			exec 6>zombiepipe
+			echo hey >&6
+			
+			metode 3:
+			echo hey > app/pipe
+
+			metode 4:
+			cat - > app/pipe
