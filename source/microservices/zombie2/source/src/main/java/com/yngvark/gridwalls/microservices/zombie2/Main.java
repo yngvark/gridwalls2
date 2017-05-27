@@ -1,30 +1,43 @@
 package com.yngvark.gridwalls.microservices.zombie2;
 
-import java.io.BufferedWriter;
-import java.io.FileOutputStream;
+import com.yngvark.gridwalls.microservices.zombie2.app.App;
+import com.yngvark.gridwalls.microservices.zombie2.exit_os_process.ExecutorServiceExiter;
+import com.yngvark.gridwalls.microservices.zombie2.exit_os_process.Shutdownhook;
+import com.yngvark.gridwalls.microservices.zombie2.netcom.NetcomConsumer;
+import com.yngvark.gridwalls.microservices.zombie2.netcom.NetcomSender;
+
 import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Main {
-    public static void main(String[] args) throws IOException, InterruptedException {
-        if (args.length != 2)
+    public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
+        // Args
+        if (args.length != 2) {
             System.err.println("USAGE: <this program> <mkfifo input> <mkfifo output>");
-
+            System.exit(1);
+        }
         String fifoInputFilename = args[0];
         String fifoOutputFilename = args[1];
 
-        System.out.println("Start");<
+        // Dependencies
+        ExecutorService executorService = Executors.newCachedThreadPool();
+        NetcomSender netcomSender = new NetcomSender(fifoOutputFilename);
+        NetcomConsumer netcomConsumer = new NetcomConsumer(fifoInputFilename);
 
-        FileOutputStream fileOutputStream = new FileOutputStream(fifoOutputFilename);
-        BufferedWriter out = new BufferedWriter(new OutputStreamWriter(fileOutputStream));
+        App app = App.create(executorService, netcomSender, netcomConsumer);
 
-        for (int i = 0; i < 3; i++) {
-            out.write("Hey this is from zombie, line " + i);
-            out.newLine();
-            out.flush();
-            Thread.sleep(1000);
-        }
+        // Shutdownhook
+        Shutdownhook shutdownhook = new Shutdownhook(app);
+        Runtime.getRuntime().addShutdownHook(new Thread(shutdownhook::run));
 
-        out.close();
+        // App
+        ErrorHandlingRunner errorHandlingRunner = new ErrorHandlingRunner();
+        errorHandlingRunner.run(app);
+
+        // Exit
+        ExecutorServiceExiter.exitGracefully(executorService);
     }
+
 }
