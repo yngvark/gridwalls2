@@ -60,7 +60,6 @@ public class App {
                 gameFuture.get();
                 System.out.println("Waiting, with timeout, for netcomConsumerFuture to return.");
                 netcomConsumerFuture.get(3, TimeUnit.SECONDS);
-                System.out.println("netcomConsumerFuture complete");
             } catch (InterruptedException | ExecutionException | TimeoutException e) {
                 e.printStackTrace();
             }
@@ -68,7 +67,7 @@ public class App {
 
         System.out.println("Waiting for allFutures to return...");
         allFutures.get();
-        System.out.println("allFutures complete");
+        System.out.println("Waiting for allFutures to return... done.");
 
         fileWriter.closeStream();
     }

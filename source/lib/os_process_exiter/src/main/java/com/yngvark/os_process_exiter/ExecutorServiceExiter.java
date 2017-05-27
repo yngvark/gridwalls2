@@ -1,4 +1,4 @@
-package com.yngvark.gridwalls.microservices.netcom_forwarder.exit_os_process;
+package com.yngvark.os_process_exiter;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;

@@ -18,27 +18,34 @@ public class FileConsumer {
     public void consume() throws IOException {
         System.out.println("Opening consume file... " + fifoInputFilename);
         FileInputStream fileInputStream = new FileInputStream(fifoInputFilename);
-        System.out.println("Consume file opened.");
+        System.out.println("Opening consume file... done.");
 
         in = new BufferedReader(new InputStreamReader(fileInputStream));
+
+        System.out.println("Consume: start.");
 
         String read;
         while ((read = in.readLine()) != null && run) {
             System.out.println("<<< From netcom: " + read);
         }
 
+        if (read == null) {
+            System.out.println("Consume file stream was closed from other side.");
+            System.out.println("");
+        }
+
         in.close();
+
+        System.out.println("Consume: done.");
     }
 
     public void stopConsuming() {
-        System.out.println("Stopping consuming input file.");
+        System.out.println("Stopping consuming input file...");
         run = false;
 
         if (in != null) {
             try {
                 in.close();
-                System.out.println("Stopped consuming input file.");
-
                 in = null;
             } catch (IOException e) {
                 System.out.println("Caught exception when stopping consuming.");
@@ -46,5 +53,6 @@ public class FileConsumer {
             }
         }
 
+        System.out.println("Stopping consuming input file... done");
     }
 }

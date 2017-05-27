@@ -5,12 +5,18 @@ apply plugin: 'java'
 
 sourceCompatibility = 1.8
 
+def localMavenRepository = 'file://' + new File(System.getProperty('user.home'), 'LocalRepository').absolutePath
+
 repositories {
     mavenCentral()
+    mavenLocal()
+    maven {url localMavenRepository}
+
 }
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile group: 'com.yngvark', name: 'os_process_exiter', version: '1.0.0'
 }
 
 

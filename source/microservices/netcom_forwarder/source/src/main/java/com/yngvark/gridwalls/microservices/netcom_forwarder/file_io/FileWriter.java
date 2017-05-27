@@ -12,6 +12,10 @@ public class FileWriter {
 
     public void write(String msg) throws IOException {
         msg = "[msg] " + msg;
+        writeRaw(msg);
+    }
+
+    private void writeRaw(String msg) throws IOException {
         System.out.println(">>> Sending: " + msg);
 
         out.write(msg);
@@ -21,10 +25,8 @@ public class FileWriter {
 
     public void closeStream() throws IOException {
         System.out.println("Closing output file...");
-
-        write("/quit");
         out.close();
-        System.out.println("Output file closed.");
+        System.out.println("Closing output file... done.");
 
     }
 }

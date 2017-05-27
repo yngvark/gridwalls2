@@ -52,7 +52,6 @@ public class App {
                 consumeNetworkFuture.get();
                 System.out.println("Waiting, with timeout, for fileConsumer to return.");
                 fileConsumer.get(3, TimeUnit.SECONDS);
-                System.out.println("fileConsumer complete");
             } catch (InterruptedException | ExecutionException | TimeoutException e) {
                 e.printStackTrace();
             }
@@ -60,7 +59,7 @@ public class App {
 
         System.out.println("Waiting for allFutures to return...");
         allFutures.get();
-        System.out.println("allFutures complete");
+        System.out.println("Waiting for allFutures to return... done.");
 
         fileWriter.closeStream();
     }

@@ -15,7 +15,7 @@ public class FileOpener {
     public FileWriter openStream() throws FileNotFoundException {
         System.out.println("Opening output file... " + fifoOutputFilename);
         FileOutputStream fileOutputStream = new FileOutputStream(fifoOutputFilename);
-        System.out.println("Output file opened.");
+        System.out.println("Opening output file... done.");
 
         BufferedWriter out = new BufferedWriter(new OutputStreamWriter(fileOutputStream));
 

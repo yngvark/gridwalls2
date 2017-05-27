@@ -19,10 +19,12 @@ class NetworkToFileHub {
             fileWriter.write(msg);
             Thread.sleep(1000);
         }
+
+        //fileWriter.write("/quit");
     }
 
     public void stop() {
-        System.out.println("Stopping message generator.");
+        System.out.println("Stopping " + getClass().getSimpleName());
         run = false;
     }
 }
