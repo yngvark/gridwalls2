@@ -3,8 +3,8 @@ package com.yngvark.gridwalls.microservices.zombie2;
 import com.yngvark.gridwalls.microservices.zombie2.app.App;
 import com.yngvark.gridwalls.microservices.zombie2.exit_os_process.ExecutorServiceExiter;
 import com.yngvark.gridwalls.microservices.zombie2.exit_os_process.Shutdownhook;
-import com.yngvark.gridwalls.microservices.zombie2.netcom.NetcomConsumer;
-import com.yngvark.gridwalls.microservices.zombie2.netcom.NetcomSender;
+import com.yngvark.gridwalls.microservices.zombie2.file_io.FileConsumer;
+import com.yngvark.gridwalls.microservices.zombie2.file_io.FileOpener;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
@@ -23,10 +23,10 @@ public class Main {
 
         // Dependencies
         ExecutorService executorService = Executors.newCachedThreadPool();
-        NetcomSender netcomSender = new NetcomSender(fifoOutputFilename);
-        NetcomConsumer netcomConsumer = new NetcomConsumer(fifoInputFilename);
+        FileOpener fileOpener = new FileOpener(fifoOutputFilename);
+        FileConsumer fileConsumer = new FileConsumer(fifoInputFilename);
 
-        App app = App.create(executorService, netcomSender, netcomConsumer);
+        App app = App.create(executorService, fileOpener, fileConsumer);
 
         // Shutdownhook
         Shutdownhook shutdownhook = new Shutdownhook(app);

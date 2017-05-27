@@ -1,8 +1,7 @@
-package com.yngvark.gridwalls.microservices.zombie2.app;
+package com.yngvark.gridwalls.microservices.netcom_forwarder.app;
 
-import com.yngvark.gridwalls.microservices.zombie2.file_io.FileConsumer;
-import com.yngvark.gridwalls.microservices.zombie2.file_io.FileOpener;
-import com.yngvark.gridwalls.microservices.zombie2.file_io.FileWriter;
+import com.yngvark.gridwalls.microservices.netcom_forwarder.file_io.FileConsumer;
+import com.yngvark.gridwalls.microservices.netcom_forwarder.file_io.FileWriter;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
@@ -13,54 +12,47 @@ import java.util.concurrent.TimeoutException;
 
 public class App {
     private final ExecutorService executorService;
-    private final FileOpener fileOpener;
+    private final FileWriter fileWriter;
     private final FileConsumer fileConsumer;
-
-    private Game game;
+    private final NetworkToFileHub networkToFileHub;
 
     public static App create(
             ExecutorService executorService,
-            FileOpener fileOpener,
+            FileWriter fileWriter,
             FileConsumer fileConsumer) {
         return new App(
                 executorService,
-                fileOpener,
-                fileConsumer);
+                fileWriter,
+                fileConsumer,
+                new NetworkToFileHub(fileWriter));
     }
 
     App(
             ExecutorService executorService,
-            FileOpener fileOpener,
-            FileConsumer fileConsumer) {
+            FileWriter fileWriter,
+            FileConsumer fileConsumer,
+            NetworkToFileHub networkToFileHub) {
         this.executorService = executorService;
-        this.fileOpener = fileOpener;
+        this.fileWriter = fileWriter;
         this.fileConsumer = fileConsumer;
+        this.networkToFileHub = networkToFileHub;
     }
 
     public void run() throws Throwable {
-        /*
-        Muligheter for exit:
-        - Shutdownhook sier stop.
-        - consumeren stopper.
-        - game stopper.
-         */
+        System.out.println("Starting network forwarder.");
 
-        System.out.println("Starting zombie logic.");
+        fileWriter.openStream();
 
-        Future netcomConsumerFuture = consumeMessages();
-
-        FileWriter fileWriter = fileOpener.openStream();
-        game = new Game(fileWriter);
-
-        Future gameFuture = runGame(game);
+        Future consumeNetworkFuture = consumeNetworkMessages();
+        Future fileConsumer = consumeFileMessages();
 
         Future allFutures = executorService.submit(() -> {
             try {
-                System.out.println("Waiting for gameFuture to return.");
-                gameFuture.get();
-                System.out.println("Waiting, with timeout, for netcomConsumerFuture to return.");
-                netcomConsumerFuture.get(3, TimeUnit.SECONDS);
-                System.out.println("netcomConsumerFuture complete");
+                System.out.println("Waiting for consumeNetworkFuture to return.");
+                consumeNetworkFuture.get();
+                System.out.println("Waiting, with timeout, for fileConsumer to return.");
+                fileConsumer.get(3, TimeUnit.SECONDS);
+                System.out.println("fileConsumer complete");
             } catch (InterruptedException | ExecutionException | TimeoutException e) {
                 e.printStackTrace();
             }
@@ -73,10 +65,10 @@ public class App {
         fileWriter.closeStream();
     }
 
-    private Future runGame(Game game) {
+    private Future consumeNetworkMessages() {
         return executorService.submit(() -> {
                 try {
-                    game.produce();
+                    networkToFileHub.consumeAndForward();
                     fileConsumer.stopConsuming();
                 } catch (IOException|InterruptedException e) {
                     System.out.println("Exception occurred");
@@ -85,11 +77,11 @@ public class App {
             });
     }
 
-    private Future consumeMessages() throws IOException {
+    private Future consumeFileMessages() throws IOException {
         return executorService.submit(() -> {
             try {
                 fileConsumer.consume();
-                game.stop();
+                networkToFileHub.stop();
             } catch (IOException e) {
                 System.out.println("Exception occurred");
                 e.printStackTrace();
@@ -99,10 +91,6 @@ public class App {
 
     public void stop() {
         System.out.println("Stopping app.");
-
-        if (game == null)
-            throw new IllegalStateException("Cannot stop game that hasn't started.");
-
-        game.stop();
+        networkToFileHub.stop();
     }
 }

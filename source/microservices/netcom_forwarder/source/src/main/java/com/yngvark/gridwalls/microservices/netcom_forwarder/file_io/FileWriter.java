@@ -1,4 +1,4 @@
-package com.yngvark.gridwalls.microservices.zombie2.netcom;
+package com.yngvark.gridwalls.microservices.netcom_forwarder.file_io;
 
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
@@ -6,11 +6,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 
-public class NetcomSender {
+public class FileWriter {
     private final String fifoOutputFilename;
     private BufferedWriter out;
 
-    public NetcomSender(String fifoOutputFilename) {
+    public FileWriter(String fifoOutputFilename) {
         this.fifoOutputFilename = fifoOutputFilename;
     }
 
@@ -23,7 +23,7 @@ public class NetcomSender {
     }
 
     public void send(String msg) throws IOException {
-        System.out.println("Sending: " + msg);
+        System.out.println(">>> Sending: " + msg);
 
         out.write("[msg] " + msg);
         out.newLine();

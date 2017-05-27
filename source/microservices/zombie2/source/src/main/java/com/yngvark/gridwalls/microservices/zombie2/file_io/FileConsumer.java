@@ -1,17 +1,17 @@
-package com.yngvark.gridwalls.microservices.zombie2.netcom;
+package com.yngvark.gridwalls.microservices.zombie2.file_io;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-public class NetcomConsumer {
+public class FileConsumer {
     private final String fifoInputFilename;
 
     private boolean run = true;
     private BufferedReader in;
 
-    public NetcomConsumer(String fifoInputFilename) {
+    public FileConsumer(String fifoInputFilename) {
         this.fifoInputFilename = fifoInputFilename;
     }
 
@@ -24,7 +24,7 @@ public class NetcomConsumer {
 
         String read;
         while ((read = in.readLine()) != null && run) {
-            System.out.println("From netcom: " + read);
+            System.out.println("<<< From netcom: " + read);
         }
 
         in.close();

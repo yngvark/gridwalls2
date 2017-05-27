@@ -1,22 +1,22 @@
 package com.yngvark.gridwalls.microservices.zombie2.app;
 
-import com.yngvark.gridwalls.microservices.zombie2.netcom.NetcomSender;
+import com.yngvark.gridwalls.microservices.zombie2.file_io.FileWriter;
 
 import java.io.IOException;
 
 class Game {
-    private final NetcomSender netcomSender;
+    private final FileWriter fileWriter;
 
     private boolean run = true;
 
-    public Game(NetcomSender netcomSender) {
-        this.netcomSender = netcomSender;
+    public Game(FileWriter fileWriter) {
+        this.fileWriter = fileWriter;
     }
 
     public void produce() throws IOException, InterruptedException {
         for (int i = 0; i < 4 && run; i++) {
             String msg = "Hey this is from Zombie, line " + i;
-            netcomSender.send(msg);
+            fileWriter.write(msg);
             Thread.sleep(1000);
         }
     }
