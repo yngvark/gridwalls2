@@ -1,6 +1,7 @@
 package com.yngvark.gridwalls.microservices.netcom_forwarder.app;
 
 import com.yngvark.gridwalls.microservices.netcom_forwarder.file_io.FileConsumer;
+import com.yngvark.gridwalls.microservices.netcom_forwarder.file_io.FileOpener;
 import com.yngvark.gridwalls.microservices.netcom_forwarder.file_io.FileWriter;
 
 import java.io.IOException;
@@ -12,38 +13,37 @@ import java.util.concurrent.TimeoutException;
 
 public class App {
     private final ExecutorService executorService;
-    private final FileWriter fileWriter;
+    private final FileOpener fileOpener;
     private final FileConsumer fileConsumer;
-    private final NetworkToFileHub networkToFileHub;
+
+    private NetworkToFileHub networkToFileHub;
 
     public static App create(
             ExecutorService executorService,
-            FileWriter fileWriter,
+            FileOpener fileOpener,
             FileConsumer fileConsumer) {
         return new App(
                 executorService,
-                fileWriter,
-                fileConsumer,
-                new NetworkToFileHub(fileWriter));
+                fileOpener,
+                fileConsumer);
     }
 
     App(
             ExecutorService executorService,
-            FileWriter fileWriter,
-            FileConsumer fileConsumer,
-            NetworkToFileHub networkToFileHub) {
+            FileOpener fileOpener,
+            FileConsumer fileConsumer) {
         this.executorService = executorService;
-        this.fileWriter = fileWriter;
+        this.fileOpener = fileOpener;
         this.fileConsumer = fileConsumer;
-        this.networkToFileHub = networkToFileHub;
     }
 
     public void run() throws Throwable {
         System.out.println("Starting network forwarder.");
 
-        fileWriter.openStream();
+        FileWriter fileWriter = fileOpener.openStream();
+        networkToFileHub = new NetworkToFileHub(fileWriter);
 
-        Future consumeNetworkFuture = consumeNetworkMessages();
+        Future consumeNetworkFuture = consumeNetworkMessages(networkToFileHub);
         Future fileConsumer = consumeFileMessages();
 
         Future allFutures = executorService.submit(() -> {
@@ -65,7 +65,7 @@ public class App {
         fileWriter.closeStream();
     }
 
-    private Future consumeNetworkMessages() {
+    private Future consumeNetworkMessages(NetworkToFileHub networkToFileHub) {
         return executorService.submit(() -> {
                 try {
                     networkToFileHub.consumeAndForward();
@@ -91,6 +91,10 @@ public class App {
 
     public void stop() {
         System.out.println("Stopping app.");
+
+        if (networkToFileHub == null)
+            throw new IllegalStateException("Cannot stop game that hasn't started.");
+
         networkToFileHub.stop();
     }
 }

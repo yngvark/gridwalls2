@@ -4,6 +4,7 @@ import com.yngvark.gridwalls.microservices.netcom_forwarder.app.App;
 import com.yngvark.gridwalls.microservices.netcom_forwarder.exit_os_process.ExecutorServiceExiter;
 import com.yngvark.gridwalls.microservices.netcom_forwarder.exit_os_process.Shutdownhook;
 import com.yngvark.gridwalls.microservices.netcom_forwarder.file_io.FileConsumer;
+import com.yngvark.gridwalls.microservices.netcom_forwarder.file_io.FileOpener;
 import com.yngvark.gridwalls.microservices.netcom_forwarder.file_io.FileWriter;
 
 import java.io.IOException;
@@ -23,10 +24,10 @@ public class Main {
 
         // Dependencies
         ExecutorService executorService = Executors.newCachedThreadPool();
-        FileWriter fileWriter = new FileWriter(fifoOutputFilename);
+        FileOpener fileOpener = new FileOpener(fifoOutputFilename);
         FileConsumer fileConsumer = new FileConsumer(fifoInputFilename);
 
-        App app = App.create(executorService, fileWriter, fileConsumer);
+        App app = App.create(executorService, fileOpener, fileConsumer);
 
         // Shutdownhook
         Shutdownhook shutdownhook = new Shutdownhook(app);
