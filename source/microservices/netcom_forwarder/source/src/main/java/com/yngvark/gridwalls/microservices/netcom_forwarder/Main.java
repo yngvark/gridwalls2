@@ -2,8 +2,8 @@ package com.yngvark.gridwalls.microservices.netcom_forwarder;
 
 import com.yngvark.gridwalls.microservices.netcom_forwarder.app.App;
 import com.yngvark.gridwalls.microservices.netcom_forwarder.exit_os_process.Shutdownhook;
-import com.yngvark.gridwalls.microservices.netcom_forwarder.file_io.FileConsumer;
-import com.yngvark.gridwalls.microservices.netcom_forwarder.file_io.FileOpener;
+import com.yngvark.communicate_through_named_pipes.file_io.FileConsumer;
+import com.yngvark.communicate_through_named_pipes.file_io.FileOpener;
 import com.yngvark.os_process_exiter.ExecutorServiceExiter;
 
 import java.io.IOException;

@@ -1,6 +1,6 @@
 package com.yngvark.gridwalls.microservices.netcom_forwarder.app;
 
-import com.yngvark.gridwalls.microservices.netcom_forwarder.file_io.FileWriter;
+import com.yngvark.communicate_through_named_pipes.file_io.FileWriter;
 
 import java.io.IOException;
 
