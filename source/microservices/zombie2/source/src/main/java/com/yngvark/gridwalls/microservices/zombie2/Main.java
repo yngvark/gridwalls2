@@ -1,10 +1,10 @@
 package com.yngvark.gridwalls.microservices.zombie2;
 
 import com.yngvark.gridwalls.microservices.zombie2.app.App;
-import com.yngvark.gridwalls.microservices.zombie2.exit_os_process.ExecutorServiceExiter;
 import com.yngvark.gridwalls.microservices.zombie2.exit_os_process.Shutdownhook;
 import com.yngvark.gridwalls.microservices.zombie2.file_io.FileConsumer;
 import com.yngvark.gridwalls.microservices.zombie2.file_io.FileOpener;
+import com.yngvark.os_process_exiter.ExecutorServiceExiter;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;

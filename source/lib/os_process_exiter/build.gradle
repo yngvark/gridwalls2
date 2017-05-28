@@ -18,11 +18,11 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.yngvark.gridwalls:download_common_buildscript:1.0.0'
+        classpath 'com.yngvark.gridwalls:common_buildscript:1.0.0'
     }
 }
 
 afterEvaluate { project ->
     apply from: project.buildscript.classLoader.getResource(
-            'com/yngvark/gridwalls/download_common_buildscript/uploadArchives.gradle').toURI()
+            'com/yngvark/gridwalls/common_buildscript/uploadArchives.gradle').toURI()
 }

@@ -1,25 +1,13 @@
-group 'com.yngvark.gridwalls'
-version '1.0-SNAPSHOT'
+# How to use
 
-apply plugin: 'java'
+To import a build script from this library, use something like this
 
-sourceCompatibility = 1.8
-
-repositories {
-    mavenCentral()
-    maven {url project.ext.localMavenRepository}
-}
-
-dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-    compile 'com.yngvark:os_process_exiter:1.0.0'
-}
-
+```$groovy
 buildscript {
-    project.ext.localMavenRepository = 'file://' + new File(System.getProperty('user.home'), '.mavenRepo').absolutePath
+    def localMavenRepository = 'file://' + new File(System.getProperty('user.home'), '.mavenRepo').absolutePath
 
     repositories {
-        maven {url project.localMavenRepository}
+        maven {url localMavenRepository}
     }
 
     dependencies {
@@ -32,3 +20,6 @@ afterEvaluate { project ->
     apply from: project.buildscript.classLoader.getResource('com/yngvark/gridwalls/common_buildscript/uploadArchives.gradle').toURI()
     apply from: project.buildscript.classLoader.getResource('com/yngvark/gridwalls/common_buildscript/installDist.gradle').toURI()
 }
+
+```
+

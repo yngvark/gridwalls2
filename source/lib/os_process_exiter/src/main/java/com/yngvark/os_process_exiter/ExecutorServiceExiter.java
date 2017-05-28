@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit;
 public class ExecutorServiceExiter {
 
     public static void exitGracefully(ExecutorService executorService) {
-        System.out.println("Exiting gracefully.33");
+        System.out.println("Exiting gracefully.");
 
         if (executorService.isShutdown()) {
             System.out.println("Executor service already shut down.");

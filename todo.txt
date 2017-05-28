@@ -10,13 +10,6 @@ TODO
 					mkfifo container/to_ms
 					./container/.../netcom/netcom container/to_ms container/from_ms
 					./container/.../bin/zombie container/from_ms container/to_ms
-		[ ] Hvordan skal graceful shutdown funke?
-			Implementer en quit-beskjed
-			- Netcom shutdownhook: Sender spesialmsg "/quit"
-			- Zombies shutdownhook: Sender spesialmsg "/quit"
-			Ved mottak "/quit", close streamen.
-
-
 
 		[x] Få mkfifo til å funke
 			PLAN
@@ -27,11 +20,25 @@ TODO
 				../netcom_forwarder/connect out in
 				zombie out in
 
+		[ ] Hvordan skal graceful shutdown funke?
+			Implementer en quit-beskjed
+			- Netcom shutdownhook: Sender spesialmsg "/quit"
+			- Zombies shutdownhook: Sender spesialmsg "/quit"
+			Ved mottak "/quit", close streamen.
+			Nei, innebygd fikser det.
+
+			Sjekk at ting funker
+
 			NÅ
 				Putte til kø: cat - > mkfifo_filnavn
 				Lese kø: cat mkfifo_filnavn
-	[ ] Lag ting skikkelig
-		[ ] Lag docker-oppsett
+		[ ] Fiks dockeroppsett for hvert repo
+			[ ] Lag build.sh som bygger med docker
+			[ ] Lag run.sh
+				linking
+				network
+				> docker compose
+
 		[ ] Få NetcomForwarder til å snakke med RabbitMQ
 
 [ ] Fiks byggesystem så full bygging og kjøring av appen min blir smooth sailing

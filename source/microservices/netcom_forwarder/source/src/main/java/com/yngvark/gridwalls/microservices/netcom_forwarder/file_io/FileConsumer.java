@@ -31,11 +31,11 @@ public class FileConsumer {
 
         if (read == null) {
             System.out.println("Consume file stream was closed from other side.");
-            System.out.println("");
         }
 
         in.close();
 
+        System.out.println("");
         System.out.println("Consume: done.");
     }
 

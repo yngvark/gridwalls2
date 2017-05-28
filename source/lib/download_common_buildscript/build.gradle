@@ -1,6 +1,0 @@
-group 'com.yngvark.gridwalls'
-version '1.0.0'
-
-apply plugin: 'java'
-
-apply from: 'src/main/resources/com/yngvark/gridwalls/download_common_buildscript/uploadArchives.gradle'
