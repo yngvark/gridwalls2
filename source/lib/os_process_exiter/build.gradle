@@ -22,7 +22,6 @@ buildscript {
     }
 }
 
-
 afterEvaluate { project ->
     apply from: project.buildscript.classLoader.getResource('uploadArchives.gradle').toURI()
 }
