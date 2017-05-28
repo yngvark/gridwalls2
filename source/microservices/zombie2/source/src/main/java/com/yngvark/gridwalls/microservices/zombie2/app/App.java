@@ -1,8 +1,8 @@
 package com.yngvark.gridwalls.microservices.zombie2.app;
 
-import com.yngvark.gridwalls.microservices.zombie2.file_io.FileConsumer;
-import com.yngvark.gridwalls.microservices.zombie2.file_io.FileOpener;
-import com.yngvark.gridwalls.microservices.zombie2.file_io.FileWriter;
+import com.yngvark.communicate_through_named_pipes.file_io.FileConsumer;
+import com.yngvark.communicate_through_named_pipes.file_io.FileOpener;
+import com.yngvark.communicate_through_named_pipes.file_io.FileWriter;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
