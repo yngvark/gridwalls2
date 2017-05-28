@@ -1,0 +1,17 @@
+apply plugin: 'maven'
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: 'file://' + new File(System.getProperty('user.home'), '.mavenRepo').absolutePath) { }
+
+            snapshotRepository(url: 'file://' + new File(System.getProperty('user.home'), '.mavenRepo/snapshots').absolutePath) { }
+
+            pom.project {
+                group rootProject.group
+                name rootProject.name
+                description rootProject.description
+            }
+        }
+    }
+}

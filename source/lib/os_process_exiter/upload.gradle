@@ -1,0 +1,17 @@
+apply plugin: 'maven'
+archivesBaseName = "os_process_exiter"
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: 'file://' + new File(System.getProperty('user.home'), '.mavenRepo').absolutePath) { }
+
+            snapshotRepository(url: 'file://' + new File(System.getProperty('user.home'), '.mavenRepo/snapshots').absolutePath) { }
+
+            pom.project {
+                name 'OS process exiter'
+                description ''
+            }
+        }
+    }
+}
