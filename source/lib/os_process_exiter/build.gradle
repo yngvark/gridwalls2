@@ -23,5 +23,5 @@ buildscript {
 }
 
 afterEvaluate { project ->
-    apply from: project.buildscript.classLoader.getResource('uploadArchives.gradle').toURI()
+    apply from: project.buildscript.classLoader.getResource('com/yngvark/gridwalls/download_common_buildscript/uploadArchives.gradle').toURI()
 }
