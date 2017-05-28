@@ -91,9 +91,7 @@ public class App {
     public void stop() {
         System.out.println("Stopping app.");
 
-        if (networkToFileHub == null)
-            throw new IllegalStateException("Cannot stop game that hasn't started.");
-
-        networkToFileHub.stop();
+        if (networkToFileHub != null)
+            networkToFileHub.stop();
     }
 }

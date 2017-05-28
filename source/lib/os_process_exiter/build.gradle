@@ -6,31 +6,23 @@ apply plugin: 'java'
 sourceCompatibility = 1.8
 
 repositories {
+    jcenter()
     mavenCentral()
-    mavenLocal()
 }
 
-dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-}
+buildscript {
+    def localMavenRepository = 'file://' + new File(System.getProperty('user.home'), '.mavenRepo').absolutePath
 
-apply plugin: 'maven'
-
-archivesBaseName = "os_process_exiter"
-
-uploadArchives {
     repositories {
-        mavenDeployer {
-            repository(url: 'file://' + new File(System.getProperty('user.home'), 'LocalRepository').absolutePath) { }
-
-            snapshotRepository(url: 'file://' + new File(System.getProperty('user.home'), 'LocalRepository/snapshots').absolutePath) { }
-
-            pom.project {
-                name 'OS process eiter'
-                packaging 'aar'
-                description ''
-                url 'http://private-git-url'
-            }
-        }
+        maven {url localMavenRepository}
     }
+
+    dependencies {
+        classpath 'com.yngvark.gridwalls:download_common_buildscript:1.0.0'
+    }
+}
+
+
+afterEvaluate { project ->
+    apply from: project.buildscript.classLoader.getResource('uploadArchives.gradle').toURI()
 }

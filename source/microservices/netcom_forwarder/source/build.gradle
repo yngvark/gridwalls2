@@ -9,14 +9,12 @@ def localMavenRepository = 'file://' + new File(System.getProperty('user.home'),
 
 repositories {
     mavenCentral()
-    mavenLocal()
     maven {url localMavenRepository}
-
 }
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
-    compile group: 'com.yngvark', name: 'os_process_exiter', version: '1.0.0'
+    compile 'com.yngvark:os_process_exiter:1.0.0'
 }
 
 
@@ -27,7 +25,6 @@ dependencies {
 // Run java -jar build/install/<appname>/lib/<appname>.jar
 apply plugin: 'application'
 mainClassName = 'com.yngvark.gridwalls.microservices.netcom_forwarder.Main'
-
 
 task dist(type: Copy) {
     dependsOn "installDist"
