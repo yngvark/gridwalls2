@@ -2,29 +2,20 @@ group 'com.yngvark'
 version '1.0.0'
 
 apply plugin: 'java'
-
 sourceCompatibility = 1.8
 
 repositories {
-    mavenCentral()
+    mavenLocal()
 }
 
 dependencies {
 }
 
-buildscript {
-    def localMavenRepository = 'file://' + new File(System.getProperty('user.home'), '.mavenRepo').absolutePath
-
-    repositories {
-        maven {url localMavenRepository}
+apply plugin: 'maven-publish'
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
     }
-
-    dependencies {
-        classpath 'com.yngvark.gridwalls:common_buildscript:1.0.0'
-    }
-}
-
-afterEvaluate { project ->
-    apply from: project.buildscript.classLoader.getResource(
-            'com/yngvark/gridwalls/common_buildscript/uploadArchives.gradle').toURI()
 }

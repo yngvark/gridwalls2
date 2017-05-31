@@ -1,0 +1,20 @@
+For nå:
+
+- Hver MS har et repo
+- I hvert repo ligger
+	/build.sh # Output: ett eller flere docker images i det lokale image-registriet?
+		docker build ...
+	/test.sh # Output: 1. True/false. 2. Test output/logg.
+		whatever. Feks
+			cd test && docker-compose up
+	/run.sh
+		cd container && docker-compose up
+
+Poenget er at når man kjører
+	build.sh
+	test.sh
+	run.sh
+så skal alt bare funke.
+
+Lengre sikt:
+- Har kubernetes. Må lære meg det først for å se systemet.

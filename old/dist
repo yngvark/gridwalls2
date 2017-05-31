@@ -1,0 +1,6 @@
+
+task make(type: Copy) {
+    dependsOn "installDist"
+    from "build/install/$rootProject.name"
+    into '../container/app'
+}

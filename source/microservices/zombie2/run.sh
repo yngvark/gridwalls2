@@ -1,4 +1,4 @@
 docker run \
-	-v `pwd`/container/app:/app \
+	-v gridwallsBuild:/app \
 	openjdk:8-jre \
-	/app/bin/zombie2
+	/app/bin/run

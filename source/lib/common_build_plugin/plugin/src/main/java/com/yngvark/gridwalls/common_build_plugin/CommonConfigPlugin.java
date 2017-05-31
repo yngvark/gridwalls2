@@ -20,20 +20,41 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.Properties;
 
 public class CommonConfigPlugin implements Plugin<Project> {
+    private static final String PLUGIN_NAME = CommonConfigPlugin.class.getSimpleName();
+
     @Override
     public void apply(Project target) {
-        target.getPluginManager().apply(ApplicationPlugin.class);
-        target.getExtensions().create("commonConfigExecutable", CommonConfigExecutable.class);
 
-        target.afterEvaluate((action) -> {
-            String mainClassName = target.getExtensions().getByType(CommonConfigExecutable.class).mainClassName;
-            target.getConvention().getPlugin(ApplicationPluginConvention.class).setMainClassName(mainClassName);
-        });
+        if (target.getExtensions().getExtraProperties().has("commonBuildPlugin")) {
+            Map<String, Boolean> config = (Map<String, Boolean>)
+                    target.getExtensions().getExtraProperties().get("commonBuildPlugin");
 
-        target.getPluginManager().apply(MavenPublishPlugin.class);
+            if (config.getOrDefault("applyApplicationPlugin", false)) {
+                target.getExtensions().create("commonConfigApplicationPlugin", CommonConfigExecutable.class);
+
+                target.getPluginManager().apply(ApplicationPlugin.class);
+                target.afterEvaluate((action) -> {
+                    String mainClassName = target.getExtensions().getByType(CommonConfigExecutable.class).mainClassName;
+                    if (mainClassName == null) {
+                        throw new RuntimeException(
+                                "Missing configuration for " + PLUGIN_NAME + "'s application plugin. "
+                                        + "Your build.gradle needs to set mainClassName. "
+                                        + "For how to do this, see README for " + PLUGIN_NAME + ".");
+                    }
+
+                    target.getConvention().getPlugin(ApplicationPluginConvention.class).setMainClassName(mainClassName);
+                });
+            }
+
+            if (config.getOrDefault("applyMavenPublishPlugin", false)) {
+                target.getPluginManager().apply(MavenPublishPlugin.class);
+            }
+        }
+
     }
 
     @SuppressWarnings("UnusedDeclaration")
@@ -64,19 +85,26 @@ public class CommonConfigPlugin implements Plugin<Project> {
 
         @Mutate
         void createPublications(PublishingExtension publishing, CommonConfig commonConfig) {
-            publishing.publications((publicationContainer) -> {
-                publicationContainer.create("somePublish", MavenPublication.class, (publicationConfig) -> {
-                    SoftwareComponent softwareComponent = commonConfig.getComponentToMavenPublish();
-                    publicationConfig.from(softwareComponent);
-                });
-            });
+            if (commonConfig.getComponentToMavenPublish() == null) {
+                throw new RuntimeException(
+                        "Missing configuration for " + CommonConfigPlugin.PLUGIN_NAME + "'s MavenPublish "
+                                + "plugin. Your build.gradle needs to set componentToMavenPublish. "
+                                + "For how to do this, see README for " + CommonConfigPlugin.PLUGIN_NAME + ".");
+            }
+
+            publishing.publications((publicationContainer) -> publicationContainer.create(
+                    "artifact",
+                    MavenPublication.class,
+                    (publicationConfig) -> {
+                        SoftwareComponent softwareComponent = commonConfig.getComponentToMavenPublish();
+                        publicationConfig.from(softwareComponent);
+                    }));
 
             publishing.repositories((repoHandler) -> repoHandler.maven(
                     mavenRepo -> {
                         String mavenRepoUrl = readMavenRepoUrlFromFile();
                         mavenRepo.setUrl(mavenRepoUrl);
-                    }
-            ));
+                    }));
         }
 
         private String readMavenRepoUrlFromFile() {

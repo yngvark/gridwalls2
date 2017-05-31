@@ -1,30 +1,12 @@
-buildscript {
-    project.ext.localMavenRepository = 'file://' + new File(System.getProperty('user.home'), '.mavenRepo').absolutePath
-
-    repositories {
-        maven {url project.localMavenRepository}
-    }
-
-    dependencies {
-        classpath 'com.yngvark.gridwalls:common_buildscript:1.0.0'
-    }
-}
-
-// Resources below are found in JAR from common_buildscript
-afterEvaluate { project ->
-    apply from: project.buildscript.classLoader.getResource('com/yngvark/gridwalls/common_buildscript/installDist.gradle').toURI()
-}
-
 group 'gridwalls'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
-
 sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
-    maven {url project.ext.localMavenRepository}
+    mavenLocal()
 }
 
 dependencies {
@@ -33,5 +15,11 @@ dependencies {
     compile 'com.yngvark:communicate_through_named_pipes:1.0.0'
 }
 
-//mainClassName = 'com.yngvark.gridwalls.microservices.zombie2.Main'
-project.ext.mainClassName = 'com.yngvark.gridwalls.microservices.zombie2.Main'
+apply plugin: 'application'
+mainClassName = 'com.yngvark.gridwalls.microservices.zombie2.Main'
+applicationName = 'run'
+distributions {
+    main {
+        baseName = 'app'
+    }
+}

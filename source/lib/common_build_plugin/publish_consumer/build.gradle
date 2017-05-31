@@ -1,0 +1,41 @@
+group 'com.yngvark'
+version '1.0.0'
+
+apply plugin: 'java'
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+
+buildscript {
+    repositories {
+        maven {
+            def fetchMavenRepoUrl = { ->
+                String mavenDir = new URL('https://bitbucket.org/yngvark/shared_config/raw/7cff02f13b49ea79e9aef6f47ab509bfcccd0a25/mavenRepoUrl').text
+                "file://" + new File(System.getProperty("user.home"), mavenDir).getAbsolutePath()
+            }
+            url fetchMavenRepoUrl()
+        }
+    }
+
+    dependencies {
+        classpath 'com.yngvark.gridwalls:common_build_plugin:1.0.0'
+    }
+}
+
+rootProject.ext.commonBuildPlugin = [
+        applyMavenPublishPlugin: true
+]
+apply plugin: 'com.yngvark.gridwalls.common_build_plugin'
+
+model { // Only needed if 'applyMavenPublishPlugin' is true above. TODO nope, that is wrong. Bah...
+    commonConfig {
+
+    }
+}
