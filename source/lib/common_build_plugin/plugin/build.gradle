@@ -1,0 +1,55 @@
+group 'com.yngvark.gridwalls'
+version '1.0.0'
+
+apply plugin: 'java'
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile gradleApi()
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+};
+
+{ ->
+    apply plugin: 'idea'
+    idea {
+        module {
+            downloadJavadoc = true
+            downloadSources = true
+        }
+    }
+}()
+
+def fetchMavenRepoUrl = { ->
+    String mavenDir = new URL('https://bitbucket.org/yngvark/shared_config/raw/7cff02f13b49ea79e9aef6f47ab509bfcccd0a25/mavenRepoUrl').text
+    "file://" + new File(System.getProperty("user.home"), mavenDir).getAbsolutePath()
+}
+
+def writeToFile = { String filename, String contents ->
+    println "Printing this info to our build."
+    GFileUtils.writeStringToFile(new File(filename), contents)
+}
+
+String mavenRepoUrl = fetchMavenRepoUrl()
+println "Our config repo tells us that maven repo url is: " + mavenRepoUrl
+
+println "Printing this info into our build"
+writeToFile('src/main/resources/mavenRepoUrl', "url=" + mavenRepoUrl)
+
+// Config for publishing an artifact of this project
+apply plugin: 'maven-publish'
+publishing {
+    repositories {
+        maven {
+            url mavenRepoUrl
+        }
+    }
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+}

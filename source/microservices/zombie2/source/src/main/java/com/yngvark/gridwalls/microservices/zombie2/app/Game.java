@@ -19,8 +19,6 @@ class Game {
             fileWriter.write(msg);
             Thread.sleep(1000);
         }
-
-        //fileWriter.write("/quit");
     }
 
     public void stop() {

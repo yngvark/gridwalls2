@@ -3,10 +3,11 @@
 //
 // From the project directory, run gradle installDist
 // Run java -jar build/install/<appname>/lib/<appname>.jar
-apply plugin: 'application'
-mainClassName = 'com.yngvark.gridwalls.microservices.netcom_forwarder.Main'
+apply plugin: 'application' // provides the task 'installDist'
 
-task dist(type: Copy) {
+mainClassName = project.ext.mainClassName
+
+task copyExecutableOutsideProjectFolder(type: Copy) {
     dependsOn "installDist"
     from "build/install/$rootProject.name"
     into '../container/app'
