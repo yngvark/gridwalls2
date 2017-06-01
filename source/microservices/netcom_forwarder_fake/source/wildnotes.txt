@@ -1,0 +1,6 @@
+mkfifo out
+mkfifo in
+
+cd zombie
+../netcom_forwarder/connect out in
+zombie out in

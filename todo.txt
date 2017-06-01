@@ -57,7 +57,7 @@ TODO
 				linking
 				network
 				> docker compose
-		[ ] Få Zombie og NetcomForwarder til å vente dersom in og out ikke eksisterer. Resilience.
+		[x] Få Zombie og NetcomForwarder til å vente dersom in og out ikke eksisterer. Resilience.
  		[ ] Få NetcomForwarder til å snakke med RabbitMQ
 
 [ ] Fiks byggesystem så full bygging og kjøring av appen min blir smooth sailing
