@@ -1,4 +1,4 @@
-package com.yngvark.communicate_through_named_pipes.file_io;
+package com.yngvark.communicate_through_named_pipes.consume;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;

@@ -1,4 +1,4 @@
-package com.yngvark.communicate_through_named_pipes.file_io;
+package com.yngvark.communicate_through_named_pipes.write;
 
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
