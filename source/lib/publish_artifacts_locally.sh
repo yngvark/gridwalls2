@@ -1,2 +1,0 @@
-communicate_through_named_pipes/source/gradlew publishToMavenLocal -p communicate_through_named_pipes/source
-os_process_exiter/source/gradlew publishToMavenLocal -p os_process_exiter/source

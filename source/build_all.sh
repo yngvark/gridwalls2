@@ -10,8 +10,10 @@ function build_local() {
 	lib/communicate_through_named_pipes/source/gradlew -p lib/communicate_through_named_pipes/source publishToMavenLocal
 
 	# Microservices
-	microservices/netcom_forwarder/source/gradlew -p microservices/netcom_forwarder/source installDist
-	microservices/zombie/source/gradlew -p microservices/zombie/source installDist
+	cd microservices
+	cd netcom_forwarder && ./build.sh && cd ..
+	cd zombie && ./build.sh && cd ..
+	cd ..
 }
 
 function build_docker() {
@@ -21,8 +23,8 @@ function build_docker() {
 
 	# Libraries
 	cd lib
-	#cd os_process_exiter && ./publish_artifact_docker.sh && cd ..
-	#cd communicate_through_named_pipes && ./publish_artifact_docker.sh && cd ..
+	cd os_process_exiter && ./publish_artifact_docker.sh && cd ..
+	cd communicate_through_named_pipes && ./publish_artifact_docker.sh && cd ..
 	cd ..
 
 	# Microservices
@@ -32,7 +34,6 @@ function build_docker() {
 	cd ..
 }
 
-#if [ $count -eq 100 ]
 if [[ "$@" == "-l" ]]
 then
 	build_local
