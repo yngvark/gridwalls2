@@ -12,14 +12,15 @@ services:
       - /bin/bash
       - /app_init/init_named_pipes.sh
 
-  #temp:
-  #  image: alpine
-  #  volumes:
-  #    - named_pipes:/app_data
-  #  command:
-  #    - sh
-  #    - -c
-  #    - rm -f /app_data/* && ls /app_data
+  delpipes:
+    image: alpine
+    volumes:
+      - named_pipes:/app_data
+    command:
+      - sh
+      - -c
+      - echo Doing nothing
+      #- rm -f /app_data/* && ls /app_data
 
   netcom_forwarder:
     depends_on:
@@ -42,6 +43,20 @@ services:
     command:
       - /app_data/in
       - /app_data/out
+
+  n:
+    image: ubuntu
+    volumes:
+      - named_pipes:/app_data
+    command:
+      - bash
+
+  z:
+    image: ubuntu
+    volumes:
+      - named_pipes:/app_data
+    command:
+      - bash
 
 volumes:
   named_pipes:
