@@ -1,9 +1,15 @@
 package com.yngvark.communicate_through_named_pipes.write;
 
+import org.slf4j.Logger;
+
 import java.io.BufferedWriter;
 import java.io.IOException;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 public class FileWriter {
+    Logger logger = getLogger(getClass());
+
     private final BufferedWriter out;
 
     public FileWriter(BufferedWriter out) {
@@ -16,7 +22,7 @@ public class FileWriter {
     }
 
     private void writeRaw(String msg) throws IOException {
-        System.out.println(">>> Sending: " + msg);
+        logger.info(">>> Sending: " + msg);
 
         out.write(msg);
         out.newLine();
@@ -24,9 +30,9 @@ public class FileWriter {
     }
 
     public void closeStream() throws IOException {
-        System.out.println("Closing output file...");
+        logger.info("Closing output file...");
         out.close();
-        System.out.println("Closing output file... done.");
+        logger.info("Closing output file... done.");
 
     }
 }
