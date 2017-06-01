@@ -1,4 +1,4 @@
-package com.yngvark.communicate_through_named_pipes.input;
+package com.yngvark.communicate_through_named_pipes;
 
 public interface RetrySleeper {
     void sleep() throws InterruptedException;

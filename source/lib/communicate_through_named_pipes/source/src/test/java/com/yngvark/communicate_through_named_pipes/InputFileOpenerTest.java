@@ -1,4 +1,4 @@
-package com.yngvark.communicate_through_named_pipes.input;
+package com.yngvark.communicate_through_named_pipes;
 
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -52,24 +52,18 @@ class InputFileOpenerTest {
 
             }
         };
-        InputFileOpener inputFileReader = new InputFileOpener(retrySleeper, file);
+        FileExistsWaiter fileExistsWaiter = new FileExistsWaiter(retrySleeper);
 
         ExecutorService executorService = Executors.newCachedThreadPool();
 
         // When
-        Future<Boolean> future = executorService.submit(() -> {
-            try {
-                inputFileReader.openStream();
-                return true;
-            } catch (IOException e) {
-                e.printStackTrace();
-                return false;
-            }
+        Future future = executorService.submit(() -> {
+            fileExistsWaiter.waitUntilFileExists(file);
         });
 
         // Then
         try {
-            assertTrue(future.get(3, TimeUnit.SECONDS));
+            future.get(3, TimeUnit.SECONDS);
         } catch (InterruptedException | ExecutionException e) {
             throw e;
         } catch (TimeoutException e) {
