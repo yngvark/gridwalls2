@@ -44,20 +44,6 @@ services:
       - /app_data/in
       - /app_data/out
 
-  n:
-    image: ubuntu
-    volumes:
-      - named_pipes:/app_data
-    command:
-      - bash
-
-  z:
-    image: ubuntu
-    volumes:
-      - named_pipes:/app_data
-    command:
-      - bash
-
 volumes:
   named_pipes:
 
