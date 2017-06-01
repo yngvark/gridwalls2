@@ -18,6 +18,7 @@ public class Main {
             System.err.println("USAGE: <this program> <mkfifo input> <mkfifo output>");
             System.exit(1);
         }
+
         String fifoInputFilename = args[0];
         String fifoOutputFilename = args[1];
 

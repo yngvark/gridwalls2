@@ -1,0 +1,52 @@
+version: "3"
+
+services:
+
+  init:
+    image: ubuntu
+    volumes:
+      - ./init:/app_init
+      - named_pipes:/app_data
+    command:
+      #- bash
+      - /bin/bash
+      - /app_init/init_named_pipes.sh
+
+  #temp:
+  #  image: alpine
+  #  volumes:
+  #    - named_pipes:/app_data
+  #  command:
+  #    - sh
+  #    - -c
+  #    - rm -f /app_data/* && ls /app_data
+
+  netcom_forwarder:
+    depends_on:
+      - init
+    build: netcom_forwarder
+    volumes:
+      - named_pipes:/app_data
+    command:
+      - /app_data/out
+      - /app_data/in
+
+  zombie:
+    depends_on:
+      - init
+    build: zombie
+    #external_links:
+    #  - rabbitmq:rabbithost
+    volumes:
+      - named_pipes:/app_data
+    command:
+      - /app_data/in
+      - /app_data/out
+
+volumes:
+  named_pipes:
+
+#networks:
+#  default:
+#    external:
+#      name: containers_rabbit

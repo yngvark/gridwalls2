@@ -1,0 +1,20 @@
+version: "3"
+
+services:
+
+  app:
+    build: .
+    external_links:
+      - rabbitmq:rabbithost
+    command:
+      - $NAMED_PIPE_OUT
+      - $NAMED_PIPE_IN
+
+volumes:
+  named_pipes:
+    external: true
+
+#networks:
+#  default:
+#    external:
+#      name: containers_rabbit

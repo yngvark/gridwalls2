@@ -12,8 +12,8 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
-    compile 'com.yngvark:os_process_exiter:1.0.0'
-    compile 'com.yngvark:communicate_through_named_pipes:1.0.0'
+    compile 'com.yngvark:os_process_exiter:1.0.+'
+    compile 'com.yngvark:communicate_through_named_pipes:1.0.+'
 }
 
 apply plugin: 'application'

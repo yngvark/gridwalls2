@@ -26,7 +26,7 @@ public class FileConsumer {
 
         String read;
         while ((read = in.readLine()) != null && run) {
-            System.out.println("<<< From netcom: " + read);
+            System.out.println("<<< From other side: " + read);
         }
 
         if (read == null) {
