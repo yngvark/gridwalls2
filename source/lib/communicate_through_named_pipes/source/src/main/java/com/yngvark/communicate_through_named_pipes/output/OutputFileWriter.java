@@ -1,4 +1,4 @@
-package com.yngvark.communicate_through_named_pipes.write;
+package com.yngvark.communicate_through_named_pipes.output;
 
 import org.slf4j.Logger;
 
@@ -7,12 +7,12 @@ import java.io.IOException;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class FileWriter {
+public class OutputFileWriter {
     Logger logger = getLogger(getClass());
 
     private final BufferedWriter out;
 
-    public FileWriter(BufferedWriter out) {
+    public OutputFileWriter(BufferedWriter out) {
         this.out = out;
     }
 
@@ -33,6 +33,5 @@ public class FileWriter {
         logger.info("Closing output file...");
         out.close();
         logger.info("Closing output file... done.");
-
     }
 }

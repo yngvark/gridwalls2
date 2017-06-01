@@ -1,19 +1,13 @@
-package com.yngvark.communicate_through_named_pipes.consume;
+package com.yngvark.communicate_through_named_pipes.input;
 
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 
-import java.io.BufferedOutputStream;
-import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -27,7 +21,7 @@ import java.util.concurrent.TimeoutException;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.slf4j.LoggerFactory.getLogger;
 
-class FileConsumerTest {
+class InputFileOpenerTest {
     private final Logger logger = getLogger(getClass());
 
     @Test
@@ -43,7 +37,7 @@ class FileConsumerTest {
         Map<String, Integer> timeUnitsPassedMap = new ConcurrentHashMap<>();
         timeUnitsPassedMap.put("value", 0);
 
-        FileOpenRetrySleeper fileOpenRetrySleeper = () -> {
+        RetrySleeper retrySleeper = () -> {
             Integer timeUnitsPassed = timeUnitsPassedMap.get("value") + 1;
             timeUnitsPassedMap.put("value", timeUnitsPassed);
 
@@ -58,14 +52,14 @@ class FileConsumerTest {
 
             }
         };
-        FileConsumer fileConsumer = new FileConsumer(file, fileOpenRetrySleeper);
+        InputFileOpener inputFileReader = new InputFileOpener(retrySleeper, file);
 
         ExecutorService executorService = Executors.newCachedThreadPool();
 
         // When
         Future<Boolean> future = executorService.submit(() -> {
             try {
-                fileConsumer.consume();
+                inputFileReader.openStream();
                 return true;
             } catch (IOException e) {
                 e.printStackTrace();
