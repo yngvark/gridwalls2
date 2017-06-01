@@ -1,16 +1,21 @@
 package com.yngvark.os_process_exiter;
 
+import org.slf4j.Logger;
+
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 public class ExecutorServiceExiter {
+    private static final Logger logger = getLogger(ExecutorServiceExiter.class);
 
     public static void exitGracefully(ExecutorService executorService) {
-        System.out.println("Exiting gracefully.");
+        logger.info("Exiting gracefully.");
 
         if (executorService.isShutdown()) {
-            System.out.println("Executor service already shut down.");
+            logger.info("Executor service already shut down.");
             return;
         }
 
@@ -20,18 +25,18 @@ public class ExecutorServiceExiter {
         try {
             terminatedBeforeTimeout = executorService.awaitTermination(3, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
-            System.out.println("Interrupted while awaiting termination. Cannot exit gracefully. Exiting.");
+            logger.info("Interrupted while awaiting termination. Cannot exit gracefully. Exiting.");
             e.printStackTrace();
             return;
         }
 
         if (!terminatedBeforeTimeout) {
-            System.out.println("Exiting gracefully timed out. Forcing shutdown.");
+            logger.info("Exiting gracefully timed out. Forcing shutdown.");
             List<Runnable> unstartedRunnables = executorService.shutdownNow();
-            System.out.println("Number of tasks not able to be shut down: " + unstartedRunnables.size());
+            logger.info("Number of tasks not able to be shut down: " + unstartedRunnables.size());
             return;
         }
 
-        System.out.println("Exiting gracefully was successful.");
+        logger.info("Exiting gracefully was successful.");
     }
 }

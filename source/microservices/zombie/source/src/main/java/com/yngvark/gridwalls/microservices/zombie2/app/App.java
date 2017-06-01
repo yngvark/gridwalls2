@@ -1,8 +1,10 @@
 package com.yngvark.gridwalls.microservices.zombie2.app;
 
-import com.yngvark.communicate_through_named_pipes.file_io.FileConsumer;
-import com.yngvark.communicate_through_named_pipes.file_io.FileOpener;
-import com.yngvark.communicate_through_named_pipes.file_io.FileWriter;
+import com.yngvark.communicate_through_named_pipes.input.InputFileOpener;
+import com.yngvark.communicate_through_named_pipes.input.InputFileReader;
+import com.yngvark.communicate_through_named_pipes.output.OutputFileOpener;
+import com.yngvark.communicate_through_named_pipes.output.OutputFileWriter;
+import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
@@ -11,30 +13,34 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 public class App {
+    private final Logger logger = getLogger(getClass());
     private final ExecutorService executorService;
-    private final FileOpener fileOpener;
-    private final FileConsumer fileConsumer;
+    private final InputFileOpener inputFileOpener;
+    private final OutputFileOpener outputFileOpener;
 
     private Game game;
+    private InputFileReader inputFileReader;
 
     public static App create(
             ExecutorService executorService,
-            FileOpener fileOpener,
-            FileConsumer fileConsumer) {
+            InputFileOpener inputFileOpener,
+            OutputFileOpener outputFileOpener) {
         return new App(
                 executorService,
-                fileOpener,
-                fileConsumer);
+                inputFileOpener,
+                outputFileOpener);
     }
 
     App(
             ExecutorService executorService,
-            FileOpener fileOpener,
-            FileConsumer fileConsumer) {
+            InputFileOpener inputFileOpener,
+            OutputFileOpener outputFileOpener) {
         this.executorService = executorService;
-        this.fileOpener = fileOpener;
-        this.fileConsumer = fileConsumer;
+        this.inputFileOpener = inputFileOpener;
+        this.outputFileOpener = outputFileOpener;
     }
 
     public void run() throws Throwable {
@@ -45,59 +51,60 @@ public class App {
         - game stopper.
          */
 
-        System.out.println("Starting zombie logic.");
+        logger.info("Starting zombie logic.");
 
-        Future netcomConsumerFuture = consumeMessages();
+        inputFileReader = inputFileOpener.openStream();
+        Future netcomConsumerFuture = consumeMessages(inputFileReader);
 
-        FileWriter fileWriter = fileOpener.openStream();
-        game = new Game(fileWriter);
+        OutputFileWriter outputFileWriter = outputFileOpener.openStream();
+        game = new Game(outputFileWriter);
 
         Future gameFuture = runGame(game);
 
         Future allFutures = executorService.submit(() -> {
             try {
-                System.out.println("Waiting for gameFuture to return.");
+                logger.info("Waiting for gameFuture to return.");
                 gameFuture.get();
-                System.out.println("Waiting, with timeout, for netcomConsumerFuture to return.");
+                logger.info("Waiting, with timeout, for netcomConsumerFuture to return.");
                 netcomConsumerFuture.get(3, TimeUnit.SECONDS);
             } catch (InterruptedException | ExecutionException | TimeoutException e) {
                 e.printStackTrace();
             }
         });
 
-        System.out.println("Waiting for allFutures to return...");
+        logger.info("Waiting for allFutures to return...");
         allFutures.get();
-        System.out.println("Waiting for allFutures to return... done.");
+        logger.info("Waiting for allFutures to return... done.");
 
-        fileWriter.closeStream();
+        outputFileWriter.closeStream();
+    }
+
+    private Future consumeMessages(InputFileReader inputFileReader) throws IOException {
+        return executorService.submit(() -> {
+            try {
+                inputFileReader.consume();
+                game.stop();
+            } catch (IOException e) {
+                logger.info("Exception occurred");
+                e.printStackTrace();
+            }
+        });
     }
 
     private Future runGame(Game game) {
         return executorService.submit(() -> {
                 try {
                     game.produce();
-                    fileConsumer.stopConsuming();
+                    inputFileReader.closeStream();
                 } catch (IOException|InterruptedException e) {
-                    System.out.println("Exception occurred");
+                    logger.info("Exception occurred");
                     e.printStackTrace();
                 }
             });
     }
 
-    private Future consumeMessages() throws IOException {
-        return executorService.submit(() -> {
-            try {
-                fileConsumer.consume();
-                game.stop();
-            } catch (IOException e) {
-                System.out.println("Exception occurred");
-                e.printStackTrace();
-            }
-        });
-    }
-
     public void stop() {
-        System.out.println("Stopping app.");
+        logger.info("Stopping app.");
 
         if (game == null)
             throw new IllegalStateException("Cannot stop game that hasn't started.");

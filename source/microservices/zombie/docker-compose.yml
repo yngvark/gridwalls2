@@ -9,6 +9,7 @@ services:
       - named_pipes:/app_data
     command:
       - /bin/bash
+      - -c
       - /app_init/init_named_pipes.sh
 
   delpipes:

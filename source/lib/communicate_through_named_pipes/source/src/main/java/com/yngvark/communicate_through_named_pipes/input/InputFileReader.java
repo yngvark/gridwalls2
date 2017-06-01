@@ -35,7 +35,7 @@ public class InputFileReader {
         logger.info("Consume: done.");
     }
 
-    public void stopConsuming() {
+    public void closeStream() {
         logger.info("Stopping consuming input file...");
         run = false;
 

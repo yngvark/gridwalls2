@@ -1,28 +1,33 @@
 package com.yngvark.gridwalls.microservices.zombie2.app;
 
-import com.yngvark.communicate_through_named_pipes.file_io.FileWriter;
+import com.yngvark.communicate_through_named_pipes.output.OutputFileWriter;
+import org.slf4j.Logger;
 
 import java.io.IOException;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 class Game {
-    private final FileWriter fileWriter;
+    private final Logger logger = getLogger(getClass());
+    private final OutputFileWriter outputFileWriter;
 
     private boolean run = true;
 
-    public Game(FileWriter fileWriter) {
-        this.fileWriter = fileWriter;
+    public Game(OutputFileWriter outputFileWriter) {
+        this.outputFileWriter = outputFileWriter;
     }
 
     public void produce() throws IOException, InterruptedException {
         for (int i = 0; i < 4 && run; i++) {
             String msg = "Hey this is from Zombie, line " + i;
-            fileWriter.write(msg);
+            outputFileWriter.write(msg);
             Thread.sleep(1000);
         }
+        logger.info("Game loging done.");
     }
 
     public void stop() {
-        System.out.println("Stopping message generator.");
+        logger.info("Stopping message generator.");
         run = false;
     }
 }

@@ -29,8 +29,8 @@ function build_docker() {
 
 	# Microservices
 	cd microservices
-	docker-compose build netcom_forwarder
-	docker-compose build zombie
+	cd netcom_forwarder && ./build.sh && cd ..
+	cd zombie && ./build.sh && cd ..
 	cd ..
 }
 

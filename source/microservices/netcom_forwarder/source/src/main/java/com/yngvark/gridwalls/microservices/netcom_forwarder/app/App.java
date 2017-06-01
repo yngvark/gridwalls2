@@ -1,8 +1,10 @@
 package com.yngvark.gridwalls.microservices.netcom_forwarder.app;
 
-import com.yngvark.communicate_through_named_pipes.file_io.FileConsumer;
-import com.yngvark.communicate_through_named_pipes.file_io.FileOpener;
-import com.yngvark.communicate_through_named_pipes.file_io.FileWriter;
+import com.yngvark.communicate_through_named_pipes.input.InputFileOpener;
+import com.yngvark.communicate_through_named_pipes.input.InputFileReader;
+import com.yngvark.communicate_through_named_pipes.output.OutputFileOpener;
+import com.yngvark.communicate_through_named_pipes.output.OutputFileWriter;
+import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
@@ -11,66 +13,72 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 public class App {
+    private final Logger logger = getLogger(getClass());
     private final ExecutorService executorService;
-    private final FileOpener fileOpener;
-    private final FileConsumer fileConsumer;
+    private final InputFileOpener inputFileOpener;
+    private final OutputFileOpener outputFileOpener;
+
+    private InputFileReader inputFileReader;
 
     private NetworkToFileHub networkToFileHub;
 
     public static App create(
             ExecutorService executorService,
-            FileOpener fileOpener,
-            FileConsumer fileConsumer) {
+            InputFileOpener inputFileOpener,
+            OutputFileOpener outputFileOpener) {
         return new App(
                 executorService,
-                fileOpener,
-                fileConsumer);
+                inputFileOpener,
+                outputFileOpener);
     }
 
     App(
             ExecutorService executorService,
-            FileOpener fileOpener,
-            FileConsumer fileConsumer) {
+            InputFileOpener inputFileOpener,
+            OutputFileOpener outputFileOpener) {
         this.executorService = executorService;
-        this.fileOpener = fileOpener;
-        this.fileConsumer = fileConsumer;
+        this.inputFileOpener = inputFileOpener;
+        this.outputFileOpener = outputFileOpener;
     }
 
     public void run() throws Throwable {
-        System.out.println("Starting network forwarder.");
+        logger.info("Starting network forwarder.");
 
-        FileWriter fileWriter = fileOpener.openStream();
-        networkToFileHub = new NetworkToFileHub(fileWriter);
+        OutputFileWriter outputFileWriter = outputFileOpener.openStream();
+        networkToFileHub = new NetworkToFileHub(outputFileWriter);
 
+        inputFileReader = inputFileOpener.openStream();
         Future consumeNetworkFuture = consumeNetworkMessages(networkToFileHub);
         Future fileConsumer = consumeFileMessages();
 
         Future allFutures = executorService.submit(() -> {
             try {
-                System.out.println("Waiting for consumeNetworkFuture to return.");
+                logger.info("Waiting for consumeNetworkFuture to return.");
                 consumeNetworkFuture.get();
-                System.out.println("Waiting, with timeout, for fileConsumer to return.");
+                logger.info("Waiting, with timeout, for fileConsumer to return.");
                 fileConsumer.get(3, TimeUnit.SECONDS);
             } catch (InterruptedException | ExecutionException | TimeoutException e) {
                 e.printStackTrace();
             }
         });
 
-        System.out.println("Waiting for allFutures to return...");
+        logger.info("Waiting for allFutures to return...");
         allFutures.get();
-        System.out.println("Waiting for allFutures to return... done.");
+        logger.info("Waiting for allFutures to return... done.");
 
-        fileWriter.closeStream();
+        outputFileWriter.closeStream();
     }
 
     private Future consumeNetworkMessages(NetworkToFileHub networkToFileHub) {
         return executorService.submit(() -> {
                 try {
                     networkToFileHub.consumeAndForward();
-                    fileConsumer.stopConsuming();
+                    inputFileReader.closeStream();
                 } catch (IOException|InterruptedException e) {
-                    System.out.println("Exception occurred");
+                    logger.info("Exception occurred");
                     e.printStackTrace();
                 }
             });
@@ -79,17 +87,17 @@ public class App {
     private Future consumeFileMessages() throws IOException {
         return executorService.submit(() -> {
             try {
-                fileConsumer.consume();
+                inputFileReader.consume();
                 networkToFileHub.stop();
             } catch (IOException e) {
-                System.out.println("Exception occurred");
+                logger.info("Exception occurred");
                 e.printStackTrace();
             }
         });
     }
 
     public void stop() {
-        System.out.println("Stopping app.");
+        logger.info("Stopping app.");
 
         if (networkToFileHub != null)
             networkToFileHub.stop();

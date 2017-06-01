@@ -1,7 +1,9 @@
 package com.yngvark.gridwalls.microservices.zombie2;
 
-import com.yngvark.communicate_through_named_pipes.file_io.FileConsumer;
-import com.yngvark.communicate_through_named_pipes.file_io.FileOpener;
+import com.yngvark.communicate_through_named_pipes.FileExistsWaiter;
+import com.yngvark.communicate_through_named_pipes.RetrySleeper;
+import com.yngvark.communicate_through_named_pipes.input.InputFileOpener;
+import com.yngvark.communicate_through_named_pipes.output.OutputFileOpener;
 import com.yngvark.gridwalls.microservices.zombie2.app.App;
 import com.yngvark.gridwalls.microservices.zombie2.exit_os_process.Shutdownhook;
 import com.yngvark.os_process_exiter.ExecutorServiceExiter;
@@ -24,10 +26,13 @@ public class Main {
 
         // Dependencies
         ExecutorService executorService = Executors.newCachedThreadPool();
-        FileOpener fileOpener = new FileOpener(fifoOutputFilename);
-        FileConsumer fileConsumer = new FileConsumer(fifoInputFilename);
 
-        App app = App.create(executorService, fileOpener, fileConsumer);
+        RetrySleeper retrySleeper = () -> Thread.sleep(3000);
+        FileExistsWaiter fileExistsWaiter = new FileExistsWaiter(retrySleeper);
+        OutputFileOpener outputFileOpener = new OutputFileOpener(fileExistsWaiter, fifoOutputFilename);
+        InputFileOpener inputFileOpener = new InputFileOpener(fileExistsWaiter, fifoInputFilename);
+
+        App app = App.create(executorService, inputFileOpener, outputFileOpener);
 
         // Shutdownhook
         Shutdownhook shutdownhook = new Shutdownhook(app);
@@ -39,6 +44,8 @@ public class Main {
 
         // Exit
         ExecutorServiceExiter.exitGracefully(executorService);
+
+        System.out.println("woho");
     }
 
 }
