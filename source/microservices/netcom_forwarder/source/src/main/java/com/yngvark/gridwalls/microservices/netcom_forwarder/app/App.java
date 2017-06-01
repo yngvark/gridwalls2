@@ -4,6 +4,7 @@ import com.yngvark.communicate_through_named_pipes.input.InputFileOpener;
 import com.yngvark.communicate_through_named_pipes.input.InputFileReader;
 import com.yngvark.communicate_through_named_pipes.output.OutputFileOpener;
 import com.yngvark.communicate_through_named_pipes.output.OutputFileWriter;
+import com.yngvark.gridwalls.microservices.netcom_forwarder.rabbitmq.RabbitBrokerConnecter;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -20,8 +21,6 @@ public class App {
     private final ExecutorService executorService;
     private final InputFileOpener inputFileOpener;
     private final OutputFileOpener outputFileOpener;
-
-    private InputFileReader inputFileReader;
 
     private NetworkToFileHub networkToFileHub;
 
@@ -44,15 +43,24 @@ public class App {
         this.outputFileOpener = outputFileOpener;
     }
 
+    RabbitBrokerConnecter rabbitBrokerConnecter;
     public void run() throws Throwable {
         logger.info("Starting network forwarder.");
 
+        // Stream for sending messages to the microservice.
         OutputFileWriter outputFileWriter = outputFileOpener.openStream();
+
+        // Connection with network.
+        rabbitBrokerConnecter.connect("rabbithost");
+
+        // Class for receiving messages from network and sending them to the microservice.
         networkToFileHub = new NetworkToFileHub(outputFileWriter);
 
-        inputFileReader = inputFileOpener.openStream();
-        Future consumeNetworkFuture = consumeNetworkMessages(networkToFileHub);
-        Future fileConsumer = consumeFileMessages();
+        // Stream for receiving messages from the microservice.
+        InputFileReader inputFileReader = inputFileOpener.openStream();
+
+        Future consumeNetworkFuture = consumeNetworkMessages(networkToFileHub, inputFileReader);
+        Future fileConsumer = consumeMessagesFromMicroservice(inputFileReader);
 
         Future allFutures = executorService.submit(() -> {
             try {
@@ -72,7 +80,7 @@ public class App {
         outputFileWriter.closeStream();
     }
 
-    private Future consumeNetworkMessages(NetworkToFileHub networkToFileHub) {
+    private Future consumeNetworkMessages(NetworkToFileHub networkToFileHub, InputFileReader inputFileReader) {
         return executorService.submit(() -> {
                 try {
                     networkToFileHub.consumeAndForward();
@@ -84,7 +92,7 @@ public class App {
             });
     }
 
-    private Future consumeFileMessages() throws IOException {
+    private Future consumeMessagesFromMicroservice(InputFileReader inputFileReader) throws IOException {
         return executorService.submit(() -> {
             try {
                 inputFileReader.consume();
