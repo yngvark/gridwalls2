@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class MicroserviceMsgListener implements MessageListener {
+class MicroserviceMsgListener implements MessageListener {
     private final Logger logger = getLogger(getClass());
 
     public void messageReceived(String msg) {

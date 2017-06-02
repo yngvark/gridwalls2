@@ -12,15 +12,13 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class InputFileOpener {
     private final Logger logger = getLogger(getClass());
-    private final FileExistsWaiter fileExistsWaiter;
     private final String fifoInputFilename;
 
-    public InputFileOpener(FileExistsWaiter fileExistsWaiter, String fifoInputFilename) {
-        this.fileExistsWaiter = fileExistsWaiter;
+    public InputFileOpener(String fifoInputFilename) {
         this.fifoInputFilename = fifoInputFilename;
     }
 
-    public InputFileReader openStream() {
+    public InputFileReader openStream(FileExistsWaiter fileExistsWaiter) {
         logger.info("Opening input file... " + fifoInputFilename);
 
         fileExistsWaiter.waitUntilFileExists(fifoInputFilename);

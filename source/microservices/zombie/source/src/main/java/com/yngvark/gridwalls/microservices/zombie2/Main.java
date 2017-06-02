@@ -44,8 +44,6 @@ public class Main {
 
         // Exit
         ExecutorServiceExiter.exitGracefully(executorService);
-
-        System.out.println("woho");
     }
 
 }
