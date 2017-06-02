@@ -6,6 +6,8 @@ import com.yngvark.communicate_through_named_pipes.input.InputFileOpener;
 import com.yngvark.communicate_through_named_pipes.input.InputFileReader;
 import com.yngvark.communicate_through_named_pipes.output.OutputFileOpener;
 import com.yngvark.communicate_through_named_pipes.output.OutputFileWriter;
+import com.yngvark.gridwalls.microservices.netcom_forwarder.app.forward_msgs.NetworkMsgListenerFactory;
+import com.yngvark.gridwalls.microservices.netcom_forwarder.app.forward_msgs.NetworkToFileHub;
 import com.yngvark.gridwalls.microservices.netcom_forwarder.rabbitmq.RabbitBrokerConnecter;
 import org.slf4j.Logger;
 
@@ -38,9 +40,7 @@ public class App {
                 fileExistsWaiter,
                 microserviceReaderOpener,
                 microserviceWriterOpener,
-                new NetworkToFileHub(
-                        new RabbitBrokerConnecter(),
-                        new NetworkMsgListenerFactory())
+                NetworkToFileHub.create()
                 );
     }
 

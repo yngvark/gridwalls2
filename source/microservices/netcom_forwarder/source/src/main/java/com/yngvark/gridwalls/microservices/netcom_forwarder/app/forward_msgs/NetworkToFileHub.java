@@ -1,4 +1,4 @@
-package com.yngvark.gridwalls.microservices.netcom_forwarder.app;
+package com.yngvark.gridwalls.microservices.netcom_forwarder.app.forward_msgs;
 
 import com.yngvark.communicate_through_named_pipes.output.OutputFileWriter;
 import com.yngvark.gridwalls.microservices.netcom_forwarder.rabbitmq.RabbitBrokerConnecter;
@@ -10,10 +10,16 @@ import java.io.IOException;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-class NetworkToFileHub {
+public class NetworkToFileHub {
     private final Logger logger = getLogger(getClass());
     private final RabbitBrokerConnecter rabbitBrokerConnecter;
     private final NetworkMsgListenerFactory networkMsgListenerFactory;
+
+    public static NetworkToFileHub create() {
+        return new NetworkToFileHub(
+                new RabbitBrokerConnecter(),
+                new NetworkMsgListenerFactory())
+    }
 
     public NetworkToFileHub(
             RabbitBrokerConnecter rabbitBrokerConnecter,
@@ -33,7 +39,7 @@ class NetworkToFileHub {
         throw IOException("TODO Abort rabbitconsumer somehow");
     }
 
-//    private final Logger logger = getLogger(getClass());
+    //    private final Logger logger = getLogger(getClass());
 //    private final RabbitBrokerConnecter rabbitBrokerConnecter;
 //
 //    public NetworkToFileHub(RabbitBrokerConnecter rabbitBrokerConnecter) {
