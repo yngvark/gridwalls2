@@ -11,15 +11,11 @@ import java.util.Map;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class RabbitConsumer {
+class RabbitConsumer {
     private final Logger logger = getLogger(getClass());
-    private final RabbitConnection rabbitConnection;
 
-    public RabbitConsumer(RabbitConnection rabbitConnection) {
-        this.rabbitConnection = rabbitConnection;
-    }
-
-    public void consume(String queueName, RabbitMessageListener rabbitMessageListener) {
+    public RabbitConsumerData startConsume(
+            RabbitConnection rabbitConnection, String queueName, RabbitMessageListener rabbitMessageListener) {
         String exchange = "ServerMessages";
 
         boolean exchangeDurable = false;
@@ -70,14 +66,14 @@ public class RabbitConsumer {
             }
         };
 
+        String consumerTag;
         try {
-            logger.info("Consuming queue: " + queueName);
-            eventsFromServerChannel.basicConsume(queueName, true, consumer);
-            logger.info("Consuming queue done.");
+            logger.info("Starting consume from queue: " + queueName);
+            consumerTag = eventsFromServerChannel.basicConsume(queueName, true, consumer);
         } catch (IOException e) {
             throw new RuntimeException("Could not start consuming messages, because consume failure. Details: " + e.getMessage());
         }
 
-        System.out.println("Consuming events from queue: " + queueName);
+        return new RabbitConsumerData(eventsFromServerChannel, consumerTag);
     }
 }

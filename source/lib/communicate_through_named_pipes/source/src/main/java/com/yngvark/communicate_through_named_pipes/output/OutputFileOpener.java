@@ -1,6 +1,7 @@
 package com.yngvark.communicate_through_named_pipes.output;
 
-import com.yngvark.communicate_through_named_pipes.FileExistsWaiter;
+import com.yngvark.communicate_through_named_pipes.RetrySleeper;
+import com.yngvark.communicate_through_named_pipes.RetryWaiter;
 import org.slf4j.Logger;
 
 import java.io.BufferedWriter;
@@ -18,10 +19,11 @@ public class OutputFileOpener {
         this.fifoOutputFilename = fifoOutputFilename;
     }
 
-    public OutputFileWriter openStream(FileExistsWaiter fileExistsWaiter) {
+    public OutputFileWriter openStream(RetrySleeper retrySleeper) {
         logger.info("Opening output file... " + fifoOutputFilename);
 
-        fileExistsWaiter.waitUntilFileExists(fifoOutputFilename);
+        RetryWaiter retryWaiter = new RetryWaiter(retrySleeper);
+        retryWaiter.waitUntilFileExists(fifoOutputFilename);
         FileOutputStream fileOutputStream = openFileStream(fifoOutputFilename);
 
         logger.info("Opening output file... done.");

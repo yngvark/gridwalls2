@@ -1,19 +1,56 @@
 #!/bin/bash
 
-function build_local() {
+function local_lib() {
 	echo ---------------------------------------------------------------------------------------------------
-	echo Building locally
+	echo Building locally: lib
 	echo ---------------------------------------------------------------------------------------------------
-	
-	# Libraries
+
 	lib/os_process_exiter/source/gradlew -p lib/os_process_exiter/source publishToMavenLocal
 	lib/communicate_through_named_pipes/source/gradlew -p lib/communicate_through_named_pipes/source publishToMavenLocal
+}
 
-	# Microservices
+function local_ms() {
+	echo ---------------------------------------------------------------------------------------------------
+	echo Building locally: microservices
+	echo ---------------------------------------------------------------------------------------------------
+
 	cd microservices
 	cd netcom_forwarder && ./build.sh && cd ..
 	cd zombie && ./build.sh && cd ..
 	cd ..
+}
+
+function build_local() {
+	echo ---------------------------------------------------------------------------------------------------
+	echo Building locally
+	echo ---------------------------------------------------------------------------------------------------
+
+	local_lib
+	local_ms
+}
+
+function docker_lib() {
+	echo ---------------------------------------------------------------------------------------------------
+	echo Building in docker: lib
+	echo ---------------------------------------------------------------------------------------------------
+
+	cd lib
+	cd os_process_exiter && ./publish_artifact_docker.sh && cd ..
+	cd communicate_through_named_pipes && ./publish_artifact_docker.sh && cd ..
+	cd ..
+
+}
+
+function docker_ms() {
+	echo ---------------------------------------------------------------------------------------------------
+	echo Building in docker: ms
+	echo ---------------------------------------------------------------------------------------------------
+
+	cd microservices
+	cd netcom_forwarder && ./build.sh && cd ..
+	cd zombie && ./build.sh && cd ..
+	cd ..
+
 }
 
 function build_docker() {
@@ -21,30 +58,54 @@ function build_docker() {
 	echo Building in docker
 	echo ---------------------------------------------------------------------------------------------------
 
-	# Libraries
-	cd lib
-	cd os_process_exiter && ./publish_artifact_docker.sh && cd ..
-	cd communicate_through_named_pipes && ./publish_artifact_docker.sh && cd ..
-	cd ..
-
-	# Microservices
-	cd microservices
-	cd netcom_forwarder && ./build.sh && cd ..
-	cd zombie && ./build.sh && cd ..
-	cd ..
+	docker_lib
+	docker_ms
 }
 
-if [[ "$@" == "-l" ]]
-then
+echo it is: $@
+
+for i in "$@"
+do
+case $i in
+	-l)
 	build_local
-	
-
-elif [[ "$@" == "-d" ]]
-then
+	;;
+	-d)
 	build_docker
-else
+	;;
+	-lib)
+	local_lib
+	docker_lib
+	;;
+	-ms)
+	local_ms
+	docker_ms
+	;;
+	*)
 	build_local
 	build_docker
-fi
+esac
+done
 
 
+#if [[ "$@" == "-l" ]]; then
+#	build_local
+#
+#if [[ "$@" == "-l" ]]; then
+#
+#
+#
+#if [[ "$@" == "-l" ]]
+#then
+#	build_local
+#
+#
+#elif [[ "$@" == "-d" ]]
+#then
+#	build_docker
+#else
+#	build_local
+#	build_docker
+#fi
+#
+#

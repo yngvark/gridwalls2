@@ -1,5 +1,6 @@
 package com.yngvark.gridwalls.microservices.zombie2.app;
 
+import com.yngvark.communicate_through_named_pipes.RetrySleeper;
 import com.yngvark.communicate_through_named_pipes.input.InputFileOpener;
 import com.yngvark.communicate_through_named_pipes.input.InputFileReader;
 import com.yngvark.communicate_through_named_pipes.output.OutputFileOpener;
@@ -20,6 +21,7 @@ public class App {
     private final ExecutorService executorService;
     private final InputFileOpener netcomReaderOpener;
     private final OutputFileOpener netcomWriterOpener;
+    private final RetrySleeper retrySleeper;
 
     private Game game;
     private InputFileReader netcomReader;
@@ -31,32 +33,26 @@ public class App {
         return new App(
                 executorService,
                 inputFileOpener,
-                outputFileOpener);
+                outputFileOpener,
+                () -> Thread.sleep(1000));
     }
 
-    App(
-            ExecutorService executorService,
+    public App(ExecutorService executorService,
             InputFileOpener netcomReaderOpener,
-            OutputFileOpener netcomWriterOpener) {
+            OutputFileOpener netcomWriterOpener, RetrySleeper retrySleeper) {
         this.executorService = executorService;
         this.netcomReaderOpener = netcomReaderOpener;
         this.netcomWriterOpener = netcomWriterOpener;
+        this.retrySleeper = retrySleeper;
     }
 
     public void run() throws Throwable {
-        /*
-        Muligheter for exit:
-        - Shutdownhook sier stop.
-        - consumeren stopper.
-        - game stopper.
-         */
-
         logger.info("Starting zombie logic.");
 
-        netcomReader = netcomReaderOpener.openStream();
+        netcomReader = netcomReaderOpener.openStream(retrySleeper);
         Future netcomConsumerFuture = startConsumeMessagesFromNetcomForwarder(netcomReader);
 
-        OutputFileWriter netcomWriter = netcomWriterOpener.openStream();
+        OutputFileWriter netcomWriter = netcomWriterOpener.openStream(retrySleeper);
         game = new Game(netcomWriter);
 
         Future gameFuture = runGame(game);

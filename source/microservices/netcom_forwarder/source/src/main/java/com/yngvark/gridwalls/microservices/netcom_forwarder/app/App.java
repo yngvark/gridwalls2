@@ -1,14 +1,14 @@
 package com.yngvark.gridwalls.microservices.netcom_forwarder.app;
 
-import com.yngvark.communicate_through_named_pipes.FileExistsWaiter;
 import com.yngvark.communicate_through_named_pipes.RetrySleeper;
+import com.yngvark.communicate_through_named_pipes.RetryWaiter;
 import com.yngvark.communicate_through_named_pipes.input.InputFileOpener;
 import com.yngvark.communicate_through_named_pipes.input.InputFileReader;
 import com.yngvark.communicate_through_named_pipes.output.OutputFileOpener;
 import com.yngvark.communicate_through_named_pipes.output.OutputFileWriter;
-import com.yngvark.gridwalls.microservices.netcom_forwarder.app.forward_msgs.NetworkMsgListenerFactory;
 import com.yngvark.gridwalls.microservices.netcom_forwarder.app.forward_msgs.NetworkToFileHub;
 import com.yngvark.gridwalls.microservices.netcom_forwarder.rabbitmq.RabbitBrokerConnecter;
+import com.yngvark.gridwalls.microservices.netcom_forwarder.rabbitmq.RabbitConnection;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -23,7 +23,8 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class App {
     private final Logger logger = getLogger(getClass());
     private final ExecutorService executorService;
-    private final FileExistsWaiter fileExistsWaiter;
+    private final RabbitBrokerConnecter rabbitBrokerConnecter;
+    private final RetrySleeper retrySleeper;
     private final InputFileOpener microserviceReaderOpener;
     private final OutputFileOpener microserviceWriterOpener;
     private final NetworkToFileHub networkToFileHub;
@@ -33,11 +34,11 @@ public class App {
             InputFileOpener microserviceReaderOpener,
             OutputFileOpener microserviceWriterOpener) {
         RetrySleeper retrySleeper = () -> Thread.sleep(3000);
-        FileExistsWaiter fileExistsWaiter = new FileExistsWaiter(retrySleeper);
 
         return new App(
                 executorService,
-                fileExistsWaiter,
+                new RabbitBrokerConnecter(),
+                retrySleeper,
                 microserviceReaderOpener,
                 microserviceWriterOpener,
                 NetworkToFileHub.create()
@@ -45,12 +46,14 @@ public class App {
     }
 
     public App(ExecutorService executorService,
-            FileExistsWaiter fileExistsWaiter,
+            RabbitBrokerConnecter rabbitBrokerConnecter,
+            RetrySleeper retrySleeper,
             InputFileOpener microserviceReaderOpener,
             OutputFileOpener microserviceWriterOpener,
             NetworkToFileHub networkToFileHub) {
         this.executorService = executorService;
-        this.fileExistsWaiter = fileExistsWaiter;
+        this.rabbitBrokerConnecter = rabbitBrokerConnecter;
+        this.retrySleeper = retrySleeper;
         this.microserviceReaderOpener = microserviceReaderOpener;
         this.microserviceWriterOpener = microserviceWriterOpener;
         this.networkToFileHub = networkToFileHub;
@@ -58,20 +61,22 @@ public class App {
 
     public void run() throws Throwable {
         logger.info("Starting network forwarder.");
+        RabbitConnection rabbitConnection = rabbitBrokerConnecter.connect("rabbitmq");
 
         // Class for writing messages to microservices.
-        OutputFileWriter microserviceWriter = microserviceWriterOpener.openStream(fileExistsWaiter);
+        OutputFileWriter microserviceWriter = microserviceWriterOpener.openStream(retrySleeper);
 
         // Class for reading messages from microservices.
-        InputFileReader microserviceReader = microserviceReaderOpener.openStream(fileExistsWaiter);
+        InputFileReader microserviceReader = microserviceReaderOpener.openStream(retrySleeper);
 
-        Future consumeNetworkFuture = startConsumeNetworkMessages(microserviceWriter, microserviceReader);
+        Future consumeNetworkFuture = startConsumeNetworkMessages(rabbitConnection, microserviceWriter, microserviceReader);
         Future fileConsumer = startConsumeMessagesFromMicroservice(microserviceReader);
 
         Future allFutures = executorService.submit(() -> {
             try {
-                logger.info("Waiting for consumeNetworkFuture to return.");
+                logger.trace("Waiting for consumeNetworkFuture to return.");
                 consumeNetworkFuture.get();
+
                 logger.info("Waiting, with timeout, for fileConsumer to return.");
                 fileConsumer.get(3, TimeUnit.SECONDS);
             } catch (InterruptedException | ExecutionException | TimeoutException e) {
@@ -87,15 +92,15 @@ public class App {
     }
 
     private Future startConsumeNetworkMessages(
+            RabbitConnection rabbitConnection,
             OutputFileWriter microserviceWriter,
             InputFileReader microserviceReader) {
         return executorService.submit(() -> {
             try {
-                networkToFileHub.consumeAndForwardTo(microserviceWriter);
+                networkToFileHub.consumeAndForwardTo(rabbitConnection, microserviceWriter);
                 microserviceReader.closeStream();
             } catch (IOException | InterruptedException e) {
-                logger.info("Exception occurred");
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         });
     }
@@ -107,15 +112,13 @@ public class App {
                 networkToFileHub.stop();
             } catch (IOException e) {
                 logger.info("Exception occurred");
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         });
     }
 
     public void stop() {
         logger.info("Stopping app.");
-
-        if (networkToFileHub != null)
-            networkToFileHub.stop();
+        networkToFileHub.stop();
     }
 }

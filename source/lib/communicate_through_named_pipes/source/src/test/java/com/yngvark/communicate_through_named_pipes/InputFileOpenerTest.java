@@ -52,13 +52,13 @@ class InputFileOpenerTest {
 
             }
         };
-        FileExistsWaiter fileExistsWaiter = new FileExistsWaiter(retrySleeper);
+        RetryWaiter retryWaiter = new RetryWaiter(retrySleeper);
 
         ExecutorService executorService = Executors.newCachedThreadPool();
 
         // When
         Future future = executorService.submit(() -> {
-            fileExistsWaiter.waitUntilFileExists(file);
+            retryWaiter.waitUntilFileExists(file);
         });
 
         // Then

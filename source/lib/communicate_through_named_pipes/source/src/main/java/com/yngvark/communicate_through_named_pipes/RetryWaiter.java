@@ -7,11 +7,11 @@ import java.nio.file.Paths;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class FileExistsWaiter {
+public class RetryWaiter {
     private final Logger logger = getLogger(getClass());
     private final RetrySleeper retrySleeper;
 
-    public FileExistsWaiter(RetrySleeper retrySleeper) {
+    public RetryWaiter(RetrySleeper retrySleeper) {
         this.retrySleeper = retrySleeper;
     }
 
