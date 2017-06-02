@@ -59,9 +59,20 @@ TODO
 				> docker compose
 		[x] Få Zombie og NetcomForwarder til å vente dersom in og out ikke eksisterer. Resilience.
  		[ ] Få NetcomForwarder til å snakke med RabbitMQ
- 			[ ] App.java: inputFileReader.consume(); -> her må vi ha en handler som blir kalt når det kommer en msg fra microservice
+ 			[x] App.java: inputFileReader.consume(); -> her må vi ha en handler som blir kalt når det kommer en msg fra microservice
  				så vi kan sende den til nettverk.
- 			[ ] og motsatt vei antar jeg
+ 					--------_> rename properties til uten 2tall
+ 					kjør zombie og netcomforwarder og se at incoming message blir håndtert av de nye msglisternerene
+ 			[ ] og motsatt vei antar jeg.. Meldinger fra microservice må forwardes til nettverket.
+				Hm bare pass på at meldinger som sendes til kø "game" kommer tilbake = evig loop. MQ burde handle dette.
+		[ ] Lag gamelogikk!
+		[ ] Vurder å lag en enklere implementasjon av Zombie som ikke har tråder.
+			while (msg = in.readLine =! null)
+				//doHardCoreLogic
+				if (msg.contains "ManMoved")
+					moveTowards(toManMovedEvent(msg).coords)
+
+
 
 [ ] Fiks byggesystem så full bygging og kjøring av appen min blir smooth sailing
 	[ ] Fiks bygging av microservices
