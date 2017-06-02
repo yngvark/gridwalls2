@@ -61,6 +61,7 @@ TODO
  		[ ] Få NetcomForwarder til å snakke med RabbitMQ
  			[ ] App.java: inputFileReader.consume(); -> her må vi ha en handler som blir kalt når det kommer en msg fra microservice
  				så vi kan sende den til nettverk.
+ 			[ ] og motsatt vei antar jeg
 
 [ ] Fiks byggesystem så full bygging og kjøring av appen min blir smooth sailing
 	[ ] Fiks bygging av microservices

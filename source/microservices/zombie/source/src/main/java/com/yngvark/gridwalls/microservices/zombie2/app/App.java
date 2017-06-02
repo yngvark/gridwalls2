@@ -18,11 +18,11 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class App {
     private final Logger logger = getLogger(getClass());
     private final ExecutorService executorService;
-    private final InputFileOpener inputFileOpener;
-    private final OutputFileOpener outputFileOpener;
+    private final InputFileOpener netcomReaderOpener;
+    private final OutputFileOpener netcomWriterOpener;
 
     private Game game;
-    private InputFileReader inputFileReader;
+    private InputFileReader netcomReader;
 
     public static App create(
             ExecutorService executorService,
@@ -36,11 +36,11 @@ public class App {
 
     App(
             ExecutorService executorService,
-            InputFileOpener inputFileOpener,
-            OutputFileOpener outputFileOpener) {
+            InputFileOpener netcomReaderOpener,
+            OutputFileOpener netcomWriterOpener) {
         this.executorService = executorService;
-        this.inputFileOpener = inputFileOpener;
-        this.outputFileOpener = outputFileOpener;
+        this.netcomReaderOpener = netcomReaderOpener;
+        this.netcomWriterOpener = netcomWriterOpener;
     }
 
     public void run() throws Throwable {
@@ -53,11 +53,11 @@ public class App {
 
         logger.info("Starting zombie logic.");
 
-        inputFileReader = inputFileOpener.openStream();
-        Future netcomConsumerFuture = consumeMessages(inputFileReader);
+        netcomReader = netcomReaderOpener.openStream();
+        Future netcomConsumerFuture = startConsumeMessagesFromNetcomForwarder(netcomReader);
 
-        OutputFileWriter outputFileWriter = outputFileOpener.openStream();
-        game = new Game(outputFileWriter);
+        OutputFileWriter netcomWriter = netcomWriterOpener.openStream();
+        game = new Game(netcomWriter);
 
         Future gameFuture = runGame(game);
 
@@ -76,13 +76,13 @@ public class App {
         allFutures.get();
         logger.info("Waiting for allFutures to return... done.");
 
-        outputFileWriter.closeStream();
+        netcomWriter.closeStream();
     }
 
-    private Future consumeMessages(InputFileReader inputFileReader) throws IOException {
+    private Future startConsumeMessagesFromNetcomForwarder(InputFileReader netcomReader) throws IOException {
         return executorService.submit(() -> {
             try {
-                inputFileReader.consume();
+                netcomReader.consume(new NetworkMessageListener());
                 game.stop();
             } catch (IOException e) {
                 logger.info("Exception occurred");
@@ -95,7 +95,7 @@ public class App {
         return executorService.submit(() -> {
                 try {
                     game.produce();
-                    inputFileReader.closeStream();
+                    netcomReader.closeStream();
                 } catch (IOException|InterruptedException e) {
                     logger.info("Exception occurred");
                     e.printStackTrace();

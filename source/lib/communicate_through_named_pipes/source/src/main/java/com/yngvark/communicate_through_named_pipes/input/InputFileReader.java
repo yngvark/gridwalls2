@@ -17,15 +17,16 @@ public class InputFileReader {
         this.in = in;
     }
 
-    public void consume() throws IOException {
+    public void consume(MessageListener messageListener) throws IOException {
         logger.info("Consume: start.");
 
-        String read;
-        while ((read = in.readLine()) != null && run) {
-            logger.info("<<< From other side: " + read);
+        String msg;
+        while ((msg = in.readLine()) != null && run) {
+            logger.trace("<<< From other side: " + msg);
+            messageListener.messageReceived(msg);
         }
 
-        if (read == null) {
+        if (msg == null) {
             logger.info("Consume file stream was closed from other side.");
         }
 

@@ -19,8 +19,8 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class App {
     private final Logger logger = getLogger(getClass());
     private final ExecutorService executorService;
-    private final InputFileOpener inputFileOpener;
-    private final OutputFileOpener outputFileOpener;
+    private final InputFileOpener microserviceReaderOpener;
+    private final OutputFileOpener microserviceWriterOpener;
 
     private NetworkToFileHub networkToFileHub;
 
@@ -36,31 +36,23 @@ public class App {
 
     App(
             ExecutorService executorService,
-            InputFileOpener inputFileOpener,
-            OutputFileOpener outputFileOpener) {
+            InputFileOpener microserviceReaderOpener,
+            OutputFileOpener microserviceWriterOpener) {
         this.executorService = executorService;
-        this.inputFileOpener = inputFileOpener;
-        this.outputFileOpener = outputFileOpener;
+        this.microserviceReaderOpener = microserviceReaderOpener;
+        this.microserviceWriterOpener = microserviceWriterOpener;
     }
 
     RabbitBrokerConnecter rabbitBrokerConnecter;
     public void run() throws Throwable {
         logger.info("Starting network forwarder.");
 
-        // Stream for sending messages to the microservice.
-        OutputFileWriter outputFileWriter = outputFileOpener.openStream();
+        OutputFileWriter microserviceWriter = microserviceWriterOpener.openStream();
+        networkToFileHub = new NetworkToFileHub(microserviceWriter);
+        InputFileReader microserviceReader = microserviceReaderOpener.openStream();
 
-        // Connection with network.
-        rabbitBrokerConnecter.connect("rabbithost");
-
-        // Class for receiving messages from network and sending them to the microservice.
-        networkToFileHub = new NetworkToFileHub(outputFileWriter);
-
-        // Stream for receiving messages from the microservice.
-        InputFileReader inputFileReader = inputFileOpener.openStream();
-
-        Future consumeNetworkFuture = consumeNetworkMessages(networkToFileHub, inputFileReader);
-        Future fileConsumer = consumeMessagesFromMicroservice(inputFileReader);
+        Future consumeNetworkFuture = startConsumeNetworkMessages(networkToFileHub, microserviceReader);
+        Future fileConsumer = startConsumeMessagesFromMicroservice(microserviceReader, networkToFileHub);
 
         Future allFutures = executorService.submit(() -> {
             try {
@@ -77,10 +69,10 @@ public class App {
         allFutures.get();
         logger.info("Waiting for allFutures to return... done.");
 
-        outputFileWriter.closeStream();
+        microserviceWriter.closeStream();
     }
 
-    private Future consumeNetworkMessages(NetworkToFileHub networkToFileHub, InputFileReader inputFileReader) {
+    private Future startConsumeNetworkMessages(NetworkToFileHub networkToFileHub, InputFileReader inputFileReader) {
         return executorService.submit(() -> {
                 try {
                     networkToFileHub.consumeAndForward();
@@ -92,10 +84,14 @@ public class App {
             });
     }
 
-    private Future consumeMessagesFromMicroservice(InputFileReader inputFileReader) throws IOException {
+    private Future startConsumeMessagesFromMicroservice(
+            InputFileReader microserviceReader,
+            NetworkToFileHub networkToFileHub
+    ) throws IOException
+    {
         return executorService.submit(() -> {
             try {
-                inputFileReader.consume();
+                microserviceReader.consume(new MicroserviceMsgListener());
                 networkToFileHub.stop();
             } catch (IOException e) {
                 logger.info("Exception occurred");
