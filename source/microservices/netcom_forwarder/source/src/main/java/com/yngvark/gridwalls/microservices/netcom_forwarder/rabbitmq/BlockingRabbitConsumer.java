@@ -15,7 +15,7 @@ public class BlockingRabbitConsumer {
     private boolean isConsuming = false;
     private RabbitConsumerData rabbitConsumerData;
     private BlockingQueue blockingQueue;
-
+    private boolean isStopped = false;
 
     public static BlockingRabbitConsumer create() {
         return new BlockingRabbitConsumer(new RabbitConsumer());
@@ -41,10 +41,17 @@ public class BlockingRabbitConsumer {
         }
     }
 
-    public void stop() {
+    public synchronized void stop() {
+        logger.info("Stopping {}... basicCancel tag: {}",
+                getClass().getSimpleName(), rabbitConsumerData.getConsumerTag());
+
+        if (isStopped) {
+            logger.info("Already stopped.");
+            return;
+        }
+        isStopped = true;
+
         try {
-            logger.info("Stopping {}... basicCancel tag: {}",
-                    getClass().getSimpleName(), rabbitConsumerData.getConsumerTag());
             rabbitConsumerData.getChannel().basicCancel(rabbitConsumerData.getConsumerTag());
             blockingQueue.add("You can stop consuming now.");
 
@@ -52,6 +59,6 @@ public class BlockingRabbitConsumer {
             throw new RuntimeException("Could not stop " + getClass().getSimpleName(), e);
         }
 
-        logger.info("Stopping {}... done", getClass().getSimpleName());
+        logger.info("Stopping... done");
     }
 }

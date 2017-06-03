@@ -4,7 +4,6 @@ import com.yngvark.communicate_through_named_pipes.input.InputFileOpener;
 import com.yngvark.communicate_through_named_pipes.output.OutputFileOpener;
 import com.yngvark.gridwalls.microservices.netcom_forwarder.app.App;
 import com.yngvark.gridwalls.microservices.netcom_forwarder.exit_os_process.Shutdownhook;
-import com.yngvark.os_process_exiter.ExecutorServiceExiter;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
@@ -31,14 +30,11 @@ public class Main {
 
         // Shutdownhook
         Shutdownhook shutdownhook = new Shutdownhook(app);
-        Runtime.getRuntime().addShutdownHook(new Thread(shutdownhook::run));
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> shutdownhook.run(executorService)));
 
         // App
         ErrorHandlingRunner errorHandlingRunner = new ErrorHandlingRunner();
         errorHandlingRunner.run(app);
-
-        // Exit
-        ExecutorServiceExiter.exitGracefully(executorService);
     }
 
 }

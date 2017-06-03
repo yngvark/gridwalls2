@@ -15,6 +15,7 @@ public class RabbitConnection {
     private final Logger logger = getLogger(getClass());
     private final Map<String, Channel> exchangeChannnels = new HashMap<>();
     private final Connection connection;
+    private boolean disconnected = false;
 
     public RabbitConnection(Connection connection) {
         this.connection = connection;
@@ -30,7 +31,14 @@ public class RabbitConnection {
         return exchangeChannnels.get(queue);
     }
 
-    public void disconnectIfConnected() {
+    public synchronized void disconnectIfConnected() {
+        logger.info("Disconnecting.");
+        if (disconnected) {
+            logger.info("Already disconnected.");
+            return;
+        }
+        disconnected = true;
+
         try {
             connection.close();
         } catch (IOException e) {

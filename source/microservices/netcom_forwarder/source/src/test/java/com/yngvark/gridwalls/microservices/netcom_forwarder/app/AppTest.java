@@ -5,20 +5,18 @@ import com.yngvark.communicate_through_named_pipes.input.InputFileOpener;
 import com.yngvark.communicate_through_named_pipes.input.InputFileReader;
 import com.yngvark.communicate_through_named_pipes.output.OutputFileOpener;
 import com.yngvark.communicate_through_named_pipes.output.OutputFileWriter;
+import com.yngvark.gridwalls.microservices.netcom_forwarder.ErrorHandlingTestRunner;
 import com.yngvark.gridwalls.microservices.netcom_forwarder.app.forward_msgs.NetworkMsgListenerFactoryFactory;
 import com.yngvark.gridwalls.microservices.netcom_forwarder.app.forward_msgs.NetworkToFileHub;
+import com.yngvark.gridwalls.microservices.netcom_forwarder.exit_os_process.Shutdownhook;
 import com.yngvark.gridwalls.microservices.netcom_forwarder.rabbitmq.BlockingRabbitConsumer;
 import com.yngvark.gridwalls.microservices.netcom_forwarder.rabbitmq.RabbitBrokerConnecter;
-import com.yngvark.gridwalls.microservices.netcom_forwarder.rabbitmq.RabbitConnection;
 import com.yngvark.gridwalls.microservices.netcom_forwarder.rabbitmq.RabbitMessageListener;
-import com.yngvark.os_process_exiter.ExecutorServiceExiter;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.isNull;
@@ -32,7 +30,11 @@ class AppTest {
     private final Logger logger = getLogger(getClass());
 
     @Test
-    void main() throws Throwable {
+    void nothing_should_crash() throws Throwable {
+        /* This method should resemble the Main class as much as possible, so that we test as close to reality as
+        possible.*/
+
+        /* Dependencies */
         ExecutorService executorService = Executors.newCachedThreadPool();
         RabbitBrokerConnecter rabbitBrokerConnecter = mock(RabbitBrokerConnecter.class);
 
@@ -67,11 +69,17 @@ class AppTest {
                 )
         );
 
+        // Shutdownhook
+        Shutdownhook shutdownhook = new Shutdownhook(app);
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> shutdownhook.run(executorService)));
+
+        ErrorHandlingTestRunner errorHandlingTestRunner = ErrorHandlingTestRunner.create();
+
         // When
-        app.run();
+        errorHandlingTestRunner.run(app);
 
         // Then
+        logger.info("HIH");
         verify(blockingRabbitConsumer).consume(isNull(), any(String.class), any(RabbitMessageListener.class));
-        ExecutorServiceExiter.exitGracefully(executorService);
     }
 }

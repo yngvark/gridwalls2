@@ -28,6 +28,8 @@ public class App {
     private final OutputFileOpener microserviceWriterOpener;
     private final NetworkToFileHub networkToFileHub;
 
+    private RabbitConnection rabbitConnection;
+
     public static App create(
             ExecutorService executorService,
             InputFileOpener microserviceReaderOpener,
@@ -60,7 +62,7 @@ public class App {
 
     public void run() throws Throwable {
         logger.info("Starting network forwarder.");
-        RabbitConnection rabbitConnection = rabbitBrokerConnecter.connect("rabbitmq");
+        rabbitConnection = rabbitBrokerConnecter.connect("rabbitmq");
 
         // Class for writing messages to microservices.
         OutputFileWriter microserviceWriter = microserviceWriterOpener.openStream(retrySleeper);
@@ -119,5 +121,7 @@ public class App {
     public void stop() {
         logger.info("Stopping app.");
         networkToFileHub.stop();
+        if (rabbitConnection != null)
+            rabbitConnection.disconnectIfConnected();
     }
 }
