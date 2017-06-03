@@ -1,0 +1,5 @@
+Tester ikke
+- exceptions
+- nettverksfunksjonalitet (rabbit-pakken basically.)
+- messages from microservice til forwarder
+- noe særlig funksjonalitet. Kun at ingenting kræsjer ved incoming messages fra nettverk.

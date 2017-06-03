@@ -63,9 +63,11 @@ TODO
  				så vi kan sende den til nettverk.
  					--------_> rename properties til uten 2tall
  					kjør zombie og netcomforwarder og se at incoming message blir håndtert av de nye msglisternerene
- 			[ ] fix gracefully stop i docker.
+ 			[x] fix gracefully stop i docker.
+ 			[ ] Hvordan testestrategi skal jeg egentlig ha her...
  			[ ] og motsatt vei antar jeg.. Meldinger fra microservice må forwardes til nettverket.
 				Hm bare pass på at meldinger som sendes til kø "game" kommer tilbake = evig loop. MQ burde handle dette.
+
 		[ ] Lag gamelogikk!
 		[ ] Vurder å lag en enklere implementasjon av Zombie som ikke har tråder.
 			while (msg = in.readLine =! null)
@@ -90,6 +92,8 @@ TODO
 
 LANGITDS
 ---------------------------------------------------------------
+[ ] ZombieMS
+	Se todo.txt. TLDR feilhåndtering.
 [ ] ytelsestester
 	[ ] MS til MS
 	[ ] MS til clientient
@@ -494,4 +498,13 @@ However, if I do this:
 
 the output is "--> Main class name: null".
 
+
+
+
+--
+
+
+Ikke noe problem. I can switch to english, 
+
+because I am a self-declared expert at reading people. Show me a picture
 

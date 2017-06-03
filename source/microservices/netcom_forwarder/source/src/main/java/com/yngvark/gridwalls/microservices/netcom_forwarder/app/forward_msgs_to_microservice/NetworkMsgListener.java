@@ -1,4 +1,4 @@
-package com.yngvark.gridwalls.microservices.netcom_forwarder.app.forward_msgs;
+package com.yngvark.gridwalls.microservices.netcom_forwarder.app.forward_msgs_to_microservice;
 
 import com.yngvark.communicate_through_named_pipes.output.OutputFileWriter;
 import com.yngvark.gridwalls.microservices.netcom_forwarder.rabbitmq.RabbitMessageListener;

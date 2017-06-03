@@ -1,4 +1,4 @@
-package com.yngvark.gridwalls.microservices.netcom_forwarder.app.forward_msgs;
+package com.yngvark.gridwalls.microservices.netcom_forwarder.app.forward_msgs_to_microservice;
 
 import com.yngvark.communicate_through_named_pipes.output.OutputFileWriter;
 import com.yngvark.gridwalls.microservices.netcom_forwarder.rabbitmq.BlockingRabbitConsumer;
@@ -15,24 +15,27 @@ public class NetworkToMsForwarder {
 
     private final NetworkMsgListenerFactory networkMsgListenerFactory;
     private final BlockingRabbitConsumer blockingRabbitConsumer;
+    private final String queueName;
 
-    public static NetworkToMsForwarder create() {
+    public static NetworkToMsForwarder create(String queueName) {
         return new NetworkToMsForwarder(
                 new NetworkMsgListenerFactory(),
-                BlockingRabbitConsumer.create());
+                BlockingRabbitConsumer.create(),
+                queueName);
     }
 
     public NetworkToMsForwarder(
             NetworkMsgListenerFactory networkMsgListenerFactory,
-            BlockingRabbitConsumer blockingRabbitConsumer) {
+            BlockingRabbitConsumer blockingRabbitConsumer, String queueName) {
         this.networkMsgListenerFactory = networkMsgListenerFactory;
         this.blockingRabbitConsumer = blockingRabbitConsumer;
+        this.queueName = queueName;
     }
 
     public void consumeAndForward(RabbitConnection rabbitConnection, OutputFileWriter microserviceWriter)
             throws IOException, InterruptedException {
         RabbitMessageListener rabbitMessageListener = networkMsgListenerFactory.create(microserviceWriter);
-        blockingRabbitConsumer.consume(rabbitConnection, "game", rabbitMessageListener);
+        blockingRabbitConsumer.consume(rabbitConnection, queueName, rabbitMessageListener);
         logger.info("Consuming done.");
     }
 

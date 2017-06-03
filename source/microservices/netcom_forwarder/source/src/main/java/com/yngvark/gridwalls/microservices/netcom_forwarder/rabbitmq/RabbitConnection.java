@@ -21,7 +21,7 @@ public class RabbitConnection {
         this.connection = connection;
     }
 
-    public Channel getChannelForQueue(String queue) throws IOException {
+    public Channel getChannelForExchange(String queue) throws IOException {
         if (exchangeChannnels.get(queue) == null) {
             Channel channel = connection.createChannel();
             exchangeChannnels.put(queue, channel);

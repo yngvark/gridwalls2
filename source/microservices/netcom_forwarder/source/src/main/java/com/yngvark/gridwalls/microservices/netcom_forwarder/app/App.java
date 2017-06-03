@@ -5,7 +5,8 @@ import com.yngvark.communicate_through_named_pipes.input.InputFileOpener;
 import com.yngvark.communicate_through_named_pipes.input.InputFileReader;
 import com.yngvark.communicate_through_named_pipes.output.OutputFileOpener;
 import com.yngvark.communicate_through_named_pipes.output.OutputFileWriter;
-import com.yngvark.gridwalls.microservices.netcom_forwarder.app.forward_msgs.NetworkToMsForwarder;
+import com.yngvark.gridwalls.microservices.netcom_forwarder.app.forward_msgs_to_microservice.NetworkToMsForwarder;
+import com.yngvark.gridwalls.microservices.netcom_forwarder.app.forward_msgs_to_network.MsToNetworkForwarder;
 import com.yngvark.gridwalls.microservices.netcom_forwarder.rabbitmq.RabbitBrokerConnecter;
 import com.yngvark.gridwalls.microservices.netcom_forwarder.rabbitmq.RabbitConnection;
 import org.slf4j.Logger;
@@ -27,6 +28,7 @@ public class App {
     private final InputFileOpener microserviceReaderOpener;
     private final OutputFileOpener microserviceWriterOpener;
     private final NetworkToMsForwarder networkToMsForwarder;
+    private final MsToNetworkForwarder msToNetworkForwarder;
 
     private OutputFileWriter microserviceWriter;
     private InputFileReader microserviceReader;
@@ -45,8 +47,9 @@ public class App {
                 retrySleeper,
                 microserviceReaderOpener,
                 microserviceWriterOpener,
-                NetworkToMsForwarder.create()
-                );
+                NetworkToMsForwarder.create("game"),
+                MsToNetworkForwarder.create("game")
+        );
     }
 
     public App(ExecutorService executorService,
@@ -54,13 +57,15 @@ public class App {
             RetrySleeper retrySleeper,
             InputFileOpener microserviceReaderOpener,
             OutputFileOpener microserviceWriterOpener,
-            NetworkToMsForwarder networkToMsForwarder) {
+            NetworkToMsForwarder networkToMsForwarder,
+            MsToNetworkForwarder msToNetworkForwarder) {
         this.executorService = executorService;
         this.rabbitBrokerConnecter = rabbitBrokerConnecter;
         this.retrySleeper = retrySleeper;
         this.microserviceReaderOpener = microserviceReaderOpener;
         this.microserviceWriterOpener = microserviceWriterOpener;
         this.networkToMsForwarder = networkToMsForwarder;
+        this.msToNetworkForwarder = msToNetworkForwarder;
     }
 
     public void run() throws Throwable {
@@ -100,21 +105,22 @@ public class App {
         return executorService.submit(() -> {
             try {
                 networkToMsForwarder.consumeAndForward(rabbitConnection, microserviceWriter);
-                microserviceReader.closeStream();
             } catch (IOException | InterruptedException e) {
                 throw new RuntimeException(e);
             }
+            microserviceReader.closeStream();
         });
     }
+
 
     private Future startConsumeMessagesFromMicroservice(InputFileReader microserviceReader) throws IOException {
         return executorService.submit(() -> {
             try {
-                microserviceReader.consume(new MicroserviceMsgListener());
-                networkToMsForwarder.stop();
+                msToNetworkForwarder.consume(rabbitConnection, microserviceReader);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+            networkToMsForwarder.stop();
         });
     }
 

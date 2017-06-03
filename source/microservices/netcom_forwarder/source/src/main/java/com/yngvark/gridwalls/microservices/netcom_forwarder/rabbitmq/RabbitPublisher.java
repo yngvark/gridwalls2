@@ -15,14 +15,15 @@ public class RabbitPublisher {
         this.connection = connection;
     }
 
-    public void publish(String queue, String message) {
+    public void publish(String exchange, String message) {
         Channel channel;
 
         try {
-            channel = connection.getChannelForQueue(queue);
+            channel = connection.getChannelForExchange(exchange);
 
+            logger.info("Publish to exchange {}: {}", exchange, message);
             try {
-                channel.basicPublish(queue, "", null, message.getBytes());
+                channel.basicPublish(exchange, "", null, message.getBytes());
             } catch (IOException e) {
                 logger.error("Could not publish message, because publish failure. Details: " + e.getMessage());
             }

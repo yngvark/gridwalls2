@@ -1,4 +1,4 @@
-package com.yngvark.gridwalls.microservices.netcom_forwarder.app;
+package com.yngvark.gridwalls.microservices.netcom_forwarder.app.forward_msgs_to_network;
 
 import com.yngvark.communicate_through_named_pipes.input.MessageListener;
 import org.slf4j.Logger;

@@ -26,13 +26,13 @@ public class BlockingRabbitConsumer {
     }
 
     public void consume(
-            RabbitConnection rabbitConnection, String queueName, RabbitMessageListener rabbitMessageListener) {
+            RabbitConnection rabbitConnection, String exchange, RabbitMessageListener rabbitMessageListener) {
         if (isConsuming)
             throw new IllegalStateException("Already consuming");
         isConsuming = true;
 
         blockingQueue = new LinkedBlockingQueue();
-        rabbitConsumerData = rabbitConsumer.startConsume(rabbitConnection, queueName, rabbitMessageListener);
+        rabbitConsumerData = rabbitConsumer.startConsume(rabbitConnection, exchange, rabbitMessageListener);
 
         try {
             blockingQueue.take();

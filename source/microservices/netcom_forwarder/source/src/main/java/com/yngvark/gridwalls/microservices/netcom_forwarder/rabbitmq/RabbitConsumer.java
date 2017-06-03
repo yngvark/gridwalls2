@@ -2,6 +2,7 @@ package com.yngvark.gridwalls.microservices.netcom_forwarder.rabbitmq;
 
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.Consumer;
 import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.Envelope;
 import org.slf4j.Logger;
@@ -15,8 +16,7 @@ class RabbitConsumer {
     private final Logger logger = getLogger(getClass());
 
     public RabbitConsumerData startConsume(
-            RabbitConnection rabbitConnection, String queueName, RabbitMessageListener rabbitMessageListener) {
-        String exchange = "ServerMessages";
+            RabbitConnection rabbitConnection, String exchange, RabbitMessageListener rabbitMessageListener) {
 
         boolean exchangeDurable = false;
         boolean exchangeAutoDelete = true;
@@ -35,22 +35,23 @@ class RabbitConsumer {
             throw new RuntimeException("Could not start consuming messages, because channel declaration failure. Details: " + e.getMessage());
         }
 
+
         try {
             boolean queueDurable = false;
             boolean queueExclusive = false;
             boolean queueAutoDelete = true;
-            eventsFromServerChannel.queueDeclare(queueName, queueDurable, queueExclusive, queueAutoDelete, standardArgs);
+            eventsFromServerChannel.queueDeclare(exchange, queueDurable, queueExclusive, queueAutoDelete, standardArgs);
         } catch (IOException e) {
             throw new RuntimeException("Could not start consuming messages, because queue declaration failure. Details: " + e.getMessage());
         }
 
         try {
-            eventsFromServerChannel.queueBind(queueName, exchange, "");
+            eventsFromServerChannel.queueBind(exchange, exchange, "");
         } catch (IOException e) {
             throw new RuntimeException("Could not start consuming messages, because queue bind failure. Details: " + e.getMessage());
         }
 
-        com.rabbitmq.client.Consumer consumer = new DefaultConsumer(eventsFromServerChannel) {
+        Consumer consumer = new DefaultConsumer(eventsFromServerChannel) {
             @Override
             public void handleDelivery(
                     String consumerTag,
@@ -68,8 +69,8 @@ class RabbitConsumer {
 
         String consumerTag;
         try {
-            logger.info("Starting consume from queue: " + queueName);
-            consumerTag = eventsFromServerChannel.basicConsume(queueName, true, consumer);
+            logger.info("Starting consume from queue: " + exchange);
+            consumerTag = eventsFromServerChannel.basicConsume(exchange, true, consumer);
         } catch (IOException e) {
             throw new RuntimeException("Could not start consuming messages, because consume failure. Details: " + e.getMessage());
         }
