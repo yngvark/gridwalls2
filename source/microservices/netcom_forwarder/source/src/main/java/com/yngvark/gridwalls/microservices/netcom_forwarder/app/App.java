@@ -113,7 +113,6 @@ public class App {
                 microserviceReader.consume(new MicroserviceMsgListener());
                 networkToMsForwarder.stop();
             } catch (IOException e) {
-                logger.info("Exception occurred");
                 throw new RuntimeException(e);
             }
         });

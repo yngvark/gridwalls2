@@ -17,8 +17,9 @@ public class Shutdownhook {
     }
 
     public void run(ExecutorService executorService) {
-        logger.info("Running shutdownhook");
+        logger.info("Running shutdownhook...");
         app.stop();
         ExecutorServiceExiter.exitGracefully(executorService);
+        logger.info("Running shutdownhook... done.");
     }
 }
