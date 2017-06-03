@@ -8,12 +8,13 @@ import java.io.IOException;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class OutputFileWriter {
-    Logger logger = getLogger(getClass());
+    private final Logger logger = getLogger(getClass());
+    private final BufferedWriter writer;
 
-    private final BufferedWriter out;
+    private boolean streamClosed = false;
 
-    public OutputFileWriter(BufferedWriter out) {
-        this.out = out;
+    public OutputFileWriter(BufferedWriter writer) {
+        this.writer = writer;
     }
 
     public void write(String msg) throws IOException {
@@ -24,14 +25,25 @@ public class OutputFileWriter {
     private void writeRaw(String msg) throws IOException {
         logger.info(">>> Sending: " + msg);
 
-        out.write(msg);
-        out.newLine();
-        out.flush();
+        writer.write(msg);
+        writer.newLine();
+        writer.flush();
     }
 
-    public void closeStream() throws IOException {
+    public void closeStream() {
         logger.info("Closing output file...");
-        out.close();
+        if (streamClosed) {
+            logger.warn("Already stopped.");
+            return;
+        }
+
+        try {
+            writer.close();
+            streamClosed = true;
+        } catch (IOException e) {
+            logger.error("Caught exception when closing stream: {}", e);
+        }
+
         logger.info("Closing output file... done.");
     }
 }

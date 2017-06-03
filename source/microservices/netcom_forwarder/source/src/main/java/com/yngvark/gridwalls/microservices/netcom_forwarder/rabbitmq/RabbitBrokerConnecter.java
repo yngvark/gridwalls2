@@ -36,7 +36,7 @@ public class RabbitBrokerConnecter {
             } catch (ConnectException e) {
                 String causeReason = e.getCause() == null ? "" : e.getCause().getMessage();
                 String reason = e.getMessage() + " - " + causeReason;
-                logger.error("Could not connect. Retrying soon. Reason: {}", reason);
+                logger.info("Could not connect. Retrying soon. Reason: {}", reason);
                 sleep();
             } catch (IOException | TimeoutException e) {
                 throw new RuntimeException("Could not connect to host: " + hostname, e);

@@ -81,6 +81,9 @@ case $i in
 	local_ms
 	docker_ms
 	;;
+	-ll)
+	local_lib
+	;;
 	*)
 	build_local
 	build_docker

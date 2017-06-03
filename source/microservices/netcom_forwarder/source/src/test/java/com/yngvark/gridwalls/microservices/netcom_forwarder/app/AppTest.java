@@ -7,7 +7,7 @@ import com.yngvark.communicate_through_named_pipes.output.OutputFileOpener;
 import com.yngvark.communicate_through_named_pipes.output.OutputFileWriter;
 import com.yngvark.gridwalls.microservices.netcom_forwarder.ErrorHandlingTestRunner;
 import com.yngvark.gridwalls.microservices.netcom_forwarder.app.forward_msgs.NetworkMsgListenerFactoryFactory;
-import com.yngvark.gridwalls.microservices.netcom_forwarder.app.forward_msgs.NetworkToFileHub;
+import com.yngvark.gridwalls.microservices.netcom_forwarder.app.forward_msgs.NetworkToMsForwarder;
 import com.yngvark.gridwalls.microservices.netcom_forwarder.exit_os_process.Shutdownhook;
 import com.yngvark.gridwalls.microservices.netcom_forwarder.rabbitmq.BlockingRabbitConsumer;
 import com.yngvark.gridwalls.microservices.netcom_forwarder.rabbitmq.RabbitBrokerConnecter;
@@ -15,8 +15,10 @@ import com.yngvark.gridwalls.microservices.netcom_forwarder.rabbitmq.RabbitMessa
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.isNull;
@@ -38,7 +40,9 @@ class AppTest {
         ExecutorService executorService = Executors.newCachedThreadPool();
         RabbitBrokerConnecter rabbitBrokerConnecter = mock(RabbitBrokerConnecter.class);
 
-        RetrySleeper retrySleeper = () -> {};
+        RetrySleeper retrySleeper = () -> {
+            // Do not sleep at all.
+        };
 
         InputFileOpener microserviceReaderOpener = mock(InputFileOpener.class);
         when(microserviceReaderOpener.openStream(any(RetrySleeper.class))).thenReturn(mock(InputFileReader.class));
@@ -57,13 +61,14 @@ class AppTest {
             return null;
         }).when(blockingRabbitConsumer).consume(isNull(), any(String.class), any(RabbitMessageListener.class));
 
+        // Init app
         App app = new App(
                 executorService,
                 rabbitBrokerConnecter,
                 retrySleeper,
                 microserviceReaderOpener,
                 microserviceWriterOpener,
-                new NetworkToFileHub(
+                new NetworkToMsForwarder(
                         NetworkMsgListenerFactoryFactory.create(),
                         blockingRabbitConsumer
                 )

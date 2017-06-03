@@ -10,19 +10,19 @@ import java.io.IOException;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class NetworkToFileHub {
+public class NetworkToMsForwarder {
     private final Logger logger = getLogger(getClass());
 
     private final NetworkMsgListenerFactory networkMsgListenerFactory;
     private final BlockingRabbitConsumer blockingRabbitConsumer;
 
-    public static NetworkToFileHub create() {
-        return new NetworkToFileHub(
+    public static NetworkToMsForwarder create() {
+        return new NetworkToMsForwarder(
                 new NetworkMsgListenerFactory(),
                 BlockingRabbitConsumer.create());
     }
 
-    public NetworkToFileHub(
+    public NetworkToMsForwarder(
             NetworkMsgListenerFactory networkMsgListenerFactory,
             BlockingRabbitConsumer blockingRabbitConsumer) {
         this.networkMsgListenerFactory = networkMsgListenerFactory;
