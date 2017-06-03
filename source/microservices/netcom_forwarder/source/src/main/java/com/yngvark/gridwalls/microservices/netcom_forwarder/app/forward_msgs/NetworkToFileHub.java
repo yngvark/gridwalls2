@@ -3,6 +3,7 @@ package com.yngvark.gridwalls.microservices.netcom_forwarder.app.forward_msgs;
 import com.yngvark.communicate_through_named_pipes.output.OutputFileWriter;
 import com.yngvark.gridwalls.microservices.netcom_forwarder.rabbitmq.BlockingRabbitConsumer;
 import com.yngvark.gridwalls.microservices.netcom_forwarder.rabbitmq.RabbitConnection;
+import com.yngvark.gridwalls.microservices.netcom_forwarder.rabbitmq.RabbitMessageListener;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -28,10 +29,10 @@ public class NetworkToFileHub {
         this.blockingRabbitConsumer = blockingRabbitConsumer;
     }
 
-    public void consumeAndForwardTo(RabbitConnection rabbitConnection, OutputFileWriter microserviceWriter)
+    public void consumeAndForward(RabbitConnection rabbitConnection, OutputFileWriter microserviceWriter)
             throws IOException, InterruptedException {
-        blockingRabbitConsumer.consume(
-                rabbitConnection, "game", networkMsgListenerFactory.create(microserviceWriter));
+        RabbitMessageListener rabbitMessageListener = networkMsgListenerFactory.create(microserviceWriter);
+        blockingRabbitConsumer.consume(rabbitConnection, "game", rabbitMessageListener);
         logger.info("Consuming done.");
     }
 

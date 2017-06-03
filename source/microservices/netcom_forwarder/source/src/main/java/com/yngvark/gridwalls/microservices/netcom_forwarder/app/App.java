@@ -1,7 +1,6 @@
 package com.yngvark.gridwalls.microservices.netcom_forwarder.app;
 
 import com.yngvark.communicate_through_named_pipes.RetrySleeper;
-import com.yngvark.communicate_through_named_pipes.RetryWaiter;
 import com.yngvark.communicate_through_named_pipes.input.InputFileOpener;
 import com.yngvark.communicate_through_named_pipes.input.InputFileReader;
 import com.yngvark.communicate_through_named_pipes.output.OutputFileOpener;
@@ -97,7 +96,7 @@ public class App {
             InputFileReader microserviceReader) {
         return executorService.submit(() -> {
             try {
-                networkToFileHub.consumeAndForwardTo(rabbitConnection, microserviceWriter);
+                networkToFileHub.consumeAndForward(rabbitConnection, microserviceWriter);
                 microserviceReader.closeStream();
             } catch (IOException | InterruptedException e) {
                 throw new RuntimeException(e);

@@ -63,6 +63,7 @@ TODO
  				så vi kan sende den til nettverk.
  					--------_> rename properties til uten 2tall
  					kjør zombie og netcomforwarder og se at incoming message blir håndtert av de nye msglisternerene
+ 			[ ] fix gracefully stop i docker.
  			[ ] og motsatt vei antar jeg.. Meldinger fra microservice må forwardes til nettverket.
 				Hm bare pass på at meldinger som sendes til kø "game" kommer tilbake = evig loop. MQ burde handle dette.
 		[ ] Lag gamelogikk!

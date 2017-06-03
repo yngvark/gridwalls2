@@ -46,7 +46,7 @@ public class BlockingRabbitConsumer {
             logger.info("Stopping {}... basicCancel tag: {}",
                     getClass().getSimpleName(), rabbitConsumerData.getConsumerTag());
             rabbitConsumerData.getChannel().basicCancel(rabbitConsumerData.getConsumerTag());
-            blockingQueue.add("You can stop consuming now");
+            blockingQueue.add("You can stop consuming now.");
 
         } catch (IOException e) {
             throw new RuntimeException("Could not stop " + getClass().getSimpleName(), e);
