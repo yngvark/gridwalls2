@@ -1,9 +1,9 @@
-package com.yngvark.gridwalls.microservices.netcom_forwarder.app.forward_msgs_to_network;
+package com.yngvark.gridwalls.microservices.netcom_forwarder.app.consume_msgs_from_ms;
 
 import com.yngvark.gridwalls.microservices.netcom_forwarder.rabbitmq.RabbitConnection;
 import com.yngvark.gridwalls.microservices.netcom_forwarder.rabbitmq.RabbitPublisher;
 
-public class RabbitPublisherFactory {
+class RabbitPublisherFactory {
 
     public RabbitPublisher create(RabbitConnection rabbitConnection) {
         return new RabbitPublisher(rabbitConnection);

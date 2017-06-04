@@ -21,14 +21,14 @@ public class RabbitConnection {
         this.connection = connection;
     }
 
-    public Channel getChannelForExchange(String queue) throws IOException {
-        if (exchangeChannnels.get(queue) == null) {
+    public Channel getChannelForExchange(String exchange) throws IOException {
+        if (exchangeChannnels.get(exchange) == null) {
             Channel channel = connection.createChannel();
-            exchangeChannnels.put(queue, channel);
-            channel.exchangeDeclare(queue, "fanout", false, true, null);
+            exchangeChannnels.put(exchange, channel);
+            channel.exchangeDeclare(exchange, "fanout", false, true, null);
         }
 
-        return exchangeChannnels.get(queue);
+        return exchangeChannnels.get(exchange);
     }
 
     public synchronized void disconnectIfConnected() {

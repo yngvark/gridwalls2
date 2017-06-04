@@ -18,7 +18,6 @@ public class OutputFileWriter {
     }
 
     public void write(String msg) throws IOException {
-        msg = "[msg] " + msg;
         writeRaw(msg);
     }
 

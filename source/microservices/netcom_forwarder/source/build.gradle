@@ -34,6 +34,8 @@ dependencies {
     compile 'com.yngvark:communicate_through_named_pipes:1.0.+'
 
     compile 'com.rabbitmq:amqp-client:3.6.3'
+
+    compile 'org.apache.commons:commons-lang3:3.5'
 }
 
 apply plugin: 'application'
