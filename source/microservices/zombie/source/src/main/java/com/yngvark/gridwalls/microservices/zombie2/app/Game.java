@@ -18,11 +18,12 @@ class Game {
     }
 
     public void produce() throws IOException, InterruptedException {
-        outputFileWriter.write("zombie"); // Netcom requires us to write our name as a consumer
-        outputFileWriter.write("/subscribe ServerInfo"); // Let's subscribe to updates from the server.
+        outputFileWriter.write("/myNameIs netcomForwarderTest"); // Netcom requires us to wrinte our name as a consumer
+        outputFileWriter.write("/subscribeTo ServerInfo"); // Let's subscribe to updates from the server.
+        outputFileWriter.write("/publish HIHIHIHIHI"); // Let's subscribe to updates from the server.
 
         for (int i = 0; i < 1000 && run; i++) {
-            String msg = "Hey this is from Zombie, line " + i;
+            String msg = "/publish Hey this is from Zombie, line " + i;
             outputFileWriter.write(msg);
             Thread.sleep(1000);
         }

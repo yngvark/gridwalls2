@@ -1,4 +1,4 @@
-package com.yngvark.gridwalls.microservices.netcom_forwarder.rabbitmq;
+package com.yngvark.gridwalls.netcom_forwarder_test.rabbitmq;
 
 import org.slf4j.Logger;
 

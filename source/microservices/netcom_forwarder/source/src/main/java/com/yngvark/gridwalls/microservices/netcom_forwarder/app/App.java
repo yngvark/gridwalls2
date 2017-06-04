@@ -5,10 +5,11 @@ import com.yngvark.communicate_through_named_pipes.input.InputFileOpener;
 import com.yngvark.communicate_through_named_pipes.input.InputFileReader;
 import com.yngvark.communicate_through_named_pipes.output.OutputFileOpener;
 import com.yngvark.communicate_through_named_pipes.output.OutputFileWriter;
-import com.yngvark.gridwalls.microservices.netcom_forwarder.app.consume_msgs_from_network.Netcom;
-import com.yngvark.gridwalls.microservices.netcom_forwarder.app.consume_msgs_from_ms.MicroserviceConsumer;
+import com.yngvark.gridwalls.microservices.netcom_forwarder.app.consume_input_file.InputFileConsumer;
 import com.yngvark.gridwalls.microservices.netcom_forwarder.rabbitmq.RabbitBrokerConnecter;
 import com.yngvark.gridwalls.microservices.netcom_forwarder.rabbitmq.RabbitConnection;
+import com.yngvark.gridwalls.microservices.netcom_forwarder.rabbitmq.RabbitPublisher;
+import com.yngvark.gridwalls.microservices.netcom_forwarder.rabbitmq.RabbitSubscriber;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -25,59 +26,83 @@ public class App {
     private final ExecutorService executorService;
     private final RabbitBrokerConnecter rabbitBrokerConnecter;
     private final RetrySleeper retrySleeper;
-    private final InputFileOpener microserviceReaderOpener;
-    private final OutputFileOpener microserviceWriterOpener;
-    private final NetworkToMsForwarderFactory networkToMsForwarderFactory;
+    private final InputFileOpener inputFileOpener;
+    private final OutputFileOpener outputFileOpener;
+    private final RabbitMessageListenerFactory rabbitMessageListenerFactory;
 
     private RabbitConnection rabbitConnection;
-    private OutputFileWriter microserviceWriter;
-    private InputFileReader microserviceReader;
-    private MicroserviceConsumer microserviceConsumer;
-    private Netcom netcom;
+    private RabbitSubscriber rabbitSubscriber;
+    private RabbitPublisher rabbitPublisher;
+
+    private OutputFileWriter outputFileWriter;
+    private InputFileReader inputFileReader;
+    private InputFileConsumer inputFileConsumer;
+
+    private SubscribeToListener subscribeToListener;
 
     private boolean stopped = false;
 
     public static App create(
             ExecutorService executorService,
-            InputFileOpener microserviceReaderOpener,
-            OutputFileOpener microserviceWriterOpener) {
+            InputFileOpener inputFileOpener,
+            OutputFileOpener outputFileOpener,
+            String host
+    ) {
         RetrySleeper retrySleeper = () -> Thread.sleep(3000);
 
         return new App(
                 executorService,
-                new RabbitBrokerConnecter(),
+                new RabbitBrokerConnecter(host),
                 retrySleeper,
-                microserviceReaderOpener,
-                microserviceWriterOpener,
-                new NetworkToMsForwarderFactory()
+                inputFileOpener,
+                outputFileOpener,
+                new RabbitMessageListenerFactory()
         );
     }
 
-    public App(ExecutorService executorService,
+    public App(
+            ExecutorService executorService,
             RabbitBrokerConnecter rabbitBrokerConnecter,
-            RetrySleeper retrySleeper,
-            InputFileOpener microserviceReaderOpener,
-            OutputFileOpener microserviceWriterOpener,
-            NetworkToMsForwarderFactory networkToMsForwarderFactory) {
+            RetrySleeper retrySleeper, InputFileOpener inputFileOpener,
+            OutputFileOpener outputFileOpener,
+            RabbitMessageListenerFactory rabbitMessageListenerFactory
+    ) {
         this.executorService = executorService;
         this.rabbitBrokerConnecter = rabbitBrokerConnecter;
         this.retrySleeper = retrySleeper;
-        this.microserviceReaderOpener = microserviceReaderOpener;
-        this.microserviceWriterOpener = microserviceWriterOpener;
-        this.networkToMsForwarderFactory = networkToMsForwarderFactory;
+        this.inputFileOpener = inputFileOpener;
+        this.outputFileOpener = outputFileOpener;
+        this.rabbitMessageListenerFactory = rabbitMessageListenerFactory;
     }
 
     public void run() throws Throwable {
         logger.info("Starting network forwarder.");
-        rabbitConnection = rabbitBrokerConnecter.connect("rabbitmq");
+        rabbitConnection = rabbitBrokerConnecter.connect();
+        rabbitSubscriber = new RabbitSubscriber(rabbitConnection);
+        rabbitPublisher = new RabbitPublisher(rabbitConnection);
 
-        microserviceWriter = microserviceWriterOpener.openStream(retrySleeper);
-        microserviceReader = microserviceReaderOpener.openStream(retrySleeper);
-        netcom = networkToMsForwarderFactory.create(rabbitConnection, microserviceWriter);
-        microserviceConsumer = MicroserviceConsumer.create(rabbitConnection, microserviceReader, netcom); // TODO fix.
+        outputFileWriter = outputFileOpener.openStream(retrySleeper);
+        inputFileReader = inputFileOpener.openStream(retrySleeper);
+        inputFileConsumer = new InputFileConsumer(inputFileReader);
 
-        Future consumeNetworkFuture = startConsumeMessagesFromNetwork(netcom, microserviceReader);
-        Future fileConsumerFuture = startConsumeMessagesFromMicroservice(netcom);
+        ConsumerNameListener consumerNameListener = new ConsumerNameListener();
+        inputFileConsumer.addMessageListener(consumerNameListener, "/myNameIs");
+
+        subscribeToListener = new SubscribeToListener(
+                consumerNameListener,
+                rabbitMessageListenerFactory,
+                outputFileWriter,
+                rabbitSubscriber
+        );
+
+        inputFileConsumer.addMessageListener(subscribeToListener, "/subscribeTo");
+        inputFileConsumer.addMessageListener(
+                new PublishListener(rabbitPublisher, consumerNameListener),
+                "/publish"
+        );
+
+        Future consumeNetworkFuture = startConsumeMessagesFromNetwork(subscribeToListener, inputFileReader);
+        Future consumeInputFuture = startConsumeMessagesFromInputFile(inputFileConsumer, subscribeToListener);
 
         Future allFutures = executorService.submit(() -> {
             try {
@@ -85,7 +110,7 @@ public class App {
                 consumeNetworkFuture.get();
 
                 logger.info("Waiting, with timeout, for fileConsumer to return.");
-                fileConsumerFuture.get(3, TimeUnit.SECONDS);
+                consumeInputFuture.get(3, TimeUnit.SECONDS);
             } catch (InterruptedException | ExecutionException | TimeoutException e) {
                 throw new RuntimeException(e);
             }
@@ -97,11 +122,11 @@ public class App {
     }
 
     private Future startConsumeMessagesFromNetwork(
-            Netcom netcom,
+            SubscribeToListener subscribeToListener,
             InputFileReader microserviceReader) {
         return executorService.submit(() -> {
             try {
-                netcom.blockUntilStopped();
+                subscribeToListener.blockUntilStopped();
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -109,14 +134,16 @@ public class App {
         });
     }
 
-    private Future startConsumeMessagesFromMicroservice(Netcom netcom) {
+    private Future startConsumeMessagesFromInputFile(
+            InputFileConsumer inputFileConsumer,
+            SubscribeToListener subscribeToListener) {
         return executorService.submit(() -> {
             try {
-                microserviceConsumer.consume();
+                inputFileConsumer.consume();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            netcom.stop();
+            subscribeToListener.stop();
         });
     }
 
@@ -126,12 +153,12 @@ public class App {
             throw new RuntimeException("Already stopped!");
         stopped = true;
 
-        if (microserviceWriter != null)
-            microserviceWriter.closeStream();
-        if (microserviceReader != null)
-            microserviceReader.closeStream();
-        if (netcom != null)
-            netcom.stop();
+        if (outputFileWriter != null)
+            outputFileWriter.closeStream();
+        if (inputFileReader != null)
+            inputFileReader.closeStream();
+        if (subscribeToListener != null)
+            subscribeToListener.stop();
         if (rabbitConnection != null)
             rabbitConnection.disconnectIfConnected();
         

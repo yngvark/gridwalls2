@@ -11,6 +11,7 @@ class ErrorHandlingRunner {
     public void run(App app) {
         try {
             app.run();
+            app.stop();
         } catch (Throwable throwable) {
             logger.info("Error occured. Exiting");
             throwable.printStackTrace();

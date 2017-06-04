@@ -12,18 +12,15 @@ import java.util.Map;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class RabbitSubscribe {
+public class RabbitSubscriber {
     private final Logger logger = getLogger(getClass());
     private final RabbitConnection rabbitConnection;
 
-    public RabbitSubscribe(
-            RabbitConnection rabbitConnection) {
+    public RabbitSubscriber(RabbitConnection rabbitConnection) {
         this.rabbitConnection = rabbitConnection;
     }
 
-    public RabbitConsumer subscribe(String consumerName, String queue, RabbitMessageListener rabbitMessageListener) {
-        String exchange = queue; // This is how fan-out works.
-
+    public RabbitConsumer subscribe(String consumerName, String exchange, RabbitMessageListener rabbitMessageListener) {
         boolean exchangeDurable = false;
         boolean exchangeAutoDelete = true;
         Map<String, Object> standardArgs = null;
@@ -32,13 +29,15 @@ public class RabbitSubscribe {
         try {
             eventsFromServerChannel = rabbitConnection.getConnection().createChannel();
         } catch (IOException e) {
-            throw new RuntimeException("Could not start consuming messages, because channel creation failure. Details: " + e.getMessage());
+            throw new RuntimeException(
+                    "Could not start consuming messages, because channel creation failure. Details: " + e.getMessage());
         }
 
         try {
             eventsFromServerChannel.exchangeDeclare(exchange, "fanout", exchangeDurable, exchangeAutoDelete, standardArgs);
         } catch (IOException e) {
-            throw new RuntimeException("Could not start consuming messages, because channel declaration failure. Details: " + e.getMessage());
+            throw new RuntimeException(
+                    "Could not start consuming messages, because channel declaration failure. Details: " + e.getMessage());
         }
 
         String uniqueQueueName = exchange + "_to_" + consumerName; // Because there are only 1 consumer per queue.
@@ -48,13 +47,15 @@ public class RabbitSubscribe {
             boolean queueAutoDelete = true;
             eventsFromServerChannel.queueDeclare(uniqueQueueName, queueDurable, queueExclusive, queueAutoDelete, standardArgs);
         } catch (IOException e) {
-            throw new RuntimeException("Could not start consuming messages, because queue declaration failure. Details: " + e.getMessage());
+            throw new RuntimeException(
+                    "Could not start consuming messages, because queue declaration failure. Details: " + e.getMessage());
         }
 
         try {
             eventsFromServerChannel.queueBind(uniqueQueueName, exchange, "");
         } catch (IOException e) {
-            throw new RuntimeException("Could not start consuming messages, because queue bind failure. Details: " + e.getMessage());
+            throw new RuntimeException(
+                    "Could not start consuming messages, because queue bind failure. Details: " + e.getMessage());
         }
 
         Consumer consumer = new DefaultConsumer(eventsFromServerChannel) {
@@ -78,9 +79,10 @@ public class RabbitSubscribe {
             logger.info("Starting consume from queue: " + uniqueQueueName);
             consumerTag = eventsFromServerChannel.basicConsume(uniqueQueueName, true, consumer);
         } catch (IOException e) {
-            throw new RuntimeException("Could not start consuming messages, because consume failure. Details: " + e.getMessage());
+            throw new RuntimeException(
+                    "Could not start consuming messages, because consume failure. Details: " + e.getMessage());
         }
 
-        return new RabbitConsumer(consumerName, queue, eventsFromServerChannel, consumerTag);
+        return new RabbitConsumer(consumerName, exchange, eventsFromServerChannel, consumerTag);
     }
 }

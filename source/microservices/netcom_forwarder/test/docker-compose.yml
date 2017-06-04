@@ -1,0 +1,19 @@
+version: "3"
+
+services:
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    hostname: rabbithost
+    ports:
+      - "8080:15672"
+      - 15674:15674
+    #networks:
+    #  rabbit:
+    #    aliases:
+    #      - rabbithost
+
+#networks:
+#  default:
+#    external:
+#      name: containers_rabbit
