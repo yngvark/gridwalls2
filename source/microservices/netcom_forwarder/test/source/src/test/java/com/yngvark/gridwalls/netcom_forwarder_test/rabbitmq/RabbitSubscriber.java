@@ -20,9 +20,7 @@ public class RabbitSubscriber {
         this.rabbitConnection = rabbitConnection;
     }
 
-    public RabbitConsumer subscribe(String consumerName, String queue, RabbitMessageListener rabbitMessageListener) {
-        String exchange = queue; // This is how fan-out works.
-
+    public RabbitConsumer subscribe(String consumerName, String exchange, RabbitMessageListener rabbitMessageListener) {
         boolean exchangeDurable = false;
         boolean exchangeAutoDelete = true;
         Map<String, Object> standardArgs = null;
@@ -80,6 +78,6 @@ public class RabbitSubscriber {
             throw new RuntimeException("Could not start consuming messages, because consume failure. Details: " + e.getMessage());
         }
 
-        return new RabbitConsumer(consumerName, queue, eventsFromServerChannel, consumerTag);
+        return new RabbitConsumer(consumerName, uniqueQueueName, eventsFromServerChannel, consumerTag);
     }
 }

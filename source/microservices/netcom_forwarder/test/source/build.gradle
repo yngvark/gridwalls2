@@ -34,4 +34,6 @@ dependencies {
     compile 'com.yngvark:communicate_through_named_pipes:1.0.+'
 
     testCompile 'com.rabbitmq:amqp-client:3.6.3'
+
+    testCompile 'commons-io:commons-io:2.5'
 }

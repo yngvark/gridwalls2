@@ -19,26 +19,30 @@ public class InputFileReader {
     }
 
     public void consume(MessageListener messageListener) throws IOException {
-        logger.info("Consume: start.");
+        logger.debug("Consume: start.");
 
-        String msg;
-        while ((msg = reader.readLine()) != null && run) {
+        String msg = null;
+        while (run) {
+            msg = reader.readLine();
+            if (msg == null)
+                break;
+
             logger.trace("<<< From other side: " + msg);
             messageListener.messageReceived(msg);
         }
 
         if (msg == null) {
-            logger.info("Consume file stream was closed from other side.");
+            logger.debug("Consume file stream was closed from other side.");
         }
 
         reader.close();
 
-        logger.info("");
-        logger.info("Consume: done.");
+        logger.debug("");
+        logger.debug("Consume: done.");
     }
 
     public void closeStream() {
-        logger.info("Stopping consuming input file...");
+        logger.debug("Stopping consuming input file...");
         if (streamClosed) {
             logger.warn("Already stopped.");
             return;
@@ -53,6 +57,6 @@ public class InputFileReader {
             logger.error("Caught exception when closing stream: {}", e);
         }
 
-        logger.info("Stopping consuming input file... done");
+        logger.debug("Stopping consuming input file... done");
     }
 }
