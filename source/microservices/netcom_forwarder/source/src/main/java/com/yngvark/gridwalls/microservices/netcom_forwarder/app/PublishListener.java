@@ -1,7 +1,7 @@
 package com.yngvark.gridwalls.microservices.netcom_forwarder.app;
 
 import com.yngvark.gridwalls.microservices.netcom_forwarder.app.consume_input_file.FileMessageListener;
-import com.yngvark.gridwalls.microservices.netcom_forwarder.rabbitmq.RabbitPublisher;
+import com.yngvark.gridwalls.rabbitmq.RabbitPublisher;
 
 class PublishListener implements FileMessageListener {
     private final RabbitPublisher rabbitPublisher;

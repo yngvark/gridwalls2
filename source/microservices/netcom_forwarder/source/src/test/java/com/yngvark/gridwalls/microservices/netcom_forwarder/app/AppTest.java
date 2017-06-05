@@ -5,9 +5,9 @@ import com.yngvark.communicate_through_named_pipes.input.InputFileOpener;
 import com.yngvark.communicate_through_named_pipes.input.InputFileReader;
 import com.yngvark.communicate_through_named_pipes.output.OutputFileOpener;
 import com.yngvark.communicate_through_named_pipes.output.OutputFileWriter;
-import com.yngvark.gridwalls.microservices.netcom_forwarder.rabbitmq.BlockingRabbitConsumer;
-import com.yngvark.gridwalls.microservices.netcom_forwarder.rabbitmq.RabbitBrokerConnecter;
-import com.yngvark.gridwalls.microservices.netcom_forwarder.rabbitmq.RabbitMessageListener;
+import com.yngvark.gridwalls.rabbitmq.BlockingRabbitConsumer;
+import com.yngvark.gridwalls.rabbitmq.RabbitBrokerConnecter;
+import com.yngvark.gridwalls.rabbitmq.RabbitMessageListener;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 

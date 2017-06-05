@@ -2,9 +2,9 @@ package com.yngvark.gridwalls.microservices.netcom_forwarder.app;
 
 import com.yngvark.communicate_through_named_pipes.output.OutputFileWriter;
 import com.yngvark.gridwalls.microservices.netcom_forwarder.app.consume_input_file.FileMessageListener;
-import com.yngvark.gridwalls.microservices.netcom_forwarder.rabbitmq.RabbitConsumer;
-import com.yngvark.gridwalls.microservices.netcom_forwarder.rabbitmq.RabbitMessageListener;
-import com.yngvark.gridwalls.microservices.netcom_forwarder.rabbitmq.RabbitSubscriber;
+import com.yngvark.gridwalls.rabbitmq.RabbitConsumer;
+import com.yngvark.gridwalls.rabbitmq.RabbitMessageListener;
+import com.yngvark.gridwalls.rabbitmq.RabbitSubscriber;
 import org.slf4j.Logger;
 
 import java.io.IOException;

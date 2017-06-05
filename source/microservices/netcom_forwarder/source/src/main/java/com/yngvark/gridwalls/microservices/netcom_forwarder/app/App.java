@@ -6,10 +6,10 @@ import com.yngvark.communicate_through_named_pipes.input.InputFileReader;
 import com.yngvark.communicate_through_named_pipes.output.OutputFileOpener;
 import com.yngvark.communicate_through_named_pipes.output.OutputFileWriter;
 import com.yngvark.gridwalls.microservices.netcom_forwarder.app.consume_input_file.InputFileConsumer;
-import com.yngvark.gridwalls.microservices.netcom_forwarder.rabbitmq.RabbitBrokerConnecter;
-import com.yngvark.gridwalls.microservices.netcom_forwarder.rabbitmq.RabbitConnection;
-import com.yngvark.gridwalls.microservices.netcom_forwarder.rabbitmq.RabbitPublisher;
-import com.yngvark.gridwalls.microservices.netcom_forwarder.rabbitmq.RabbitSubscriber;
+import com.yngvark.gridwalls.rabbitmq.RabbitBrokerConnecter;
+import com.yngvark.gridwalls.rabbitmq.RabbitConnection;
+import com.yngvark.gridwalls.rabbitmq.RabbitPublisher;
+import com.yngvark.gridwalls.rabbitmq.RabbitSubscriber;
 import org.slf4j.Logger;
 
 import java.io.IOException;
