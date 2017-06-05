@@ -4,6 +4,8 @@ import com.yngvark.gridwalls.microservices.zombie.game.move.Move;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 
+import java.util.Random;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -17,14 +19,15 @@ public class GameLogicTest {
         Serializer serializer = new JsonSerializer();
         GameLogic gameLogic = new GameLogic(
                 noSleeper,
-                serializer);
+                serializer,
+                new Random(98161));
 
         MapInfo mapInfo = new MapInfo(10, 7);
         String mapInfoStr = serializer.serialize(mapInfo, MapInfo.class);
         gameLogic.messageReceived(mapInfoStr);
 
         // When
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 1000; i++) {
             String msg = gameLogic.nextMsg();
             Move move = serializer.deserialize(msg, Move.class);
             logger.info(move.toString());

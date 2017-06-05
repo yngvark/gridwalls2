@@ -23,7 +23,6 @@ public class Game {
         outputFileWriter.write("/myNameIs netcomForwarderTest");
 
         while (run) {
-//            String msg = "/publish Hey this is from Zombie, line " + i;
             String msg = gameLogic.nextMsg();
             outputFileWriter.write("/publish " + msg);
         }
