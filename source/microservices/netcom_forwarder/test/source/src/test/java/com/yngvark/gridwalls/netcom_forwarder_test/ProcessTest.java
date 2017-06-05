@@ -5,13 +5,13 @@ import com.yngvark.communicate_through_named_pipes.input.InputFileReader;
 import com.yngvark.communicate_through_named_pipes.output.OutputFileOpener;
 import com.yngvark.communicate_through_named_pipes.output.OutputFileWriter;
 import com.yngvark.gridwalls.netcom_forwarder_test.lib.InputStreamListener;
+import com.yngvark.gridwalls.netcom_forwarder_test.lib.ProcessKiller;
 import com.yngvark.gridwalls.netcom_forwarder_test.lib.ProcessStarter;
 import com.yngvark.gridwalls.netcom_forwarder_test.rabbitmq.RabbitBrokerConnecter;
 import com.yngvark.gridwalls.netcom_forwarder_test.rabbitmq.RabbitConnection;
 import com.yngvark.gridwalls.netcom_forwarder_test.rabbitmq.RabbitPublisher;
 import com.yngvark.gridwalls.netcom_forwarder_test.rabbitmq.RabbitSubscriber;
 import org.apache.commons.io.IOUtils;
-import org.junit.Ignore;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -27,11 +27,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -40,9 +38,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class ProcessTest {
     public final Logger logger = getLogger(ProcessTest.class);
 
-    @Test
-    public void published_msgs_should_be_sent_to_network() throws Exception {
-        // Given
+    public App startApp() throws Exception {
         logger.info(Paths.get(".").toAbsolutePath().toString());
         String host = "172.19.0.2";
         RabbitBrokerConnecter rabbitBrokerConnecter = new RabbitBrokerConnecter(host);
@@ -68,8 +64,8 @@ public class ProcessTest {
                 from,
                 host);
 
-        InputStreamListener inputStreamListener = new InputStreamListener();
-        inputStreamListener.listenInNewThreadOn(process.getInputStream());
+        InputStreamListener stdoutListener = new InputStreamListener();
+        stdoutListener.listenInNewThreadOn(process.getInputStream());
 
         InputStreamListener stderrListener = new InputStreamListener();
         stderrListener.listenInNewThreadOn(process.getErrorStream());
@@ -83,76 +79,68 @@ public class ProcessTest {
         OutputFileWriter outputFileWriter = outputFileOpener.openStream(() -> Thread.sleep(3000));
         logger.info("Streams opened.");
 
-        // When
-        outputFileWriter.write("/myNameIs netcomForwarderTest");
+        App app = new App();
+        app.host = host;
+        app.rabbitConnection = rabbitConnection;
+        app.process = process;
+        app.stdoutListener = stdoutListener;
+        app.stderrListener = stderrListener;
+        app.inputFileReader = inputFileReader;
+        app.outputFileWriter = outputFileWriter;
+        return app;
+    }
+
+    class App {
+        String host;
+        RabbitConnection rabbitConnection;
+        Process process;
+        InputStreamListener stdoutListener;
+        InputStreamListener stderrListener;
+        InputFileReader inputFileReader;
+        OutputFileWriter outputFileWriter;
+
+        public void stopAndFreeResources() throws Exception {
+            stdoutListener.stopListening();
+            stderrListener.stopListening();
+
+            inputFileReader.closeStream();
+            outputFileWriter.closeStream();
+
+            rabbitConnection.disconnectIfConnected();
+
+            ProcessKiller.killUnixProcess(process);
+            ProcessKiller.waitForExitAndAssertExited(process, 5, TimeUnit.SECONDS);
+        }
+    }
+
+    @Test
+    public void published_msgs_should_be_sent_to_network() throws Exception {
+        // Given
+        App app = startApp();
+        app.outputFileWriter.write("/myNameIs netcomForwarderTest");
 
         int messagesToSend = 3;
-
-        RabbitSubscriber rabbitSubscriber = new RabbitSubscriber(rabbitConnection);
-        List<String> recordedNetworMessages = new ArrayList<>();
+        RabbitSubscriber rabbitSubscriber = new RabbitSubscriber(app.rabbitConnection);
 
         ExecutorService executorService = Executors.newCachedThreadPool();
-        Future receivePublishedMessagesFuture = executorService.submit(() -> {
-            BlockingQueue blockingQueue = new LinkedBlockingQueue();
-            Map<String, Integer> counter = new HashMap<>();
-            counter.put("receivedMessageCount", 0);
-            rabbitSubscriber.subscribe("networkForwarderTestReader", "netcomForwarderTest", (msg) -> {
-
-                logger.info("<<< Networkmsg: " + msg);
-                recordedNetworMessages.add(msg);
-
-                int currentCount = counter.get("receivedMessageCount") + 1;
-                counter.put("receivedMessageCount", currentCount);
-                if (currentCount == messagesToSend) {
-                    try {
-                        blockingQueue.put("We have now received expected messages. Continue test.");
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-            });
-
-            try {
-                blockingQueue.take();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        });
-
-        waitForAnyQueueToAppear(host + ":15672");
+        Future<List<String>> receivePublishedMessagesFuture = executorService.submit(() ->
+            subscribeAndReceiveMessages(messagesToSend, rabbitSubscriber)
+        );
+        waitForSubscriptionQueueToAppear(app.host + ":15672");
 
         // When
         for (int i = 0; i < messagesToSend; i++) {
-            outputFileWriter.write("/publish Hi this is networkforwarderTest: i=" + i);
+            app.outputFileWriter.write("/publish Hi this is networkforwarderTest: i=" + i);
         }
 
-        // Cleanup
-
+        // Record result
         logger.info("Waiting for our subscriber to receive published messages.");
-        receivePublishedMessagesFuture.get(6, TimeUnit.DAYS);
+        List<String> recordedNetworMessages = receivePublishedMessagesFuture.get(6, TimeUnit.DAYS);
 
-        logger.info("Closing output writer.");
-        outputFileWriter.closeStream();
-
-        logger.info("Reading");
-        inputFileReader.consume((msg) -> {
-            logger.info("<<< Msg: " + msg);
-        });
-
-        // Then
-        logger.info("Killing process.");
-
-        // Finally
-        logger.info("Stopping listening to inpustreamListener");
-        inputStreamListener.stopListening();
-
-        logger.info("Closing writer");
-        inputFileReader.closeStream();
-        logger.info("Closing reader");
-        outputFileWriter.closeStream();
-        logger.info("Disconnecting.");
-
-        rabbitConnection.disconnectIfConnected();
+        // Cleanup
+        logger.info("Closing output writer, which should make app stop by itself.");
+        app.outputFileWriter.closeStream();
+        app.stopAndFreeResources();
 
         // Then
         assertEquals(3, recordedNetworMessages.size());
@@ -161,103 +149,48 @@ public class ProcessTest {
         assertEquals("Hi this is networkforwarderTest: i=2", recordedNetworMessages.get(2));
     }
 
+    private List<String> subscribeAndReceiveMessages(int messageCountToExpect, RabbitSubscriber rabbitSubscriber) {
+        List<String> recordedNetworMessages = new ArrayList<>();
+        Lock lock = new Lock();
+        Counter counter = new Counter();
+
+        rabbitSubscriber.subscribe("networkForwarderTestReader", "netcomForwarderTest", (msg) -> {
+            logger.info("<<< Networkmsg: " + msg);
+            recordedNetworMessages.add(msg);
+            counter.increase();
+            if (counter.value() == messageCountToExpect) {
+                lock.unlock("We have now received expected messages. Continue test.");
+            }
+        });
+
+        lock.waitForUnlock();
+        return recordedNetworMessages;
+    }
+
     @Test
     public void we_should_receive_messages_from_queue_we_subscribe_to() throws Exception {
         // Given
-        logger.info(Paths.get(".").toAbsolutePath().toString());
-        String host = "172.19.0.2";
-        RabbitBrokerConnecter rabbitBrokerConnecter = new RabbitBrokerConnecter(host);
-        RabbitConnection rabbitConnection = rabbitBrokerConnecter.connect();
-
-        String to = "build/to_netcom_forwarder";
-        String from = "build/from_netcom_forwarder";
-
-        Path toPath = Paths.get(from);
-        if (Files.exists(toPath)) {
-            Files.delete(toPath);
-        }
-        Path fromPath = Paths.get(from);
-        if (Files.exists(fromPath)) {
-            Files.delete(fromPath);
-        }
-        Runtime.getRuntime().exec("mkfifo " + to).waitFor();
-        Runtime.getRuntime().exec("mkfifo " + from).waitFor();
-
-        Process process = ProcessStarter.startProcess(
-                "../../source/build/install/app/bin/run",
-                to,
-                from,
-                host);
-
-        InputStreamListener inputStreamListener = new InputStreamListener();
-        inputStreamListener.listenInNewThreadOn(process.getInputStream());
-
-        InputStreamListener stderrListener = new InputStreamListener();
-        stderrListener.listenInNewThreadOn(process.getErrorStream());
-
-        InputFileOpener inputFileOpener = new InputFileOpener(from);
-        OutputFileOpener outputFileOpener = new OutputFileOpener(to);
-
-        logger.info("Opening input.");
-        InputFileReader inputFileReader = inputFileOpener.openStream(() -> Thread.sleep(3000));
-        logger.info("Opening output.");
-        OutputFileWriter outputFileWriter = outputFileOpener.openStream(() -> Thread.sleep(3000));
-        logger.info("Streams opened.");
-
-        outputFileWriter.write("/myNameIs netcomForwarderTest");
-
-        logger.info("Subscribing to zombie.");
-        outputFileWriter.write("/subscribeTo zombie");
-        waitForAnyQueueToAppear(host + ":15672");
+        App app = startApp();
+        app.outputFileWriter.write("/myNameIs netcomForwarderTest");
+        app.outputFileWriter.write("/subscribeTo zombie");
+        waitForSubscriptionQueueToAppear(app.host + ":15672");
 
         // When
         logger.info("Publishing to zombie.");
-        RabbitPublisher rabbitPublisher = new RabbitPublisher(rabbitConnection);
+        RabbitPublisher rabbitPublisher = new RabbitPublisher(app.rabbitConnection);
         int messagesToSend = 3;
         for (int i = 0; i < messagesToSend; i++) {
             rabbitPublisher.publish("zombie", "Hello this is Zombie " + i);
         }
 
-        // Capture published messages...
-        List<String> receivedMessages = new ArrayList<>();
+        // Capture published messages
         ExecutorService executorService = Executors.newCachedThreadPool();
-
-        Future consumeExpectedMessagesFuture = executorService.submit(() -> {
-            try {
-                Map<String, Integer> counter = new HashMap<>();
-                counter.put("receivedMessageCount", 0);
-                inputFileReader.consume((msg) -> {
-                    logger.info("<<< Msg: " + msg);
-                    receivedMessages.add(msg);
-                    int currentCount = counter.get("receivedMessageCount") + 1;
-                    counter.put("receivedMessageCount", currentCount);
-                    if (currentCount == messagesToSend)
-                        inputFileReader.closeStream();
-                });
-                return;
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        });
-
-        logger.info("Starting read future");
-        consumeExpectedMessagesFuture.get(3, TimeUnit.SECONDS);
-
-        // Clean up...
-
-        logger.info("Closing output writer.");
-        outputFileWriter.closeStream();
-
-        logger.info("Stopping listening to inpustreamListener");
-        inputStreamListener.stopListening();
-
-        logger.info("Closing reader");
-        inputFileReader.closeStream();
-        logger.info("Closing writer");
-        outputFileWriter.closeStream();
-        logger.info("Disconnecting.");
-
-        rabbitConnection.disconnectIfConnected();
+        Future<List<String>> consumeExpectedMessagesFuture = executorService.submit(() ->
+            consumeExpectedMessages(app, messagesToSend)
+        );
+        logger.info("Starting future for consuming expected messages.");
+        List<String> receivedMessages = consumeExpectedMessagesFuture.get(3, TimeUnit.SECONDS);
+        app.stopAndFreeResources();
 
         // Then
         assertEquals(messagesToSend, receivedMessages.size());
@@ -266,7 +199,25 @@ public class ProcessTest {
         }
     }
 
-    private void waitForAnyQueueToAppear(String rabbitMgmtHost) {
+    private List<String> consumeExpectedMessages(App app, int expectedMessageCount) {
+        List<String> receivedMessages = new ArrayList<>();
+        Counter counter = new Counter();
+
+        try {
+            app.inputFileReader.consume((msg) -> {
+                logger.info("<<< Msg: " + msg);
+                receivedMessages.add(msg);
+                counter.increase();
+                if (counter.value() == expectedMessageCount)
+                    app.inputFileReader.closeStream();
+            });
+            return receivedMessages;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void waitForSubscriptionQueueToAppear(String rabbitMgmtHost) {
         try {
             String queues = "";
             int retryAttempt = 0;

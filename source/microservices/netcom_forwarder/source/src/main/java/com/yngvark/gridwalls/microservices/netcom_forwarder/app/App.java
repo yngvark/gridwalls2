@@ -150,7 +150,7 @@ public class App {
     public synchronized void stop() {
         logger.info("Stopping app...");
         if (stopped)
-            throw new RuntimeException("Already stopped!");
+            return;
         stopped = true;
 
         if (outputFileWriter != null)
