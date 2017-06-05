@@ -1,10 +1,12 @@
-package com.yngvark.gridwalls.microservices.zombie2.app;
+package com.yngvark.gridwalls.microservices.zombie.app;
 
 import com.yngvark.communicate_through_named_pipes.RetrySleeper;
 import com.yngvark.communicate_through_named_pipes.input.InputFileOpener;
 import com.yngvark.communicate_through_named_pipes.input.InputFileReader;
 import com.yngvark.communicate_through_named_pipes.output.OutputFileOpener;
 import com.yngvark.communicate_through_named_pipes.output.OutputFileWriter;
+import com.yngvark.gridwalls.microservices.zombie.game.Game;
+import com.yngvark.gridwalls.microservices.zombie.game.GameFactory;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -22,6 +24,7 @@ public class App {
     private final InputFileOpener netcomReaderOpener;
     private final OutputFileOpener netcomWriterOpener;
     private final RetrySleeper retrySleeper;
+    private final GameFactory gameFactory;
 
     private Game game;
     private InputFileReader netcomReader;
@@ -34,16 +37,20 @@ public class App {
                 executorService,
                 inputFileOpener,
                 outputFileOpener,
-                () -> Thread.sleep(1000));
+                () -> Thread.sleep(1000),
+                new GameFactory());
     }
 
     public App(ExecutorService executorService,
             InputFileOpener netcomReaderOpener,
-            OutputFileOpener netcomWriterOpener, RetrySleeper retrySleeper) {
+            OutputFileOpener netcomWriterOpener,
+            RetrySleeper retrySleeper,
+            GameFactory gameFactory) {
         this.executorService = executorService;
         this.netcomReaderOpener = netcomReaderOpener;
         this.netcomWriterOpener = netcomWriterOpener;
         this.retrySleeper = retrySleeper;
+        this.gameFactory = gameFactory;
     }
 
     public void run() throws Throwable {
@@ -53,14 +60,14 @@ public class App {
         Future netcomConsumerFuture = startConsumeMessagesFromNetcomForwarder(netcomReader);
 
         OutputFileWriter netcomWriter = netcomWriterOpener.openStream(retrySleeper);
-        game = new Game(netcomWriter);
+        game = gameFactory.create(netcomWriter);
 
-        Future gameFuture = runGame(game);
+        Future netcomProducerFuture = runGame(game);
 
         Future allFutures = executorService.submit(() -> {
             try {
                 logger.info("Waiting for gameFuture to return.");
-                gameFuture.get();
+                netcomProducerFuture.get();
                 logger.info("Waiting, with timeout, for netcomConsumerFuture to return.");
                 netcomConsumerFuture.get(3, TimeUnit.SECONDS);
             } catch (InterruptedException | ExecutionException | TimeoutException e) {
@@ -101,9 +108,8 @@ public class App {
 
     public void stop() {
         logger.info("Stopping app.");
-
         if (game == null)
-            throw new IllegalStateException("Cannot stop game that hasn't started.");
+            return;
 
         game.stop();
     }

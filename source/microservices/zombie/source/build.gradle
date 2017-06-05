@@ -4,6 +4,18 @@ version '1.0-SNAPSHOT'
 apply plugin: 'java'
 sourceCompatibility = 1.8
 
+buildscript {
+    repositories {
+        mavenCentral()
+        // The following is only necessary if you want to use SNAPSHOT releases.
+        // maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+    }
+    dependencies {
+        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0-M4'
+    }
+}
+apply plugin: 'org.junit.platform.gradle.plugin'
+
 repositories {
     mavenCentral()
     mavenLocal()
@@ -13,9 +25,16 @@ dependencies {
     compile('org.slf4j:slf4j-api:1.7.+')
     compile('org.slf4j:slf4j-simple:1.7.+')
 
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile("org.junit.jupiter:junit-jupiter-api:5.0.0-M4")
+    testRuntime("org.junit.jupiter:junit-jupiter-engine:5.0.0-M4")
+
     compile 'com.yngvark:os_process_exiter:1.0.+'
     compile 'com.yngvark:communicate_through_named_pipes:1.0.+'
+
+    testCompile("org.apache.commons:commons-lang3:3.5")
+
+    compile('com.google.code.gson:gson:2.8.+')
+
 }
 
 apply plugin: 'application'
