@@ -29,7 +29,8 @@ dependencies {
     testRuntime('org.slf4j:slf4j-api:1.7.+')
     testRuntime('org.slf4j:slf4j-simple:1.7.+')
 
-    compile 'com.yngvark:communicate_through_named_pipes:1.0.+'
+    testCompile 'com.yngvark:communicate_through_named_pipes:1.0.+'
+    testCompile 'com.yngvark.gridwalls:rabbitmq_helper:1.0.0'
 
     testCompile 'com.rabbitmq:amqp-client:3.6.3'
     testCompile 'commons-io:commons-io:2.5'
