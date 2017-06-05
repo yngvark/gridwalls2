@@ -18,6 +18,7 @@ class GameLogic {
     }
 
     public String nextMsg() {
+        sleeper.sleep(100 + random.nextInt(901));
         return serializer.serialize(getNextMove(), Move.class);
     }
 

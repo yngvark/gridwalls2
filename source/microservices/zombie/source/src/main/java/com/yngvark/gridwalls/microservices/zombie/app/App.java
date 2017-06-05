@@ -56,9 +56,11 @@ public class App {
     public void run() throws Throwable {
         logger.info("Starting zombie logic.");
 
+        logger.info("Opening netcomReaderOpener");
         netcomReader = netcomReaderOpener.openStream(retrySleeper);
         Future netcomConsumerFuture = startConsumeMessagesFromNetcomForwarder(netcomReader);
 
+        logger.info("Opening netcomWriterOpener");
         OutputFileWriter netcomWriter = netcomWriterOpener.openStream(retrySleeper);
         game = gameFactory.create(netcomWriter);
 

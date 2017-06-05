@@ -1,4 +1,4 @@
-package com.yngvark.gridwalls.netcom_forwarder_test.lib;
+package com.yngvark.process_test_helper;
 
 import java.io.IOException;
 

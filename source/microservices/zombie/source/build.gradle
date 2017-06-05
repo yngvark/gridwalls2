@@ -30,6 +30,7 @@ dependencies {
 
     compile 'com.yngvark:os_process_exiter:1.0.+'
     compile 'com.yngvark:communicate_through_named_pipes:1.0.+'
+    testCompile 'com.yngvark:process_test_helper:1.0.+'
 
     testCompile("org.apache.commons:commons-lang3:3.5")
 
@@ -38,7 +39,7 @@ dependencies {
 }
 
 apply plugin: 'application'
-mainClassName = 'com.yngvark.gridwalls.microservices.zombie2.Main'
+mainClassName = 'com.yngvark.gridwalls.microservices.zombie.Main'
 applicationName = 'run'
 distributions {
     main {

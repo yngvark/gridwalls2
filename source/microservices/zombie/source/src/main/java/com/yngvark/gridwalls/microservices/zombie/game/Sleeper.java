@@ -1,5 +1,5 @@
 package com.yngvark.gridwalls.microservices.zombie.game;
 
 interface Sleeper {
-    void sleep();
+    void sleep(long millis);
 }

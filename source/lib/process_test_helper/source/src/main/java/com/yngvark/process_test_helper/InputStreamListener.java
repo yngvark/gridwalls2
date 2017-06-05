@@ -1,13 +1,11 @@
-package com.yngvark.gridwalls.netcom_forwarder_test.lib;
+package com.yngvark.process_test_helper;
+
+import org.slf4j.Logger;
 
 import java.io.BufferedReader;
-import java.io.CharArrayReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.LineNumberReader;
-import java.io.PipedReader;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -18,7 +16,11 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 public class InputStreamListener {
+    private final Logger logger = getLogger(getClass());
+
     private boolean listening;
 
     private ExecutorService executorService;
