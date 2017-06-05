@@ -1,4 +1,4 @@
-package com.yngvark.gridwalls.microservices.netcom_forwarder.rabbitmq;
+package com.yngvark.gridwalls.rabbitmq;
 
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
@@ -29,15 +29,13 @@ public class RabbitSubscriber {
         try {
             eventsFromServerChannel = rabbitConnection.getConnection().createChannel();
         } catch (IOException e) {
-            throw new RuntimeException(
-                    "Could not start consuming messages, because channel creation failure. Details: " + e.getMessage());
+            throw new RuntimeException("Could not start consuming messages, because channel creation failure. Details: " + e.getMessage());
         }
 
         try {
             eventsFromServerChannel.exchangeDeclare(exchange, "fanout", exchangeDurable, exchangeAutoDelete, standardArgs);
         } catch (IOException e) {
-            throw new RuntimeException(
-                    "Could not start consuming messages, because channel declaration failure. Details: " + e.getMessage());
+            throw new RuntimeException("Could not start consuming messages, because channel declaration failure. Details: " + e.getMessage());
         }
 
         String uniqueQueueName = exchange + "_to_" + consumerName; // Because there are only 1 consumer per queue.
@@ -47,15 +45,13 @@ public class RabbitSubscriber {
             boolean queueAutoDelete = true;
             eventsFromServerChannel.queueDeclare(uniqueQueueName, queueDurable, queueExclusive, queueAutoDelete, standardArgs);
         } catch (IOException e) {
-            throw new RuntimeException(
-                    "Could not start consuming messages, because queue declaration failure. Details: " + e.getMessage());
+            throw new RuntimeException("Could not start consuming messages, because queue declaration failure. Details: " + e.getMessage());
         }
 
         try {
             eventsFromServerChannel.queueBind(uniqueQueueName, exchange, "");
         } catch (IOException e) {
-            throw new RuntimeException(
-                    "Could not start consuming messages, because queue bind failure. Details: " + e.getMessage());
+            throw new RuntimeException("Could not start consuming messages, because queue bind failure. Details: " + e.getMessage());
         }
 
         Consumer consumer = new DefaultConsumer(eventsFromServerChannel) {
@@ -79,8 +75,7 @@ public class RabbitSubscriber {
             logger.info("Starting consume from queue: " + uniqueQueueName);
             consumerTag = eventsFromServerChannel.basicConsume(uniqueQueueName, true, consumer);
         } catch (IOException e) {
-            throw new RuntimeException(
-                    "Could not start consuming messages, because consume failure. Details: " + e.getMessage());
+            throw new RuntimeException("Could not start consuming messages, because consume failure. Details: " + e.getMessage());
         }
 
         return new RabbitConsumer(consumerName, uniqueQueueName, eventsFromServerChannel, consumerTag);
