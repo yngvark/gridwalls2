@@ -64,18 +64,15 @@ TODO
  					--------_> rename properties til uten 2tall
  					kjør zombie og netcomforwarder og se at incoming message blir håndtert av de nye msglisternerene
  			[x] fix gracefully stop i docker.
- 			[ ] Hvordan testestrategi skal jeg egentlig ha her...
- 			[ ] og motsatt vei antar jeg.. Meldinger fra microservice må forwardes til nettverket.
-				Hm bare pass på at meldinger som sendes til kø "game" kommer tilbake = evig loop. MQ burde handle dette.
+ 			[x] Hvordan testestrategi skal jeg egentlig ha her...
+ 			[X] og motsatt vei antar jeg.. Meldinger fra microservice må forwardes til nettverket.
 
-		[ ] Lag gamelogikk!
 		[ ] Vurder å lag en enklere implementasjon av Zombie som ikke har tråder.
 			while (msg = in.readLine =! null)
 				//doHardCoreLogic
 				if (msg.contains "ManMoved")
 					moveTowards(toManMovedEvent(msg).coords)
-
-
+		[ ] Lag gamelogikk!
 
 [ ] Fiks byggesystem så full bygging og kjøring av appen min blir smooth sailing
 	[ ] Fiks bygging av microservices

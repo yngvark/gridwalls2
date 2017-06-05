@@ -7,6 +7,7 @@ function local_lib() {
 
 	lib/os_process_exiter/source/gradlew -p lib/os_process_exiter/source publishToMavenLocal
 	lib/communicate_through_named_pipes/source/gradlew -p lib/communicate_through_named_pipes/source publishToMavenLocal
+	lib/rabbitmq_helper/source/gradlew -p lib/rabbitmq_helper/source publishToMavenLocal
 }
 
 function local_ms() {
@@ -37,6 +38,7 @@ function docker_lib() {
 	cd lib
 	cd os_process_exiter && ./publish_artifact_docker.sh && cd ..
 	cd communicate_through_named_pipes && ./publish_artifact_docker.sh && cd ..
+	cd rabbitmq_helper && ./publish_artifact_docker.sh && cd ..
 	cd ..
 
 }
