@@ -10,7 +10,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-class GameLogic {
+public class MapInfoReceivedGameLogic {
     private final Logger logger = getLogger(getClass());
 
     private final Sleeper sleeper;
@@ -21,23 +21,13 @@ class GameLogic {
     private BlockingQueue blockingQueue = new LinkedBlockingQueue();
     private boolean mapInfoReceived = false;
 
-    private MapInfoReceivedGameLogic mapInfoReceivedGameLogic;
-
-    public GameLogic(Sleeper sleeper, Serializer serializer, Random random) {
+    public MapInfoReceivedGameLogic(Sleeper sleeper, Serializer serializer, Random random) {
         this.sleeper = sleeper;
         this.serializer = serializer;
         this.random = random;
     }
 
     public String nextMsg() {
-        if (!mapInfoReceived) {
-            try {
-                blockingQueue.take();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
         logger.info("Getting next message.");
         sleeper.sleep(100 + random.nextInt(901));
         Move move = getNextMove();
@@ -51,13 +41,6 @@ class GameLogic {
     }
 
     public void messageReceived(String msg) {
-        mapInfo = serializer.deserialize(msg, MapInfo.class);
-        mapInfoReceived = true;
-        try {
-            blockingQueue.put("We have received mapInfo, proceed.");
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
+    }
 }

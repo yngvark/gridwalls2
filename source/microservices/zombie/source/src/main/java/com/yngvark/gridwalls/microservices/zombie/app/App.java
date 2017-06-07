@@ -91,7 +91,7 @@ public class App {
                 game.stop();
             } catch (IOException e) {
                 logger.info("Exception occurred");
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         });
     }
@@ -103,7 +103,7 @@ public class App {
                     netcomReader.closeStream();
                 } catch (IOException|InterruptedException e) {
                     logger.info("Exception occurred");
-                    e.printStackTrace();
+                    throw new RuntimeException(e);
                 }
             });
     }

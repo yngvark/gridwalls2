@@ -8,4 +8,12 @@ public class MapInfo {
         this.width = width;
         this.height = height;
     }
+
+    @Override
+    public String toString() {
+        return "MapInfo{" +
+                "width=" + width +
+                ", height=" + height +
+                '}';
+    }
 }

@@ -1,9 +1,10 @@
-package com.yngvark.gridwalls.microservices.zombie.game;
+package com.yngvark.gridwalls.microservices.zombie.game.serialize_events;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.yngvark.gridwalls.microservices.zombie.game.serialize_events.Serializer;
 
-class JsonSerializer implements Serializer {
+public class JsonSerializer implements Serializer {
     private final Gson gson = new GsonBuilder().create();
 
     @Override

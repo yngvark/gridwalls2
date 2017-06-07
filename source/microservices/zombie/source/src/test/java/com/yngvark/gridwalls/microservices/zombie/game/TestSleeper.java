@@ -12,10 +12,5 @@ class TestSleeper implements Sleeper {
         return millis >= millisMin && millis <= millisMax;
     }
 
-    @Override
-    public String toString() {
-        return "TestSleeper{" +
-                "millis=" + millis +
-                '}';
-    }
+
 }

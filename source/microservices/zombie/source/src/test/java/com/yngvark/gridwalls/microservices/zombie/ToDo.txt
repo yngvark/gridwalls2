@@ -1,0 +1,1 @@
+Should wait for mapInfo before moving.

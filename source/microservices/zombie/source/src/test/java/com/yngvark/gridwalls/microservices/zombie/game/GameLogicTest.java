@@ -1,10 +1,21 @@
 package com.yngvark.gridwalls.microservices.zombie.game;
 
 import com.yngvark.gridwalls.microservices.zombie.game.move.Move;
+import com.yngvark.gridwalls.microservices.zombie.game.serialize_events.JsonSerializer;
+import com.yngvark.gridwalls.microservices.zombie.game.serialize_events.Serializer;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 
+import java.lang.reflect.GenericArrayType;
 import java.util.Random;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -12,15 +23,22 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class GameLogicTest {
     private final Logger logger = getLogger(getClass());
 
-    @Test
-    public void should_move_within_map() {
-        // Given
+    class GameLogicBuilder {
         TestSleeper testSleeper = new TestSleeper();
         Serializer serializer = new JsonSerializer();
         GameLogic gameLogic = new GameLogic(
                 testSleeper,
                 serializer,
                 new Random(98161));
+
+    }
+
+    @Test
+    public void should_move_within_map() {
+        // Given
+        GameLogicBuilder gameLogicBuilder = new GameLogicBuilder();
+        Serializer serializer = gameLogicBuilder.serializer;
+        GameLogic gameLogic = gameLogicBuilder.gameLogic;
 
         MapInfo mapInfo = new MapInfo(10, 7);
         String mapInfoStr = serializer.serialize(mapInfo, MapInfo.class);
@@ -61,16 +79,13 @@ public class GameLogicTest {
                 && move.toY <= mapInfo.height;
     }
 
-
     @Test
     public void should_sleep_between_100_and_1000_ticks_between_moves() {
         // Given
-        TestSleeper testSleeper = new TestSleeper();
-        Serializer serializer = new JsonSerializer();
-        GameLogic gameLogic = new GameLogic(
-                testSleeper,
-                serializer,
-                new Random(98161));
+        GameLogicBuilder gameLogicBuilder = new GameLogicBuilder();
+        Serializer serializer = gameLogicBuilder.serializer;
+        TestSleeper testSleeper = gameLogicBuilder.testSleeper;
+        GameLogic gameLogic = gameLogicBuilder.gameLogic;
 
         MapInfo mapInfo = new MapInfo(10, 7);
         String mapInfoStr = serializer.serialize(mapInfo, MapInfo.class);
@@ -85,4 +100,24 @@ public class GameLogicTest {
         }
     }
 
+    @Test
+    public void should_wait_for_map_info_before_moving()
+            throws TimeoutException, ExecutionException, InterruptedException {
+        // Given
+        GameLogicBuilder gameLogicBuilder = new GameLogicBuilder();
+        GameLogic gameLogic = gameLogicBuilder.gameLogic;
+
+        ExecutorService executorService = Executors.newCachedThreadPool();
+        Future nextMsgFuture = executorService.submit(() -> gameLogic.nextMsg());
+        assertThrows(TimeoutException.class, () -> nextMsgFuture.get(300, TimeUnit.MILLISECONDS));
+
+        // When
+        String mapInfo = gameLogicBuilder.serializer.serialize(new MapInfo(3, 5), MapInfo.class);
+        gameLogic.messageReceived(mapInfo);
+
+        // Then
+        String nextMsg = gameLogic.nextMsg();
+        // Check validity of move by deserializing the string
+        gameLogicBuilder.serializer.deserialize(nextMsg, Move.class);
+    }
 }
