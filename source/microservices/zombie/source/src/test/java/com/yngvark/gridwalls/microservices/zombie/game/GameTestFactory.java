@@ -1,44 +1,46 @@
 package com.yngvark.gridwalls.microservices.zombie.game;
 
 import com.yngvark.communicate_through_named_pipes.output.OutputFileWriter;
-import com.yngvark.gridwalls.microservices.zombie.app.GameEventProducer;
 import com.yngvark.gridwalls.microservices.zombie.app.NetworkMessageListener;
 import com.yngvark.gridwalls.microservices.zombie.game.serialize_events.JsonSerializer;
 import com.yngvark.gridwalls.microservices.zombie.game.serialize_events.Serializer;
 
 import java.util.Random;
 
-public class GameFactory {
-    private final MapInfoReceiver mapInfoReceiver;
+public class GameTestFactory {
+    final MapInfoReceiver mapInfoReceiver;
+    final TestSleeper testSleeper;
 
-    public static GameFactory create() {
+    public static GameTestFactory create() {
         Serializer serializer = new JsonSerializer();
 
+        TestSleeper testSleeper = new TestSleeper();
         MapInfoReceiver mapInfoReceiver = new MapInfoReceiver(
                 serializer,
                 new ZombieMoverFactory(
                         serializer,
-                        new ThreadSleeper(),
-                        new Random()
+                        testSleeper,
+                        new Random(12345)
                 )
         );
 
-        return new GameFactory(mapInfoReceiver);
+        return new GameTestFactory(mapInfoReceiver, testSleeper);
     }
 
-    public GameFactory(MapInfoReceiver mapInfoReceiver) {
+    public GameTestFactory(MapInfoReceiver mapInfoReceiver,
+            TestSleeper testSleeper) {
         this.mapInfoReceiver = mapInfoReceiver;
+        this.testSleeper = testSleeper;
     }
 
     public NetworkMessageListener createNetworkMessageListener() {
         return new NetwMsgReceiverContext(mapInfoReceiver);
     }
 
-    public GameEventProducer createEventProducer(OutputFileWriter outputFileWriter) {
+    public BlockingGameEventProducer createEventProducer(OutputFileWriter outputFileWriter) {
         return new BlockingGameEventProducer(
                 outputFileWriter,
                 new GameLogicContext(mapInfoReceiver)
         );
     }
-
 }

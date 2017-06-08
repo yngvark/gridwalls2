@@ -1,11 +1,8 @@
 package com.yngvark.gridwalls.microservices.zombie.app;
 
-import com.yngvark.communicate_through_named_pipes.RetrySleeper;
-import com.yngvark.communicate_through_named_pipes.input.InputFileOpener;
 import com.yngvark.communicate_through_named_pipes.input.InputFileReader;
-import com.yngvark.communicate_through_named_pipes.output.OutputFileOpener;
 import com.yngvark.communicate_through_named_pipes.output.OutputFileWriter;
-import com.yngvark.gridwalls.microservices.zombie.game.Game;
+import com.yngvark.gridwalls.microservices.zombie.game.BlockingGameEventProducer;
 import com.yngvark.gridwalls.microservices.zombie.game.GameFactory;
 import org.slf4j.Logger;
 
@@ -20,51 +17,45 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class App {
     private final Logger logger = getLogger(getClass());
-    private final ExecutorService executorService;
-    private final InputFileOpener netcomReaderOpener;
-    private final OutputFileOpener netcomWriterOpener;
-    private final RetrySleeper retrySleeper;
-    private final GameFactory gameFactory;
 
-    private Game game;
-    private InputFileReader netcomReader;
+    private final ExecutorService executorService;
+    private final InputFileReader netcomReader;
+    private final OutputFileWriter netcomWriter;
+    private final NetworkMessageReceiver networkMessageReceiver;
+    private final GameEventProducer eventProducer;
 
     public static App create(
             ExecutorService executorService,
-            InputFileOpener inputFileOpener,
-            OutputFileOpener outputFileOpener) {
+            InputFileReader netcomReader,
+            OutputFileWriter netcomWriter
+    ) {
+        GameFactory gameFactory = GameFactory.create();
+
         return new App(
                 executorService,
-                inputFileOpener,
-                outputFileOpener,
-                () -> Thread.sleep(1000),
-                new GameFactory());
+                netcomReader,
+                netcomWriter,
+                new NetworkMessageReceiver(
+                        gameFactory.createNetworkMessageListener()
+                ),
+                gameFactory.createEventProducer(netcomWriter)
+                );
     }
 
     public App(ExecutorService executorService,
-            InputFileOpener netcomReaderOpener,
-            OutputFileOpener netcomWriterOpener,
-            RetrySleeper retrySleeper,
-            GameFactory gameFactory) {
+            InputFileReader netcomReader, OutputFileWriter netcomWriter,
+            NetworkMessageReceiver networkMessageReceiver,
+            GameEventProducer eventProducer) {
         this.executorService = executorService;
-        this.netcomReaderOpener = netcomReaderOpener;
-        this.netcomWriterOpener = netcomWriterOpener;
-        this.retrySleeper = retrySleeper;
-        this.gameFactory = gameFactory;
+        this.netcomReader = netcomReader;
+        this.netcomWriter = netcomWriter;
+        this.networkMessageReceiver = networkMessageReceiver;
+        this.eventProducer = eventProducer;
     }
 
     public void run() throws Throwable {
-        logger.info("Starting zombie logic.");
-
-        logger.info("Opening netcomReaderOpener");
-        netcomReader = netcomReaderOpener.openStream(retrySleeper);
-        Future netcomConsumerFuture = startConsumeMessagesFromNetcomForwarder(netcomReader);
-
-        logger.info("Opening netcomWriterOpener");
-        OutputFileWriter netcomWriter = netcomWriterOpener.openStream(retrySleeper);
-        game = gameFactory.create(netcomWriter);
-
-        Future netcomProducerFuture = runGame(game);
+        Future netcomConsumerFuture = startConsumeEvents();
+        Future netcomProducerFuture = startProduceEvents();
 
         Future allFutures = executorService.submit(() -> {
             try {
@@ -84,11 +75,11 @@ public class App {
         netcomWriter.closeStream();
     }
 
-    private Future startConsumeMessagesFromNetcomForwarder(InputFileReader netcomReader) throws IOException {
+    private Future startConsumeEvents() throws IOException {
         return executorService.submit(() -> {
             try {
-                netcomReader.consume(new NetworkMessageListener());
-                game.stop();
+                netcomReader.consume(networkMessageReceiver);
+                eventProducer.stop();
             } catch (IOException e) {
                 logger.info("Exception occurred");
                 throw new RuntimeException(e);
@@ -96,23 +87,18 @@ public class App {
         });
     }
 
-    private Future runGame(Game game) {
+    private Future startProduceEvents() {
         return executorService.submit(() -> {
-                try {
-                    game.produce();
-                    netcomReader.closeStream();
-                } catch (IOException|InterruptedException e) {
-                    logger.info("Exception occurred");
-                    throw new RuntimeException(e);
-                }
-            });
+            eventProducer.produce();
+            netcomReader.closeStream(); // TODO should throw ioexception?
+        });
     }
 
     public void stop() {
         logger.info("Stopping app.");
-        if (game == null)
+        if (eventProducer == null)
             return;
 
-        game.stop();
+        eventProducer.stop();
     }
 }

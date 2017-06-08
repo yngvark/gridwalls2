@@ -5,30 +5,26 @@ import com.yngvark.gridwalls.microservices.zombie.game.serialize_events.Serializ
 import org.slf4j.Logger;
 
 import java.util.Random;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class MapInfoReceivedGameLogic {
+class ZombieMover implements GameLogic {
     private final Logger logger = getLogger(getClass());
-
-    private final Sleeper sleeper;
     private final Serializer serializer;
+    private final Sleeper sleeper;
     private final Random random;
+    private final MapInfo mapInfo;
 
-    private MapInfo mapInfo;
-    private BlockingQueue blockingQueue = new LinkedBlockingQueue();
-    private boolean mapInfoReceived = false;
-
-    public MapInfoReceivedGameLogic(Sleeper sleeper, Serializer serializer, Random random) {
-        this.sleeper = sleeper;
+    public ZombieMover(Serializer serializer, Sleeper sleeper, Random random,
+            MapInfo mapInfo) {
         this.serializer = serializer;
+        this.sleeper = sleeper;
         this.random = random;
+        this.mapInfo = mapInfo;
     }
 
-    public String nextMsg() {
-        logger.info("Getting next message.");
+    @Override
+    public String nextMsg(GameLogicContext gameLogicContext) {
         sleeper.sleep(100 + random.nextInt(901));
         Move move = getNextMove();
         return serializer.serialize(move, Move.class);
@@ -38,9 +34,5 @@ public class MapInfoReceivedGameLogic {
         int toX = random.nextInt(mapInfo.width) + 1;
         int toY = random.nextInt(mapInfo.height) + 1;
         return new Move(toX, toY);
-    }
-
-    public void messageReceived(String msg) {
-
     }
 }

@@ -1,7 +1,10 @@
 package com.yngvark.gridwalls.microservices.zombie;
 
+import com.yngvark.communicate_through_named_pipes.RetrySleeper;
 import com.yngvark.communicate_through_named_pipes.input.InputFileOpener;
+import com.yngvark.communicate_through_named_pipes.input.InputFileReader;
 import com.yngvark.communicate_through_named_pipes.output.OutputFileOpener;
+import com.yngvark.communicate_through_named_pipes.output.OutputFileWriter;
 import com.yngvark.gridwalls.microservices.zombie.app.App;
 import com.yngvark.gridwalls.microservices.zombie.exit_os_process.Shutdownhook;
 import com.yngvark.os_process_exiter.ExecutorServiceExiter;
@@ -28,7 +31,11 @@ public class Main {
         OutputFileOpener outputFileOpener = new OutputFileOpener(fifoOutputFilename);
         InputFileOpener inputFileOpener = new InputFileOpener(fifoInputFilename);
 
-        App app = App.create(executorService, inputFileOpener, outputFileOpener);
+        RetrySleeper retrySleeper = () -> Thread.sleep(1000);
+        InputFileReader netcomReader = inputFileOpener.openStream(retrySleeper);
+        OutputFileWriter netcomWriter = outputFileOpener.openStream(retrySleeper);
+
+        App app = App.create(executorService, netcomReader, netcomWriter);
 
         // Shutdownhook
         Shutdownhook shutdownhook = new Shutdownhook(app);
