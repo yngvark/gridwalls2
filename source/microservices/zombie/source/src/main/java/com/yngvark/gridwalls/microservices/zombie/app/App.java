@@ -2,7 +2,6 @@ package com.yngvark.gridwalls.microservices.zombie.app;
 
 import com.yngvark.communicate_through_named_pipes.input.InputFileReader;
 import com.yngvark.communicate_through_named_pipes.output.OutputFileWriter;
-import com.yngvark.gridwalls.microservices.zombie.game.BlockingGameEventProducer;
 import com.yngvark.gridwalls.microservices.zombie.game.GameFactory;
 import org.slf4j.Logger;
 

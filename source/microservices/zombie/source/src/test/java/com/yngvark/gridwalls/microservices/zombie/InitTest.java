@@ -10,11 +10,14 @@ import com.yngvark.gridwalls.microservices.zombie.game.serialize_events.Serializ
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -24,14 +27,10 @@ class InitTest {
     public App initApp(String to, String from) throws Exception {
         logger.info(Paths.get(".").toAbsolutePath().toString());
 
-        Path toPath = Paths.get(from);
-        if (Files.exists(toPath)) {
-            Files.delete(toPath);
-        }
+        Path toPath = Paths.get(to);
         Path fromPath = Paths.get(from);
-        if (Files.exists(fromPath)) {
-            Files.delete(fromPath);
-        }
+        delete(toPath, fromPath);
+
         Runtime.getRuntime().exec("mkfifo " + to).waitFor();
         Runtime.getRuntime().exec("mkfifo " + from).waitFor();
 
@@ -48,25 +47,40 @@ class InitTest {
         App network = new App();
         network.inputFileReader = inputFileReader;
         network.outputFileWriter = outputFileWriter;
+        network.toPath = toPath;
+        network.fromPath = fromPath;
         return network;
+    }
+
+    private void delete(Path... paths) throws IOException {
+        for (Path path : paths) {
+            if (Files.exists(path)) {
+                logger.info("Deleting {}", path);
+                Files.delete(path);
+            } else {
+                logger.info("Not deleting {}, couldnt find it.", path);
+            }
+        }
     }
 
     class App {
         InputFileReader inputFileReader;
         OutputFileWriter outputFileWriter;
+        Path toPath;
+        Path fromPath;
 
         public void stopAndFreeResources() throws Exception {
-            inputFileReader.closeStream();
             outputFileWriter.closeStream();
         }
     }
+
     @Test
     void should_not_crash() throws Exception {
         String to = "build/to_app";
         String from = "build/from_app";
 
         ExecutorService executorService = Executors.newCachedThreadPool();
-        executorService.submit(() -> {
+        Future game = executorService.submit(() -> {
             try {
                 Main.main(new String[] { to, from });
             } catch (Exception e) {
@@ -82,6 +96,8 @@ class InitTest {
 
         Thread.sleep(2000l);
         app.stopAndFreeResources();
+        game.get();
+        delete(app.toPath, app.fromPath);
     }
 
 }
