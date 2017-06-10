@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-class InitTest {
+class IntegrationTest {
     private final Logger logger = getLogger(getClass());
 
     public App initApp(String to, String from) throws Exception {

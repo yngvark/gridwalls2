@@ -1,8 +1,13 @@
 package com.yngvark.gridwalls.microservices.zombie.game;
 
 import com.yngvark.gridwalls.microservices.zombie.app.NetworkMessageListener;
+import org.slf4j.Logger;
+
+import static org.slf4j.LoggerFactory.getLogger;
 
 class NetwMsgReceiverContext implements NetworkMessageListener {
+    private final Logger logger = getLogger(getClass());
+
     private NetGameMsgListener currentListener;
 
     public NetwMsgReceiverContext(NetGameMsgListener currentListener) {
@@ -11,6 +16,7 @@ class NetwMsgReceiverContext implements NetworkMessageListener {
 
     @Override
     public void messageReceived(String msg) {
+        logger.info("<<< (> {}) {}", currentListener.getClass().getSimpleName(), msg);
         currentListener.messageReceived(this, msg);
     }
 

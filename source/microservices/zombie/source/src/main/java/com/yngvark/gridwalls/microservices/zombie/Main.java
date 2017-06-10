@@ -17,7 +17,7 @@ import java.util.concurrent.Executors;
 public class Main {
     public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
         // Args
-        if (args.length != 2) {
+        if (args.length < 2) {
             System.err.println("USAGE: <this program> <mkfifo input> <mkfifo output>");
             System.exit(1);
         }

@@ -8,7 +8,7 @@ import java.util.Random;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-class ZombieMover implements GameLogic {
+class ZombieMover implements Producer {
     private final Logger logger = getLogger(getClass());
     private final Serializer serializer;
     private final Sleeper sleeper;
@@ -24,10 +24,10 @@ class ZombieMover implements GameLogic {
     }
 
     @Override
-    public String nextMsg(GameLogicContext gameLogicContext) {
+    public String nextMsg(ProducerContext producerContext) {
         sleeper.sleep(100 + random.nextInt(901));
         Move move = getNextMove();
-        return serializer.serialize(move, Move.class);
+        return "/publish " + serializer.serialize(move, Move.class);
     }
 
     private Move getNextMove() {

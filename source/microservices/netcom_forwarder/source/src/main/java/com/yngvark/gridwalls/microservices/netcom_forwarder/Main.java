@@ -18,8 +18,7 @@ public class Main {
     private static final Logger logger = getLogger(Main.class);
 
     public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
-        logger.info("Args length: " + args.length);
-        logger.info("Args: " + StringUtils.join(args));
+        logger.info("Args: " + StringUtils.join(args, ' '));
 
         // Args
         if (args.length < 2) {

@@ -11,14 +11,14 @@ import static org.slf4j.LoggerFactory.getLogger;
 class BlockingGameEventProducer implements GameEventProducer {
     private final Logger logger = getLogger(getClass());
     private final OutputFileWriter outputFileWriter;
-    private final GameLogicContext gameLogicContext;
+    private final ProducerContext producerContext;
 
     private boolean run = true;
 
     public BlockingGameEventProducer(OutputFileWriter outputFileWriter,
-            GameLogicContext gameLogicContext) {
+            ProducerContext producerContext) {
         this.outputFileWriter = outputFileWriter;
-        this.gameLogicContext = gameLogicContext;
+        this.producerContext = producerContext;
     }
 
     public void produce() {
@@ -30,17 +30,17 @@ class BlockingGameEventProducer implements GameEventProducer {
     }
 
     private void tryToProduce() throws IOException {
-        outputFileWriter.write("/myNameIs netcomForwarderTest");
-
         while (run) {
             String msg = produceOne();
-            outputFileWriter.write("/publish " + msg);
+            outputFileWriter.write(msg);
         }
         logger.info("Game done.");
     }
 
     String produceOne() {
-        return gameLogicContext.nextMsg();
+        String msg = producerContext.nextMsg();
+        logger.info(">>> {}", msg);
+        return msg;
     }
 
     public void stop() {

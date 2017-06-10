@@ -38,10 +38,10 @@ services:
     ports:
       - "8080:15672"
       - 15674:15674
-    networks:
-      rabbit:
-        aliases:
-          - rabbithost
+    #networks:
+    #  rabbit:
+    #    aliases:
+    #      - rabbithost
 
   zombie:
     depends_on:

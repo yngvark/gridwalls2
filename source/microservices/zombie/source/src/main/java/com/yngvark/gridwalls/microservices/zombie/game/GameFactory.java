@@ -10,24 +10,34 @@ import java.util.Random;
 
 public class GameFactory {
     private final MapInfoReceiver mapInfoReceiver;
+    private final ServerGreeter serverGreeter;
 
     public static GameFactory create() {
+        return GameFactory.create(new ThreadSleeper(), new Random());
+    }
+
+    public static GameFactory create(Sleeper sleeper, Random random) {
         Serializer serializer = new JsonSerializer();
 
         MapInfoReceiver mapInfoReceiver = new MapInfoReceiver(
                 serializer,
                 new ZombieMoverFactory(
                         serializer,
-                        new ThreadSleeper(),
-                        new Random()
+                        sleeper,
+                        random
                 )
         );
 
-        return new GameFactory(mapInfoReceiver);
+        ServerGreeter serverGreeter = new ServerGreeter(mapInfoReceiver);
+
+        return new GameFactory(mapInfoReceiver, serverGreeter);
     }
 
-    public GameFactory(MapInfoReceiver mapInfoReceiver) {
+
+    public GameFactory(MapInfoReceiver mapInfoReceiver,
+            ServerGreeter serverGreeter) {
         this.mapInfoReceiver = mapInfoReceiver;
+        this.serverGreeter = serverGreeter;
     }
 
     public NetworkMessageListener createNetworkMessageListener() {
@@ -37,7 +47,7 @@ public class GameFactory {
     public GameEventProducer createEventProducer(OutputFileWriter outputFileWriter) {
         return new BlockingGameEventProducer(
                 outputFileWriter,
-                new GameLogicContext(mapInfoReceiver)
+                new ProducerContext(serverGreeter)
         );
     }
 

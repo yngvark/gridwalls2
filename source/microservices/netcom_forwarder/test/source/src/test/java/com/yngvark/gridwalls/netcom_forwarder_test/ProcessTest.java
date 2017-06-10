@@ -38,7 +38,7 @@ public class ProcessTest {
 
     public App startApp() throws Exception {
         logger.info(Paths.get(".").toAbsolutePath().toString());
-        String host = "172.19.0.2";
+        String host = "172.20.0.2";
         RabbitBrokerConnecter rabbitBrokerConnecter = new RabbitBrokerConnecter(host);
         RabbitConnection rabbitConnection = rabbitBrokerConnecter.connect();
 
@@ -133,7 +133,7 @@ public class ProcessTest {
 
         // Record result
         logger.info("Waiting for our subscriber to receive published messages.");
-        List<String> recordedNetworMessages = receivePublishedMessagesFuture.get(6, TimeUnit.DAYS);
+        List<String> recordedNetworMessages = receivePublishedMessagesFuture.get(3, TimeUnit.SECONDS);
 
         // Cleanup
         logger.info("Closing output writer, which should make app stop by itself.");
