@@ -5,6 +5,7 @@ import com.yngvark.gridwalls.microservices.zombie.app.GameEventProducer;
 import org.slf4j.Logger;
 
 import java.io.IOException;
+import java.util.concurrent.BlockingQueue;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -31,13 +32,17 @@ class BlockingGameEventProducer implements GameEventProducer {
 
     private void tryToProduce() throws IOException {
         while (run) {
-            String msg = produceOne();
-            outputFileWriter.write(msg);
+            produceOne();
         }
         logger.info("Game done.");
     }
 
-    String produceOne() {
+    private void produceOne() throws IOException {
+        String msg = nextMsg();
+        outputFileWriter.write(msg);
+    }
+
+    String nextMsg() {
         String msg = producerContext.nextMsg();
         logger.info(">>> {}", msg);
         return msg;

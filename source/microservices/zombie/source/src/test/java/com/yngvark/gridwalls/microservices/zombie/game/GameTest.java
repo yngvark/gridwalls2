@@ -9,7 +9,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 
-import java.time.Duration;
+import java.io.IOException;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -17,6 +18,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.function.Supplier;
 
 import static java.time.Duration.ofMillis;
 import static org.junit.jupiter.api.Assertions.*;
@@ -30,8 +32,9 @@ public class GameTest {
         TestSleeper testSleeper = new TestSleeper();
         GameFactory gameFactory = GameFactory.create(testSleeper, new Random(12345));
         NetworkMessageListener networkMessageListener = gameFactory.createNetworkMessageListener();
+        OutputFileWriter outputFileWriter = mock(OutputFileWriter.class);
         BlockingGameEventProducer gameEventProducer = (BlockingGameEventProducer)
-                gameFactory.createEventProducer(mock(OutputFileWriter.class));
+                gameFactory.createEventProducer(outputFileWriter);
         Serializer serializer = new JsonSerializer();
 
         void messageReceived(Object event) {
@@ -46,17 +49,25 @@ public class GameTest {
             return serializer.deserialize(parts[1], clazz);
         }
 
-        public void assertThatFirstProducedMessageIsGreeting() {
-            assertEquals("/myNameIs zombie", gameEventProducer.produceOne());
+        public void skipFirstMsg() {
+            assertEquals("/myNameIs zombie", gameEventProducer.nextMsg());
+        }
+
+        public void skipSecondMsg() {
+            assertEquals("/subscribeTo MapInfo", gameEventProducer.nextMsg());
+        }
+
+        public String nextMsg() {
+            return assertTimeoutPreemptively(ofMillis(300), () -> gameEventProducer.nextMsg());
         }
     }
 
     @Test
-    public void should_start_by_greeting_serrver() {
+    public void should_start_by_greeting_serrver() throws IOException {
         TestHelper testHelper = new TestHelper();
 
         // When
-        String msg = testHelper.gameEventProducer.produceOne();
+        String msg = testHelper.nextMsg();
 
         // Then
         assertEquals("/myNameIs zombie", msg);
@@ -65,10 +76,10 @@ public class GameTest {
     @Test
     public void should_subscribe_to_mapinfo_after_greeting_server() {
         TestHelper testHelper = new TestHelper();
-        testHelper.assertThatFirstProducedMessageIsGreeting();
+        testHelper.skipFirstMsg();
 
         // When
-        String msg = assertTimeoutPreemptively(ofMillis(300), () -> testHelper.gameEventProducer.produceOne());
+        String msg = testHelper.nextMsg();
 
         // Then
         assertEquals("/subscribeTo MapInfo", msg);
@@ -79,32 +90,54 @@ public class GameTest {
             throws TimeoutException, ExecutionException, InterruptedException {
         // Given
         TestHelper testHelper = new TestHelper();
-        testHelper.assertThatFirstProducedMessageIsGreeting();
+        testHelper.skipFirstMsg();
+        testHelper.skipSecondMsg();
 
         ExecutorService executorService = Executors.newCachedThreadPool();
-        Future nextMsgFuture = executorService.submit(() -> testHelper.gameEventProducer.produceOne());
+        Future nextMsgFuture = executorService.submit(() -> testHelper.gameEventProducer.nextMsg());
         assertThrows(TimeoutException.class, () -> nextMsgFuture.get(300, TimeUnit.MILLISECONDS));
 
         // When
         testHelper.messageReceived(new MapInfo(3, 5));
 
         // Then
-        String nextMsg = testHelper.gameEventProducer.produceOne();
+        String nextMsg2 = testHelper.nextMsg();
         // Check validity of move by deserializing the string
-        testHelper.deserializePublish(nextMsg, Move.class);
+        testHelper.deserializePublish(nextMsg2, Move.class);
+    }
+
+    @Test
+    public void streamstuff() {
+        List<String> a;
+
+        Supplier<String> s = new Supplier<String>() {
+            int i = 0;
+            @Override
+            public String get() {
+                return "x" + i++;
+            }
+        };
+
+//        Executors.newCachedThreadPool().submit(() -> {
+//
+//        });
+
+        logger.info("Get: {}", s.get());
+        logger.info("Get: {}", s.get());
+
     }
 
     @Test
     public void should_move_within_map() {
         TestHelper testHelper = new TestHelper();
-        testHelper.assertThatFirstProducedMessageIsGreeting();
+        testHelper.skipFirstMsg();
 
         MapInfo mapInfo = new MapInfo(10, 7);
         testHelper.messageReceived(mapInfo);
 
         // When
         for (int i = 0; i < 1000; i++) {
-            String msg = testHelper.gameEventProducer.produceOne();
+            String msg = testHelper.gameEventProducer.nextMsg();
             Move move = testHelper.deserializePublish(msg, Move.class);
             gatherMinMax(move);
 
@@ -140,13 +173,13 @@ public class GameTest {
     public void should_sleep_between_100_and_1000_ticks_between_moves() {
         // Given
         TestHelper testHelper = new TestHelper();
-        testHelper.assertThatFirstProducedMessageIsGreeting();
+        testHelper.skipFirstMsg();
 
         testHelper.messageReceived(new MapInfo(10, 7));
 
         // When
         for (int i = 0; i < 1000; i++) {
-            testHelper.gameEventProducer.produceOne();
+            testHelper.gameEventProducer.nextMsg();
             assertTrue(
                     testHelper.testSleeper.lastSleepDurationWasBetweenInclusive(100, 1000),
                     testHelper.testSleeper.toString());
