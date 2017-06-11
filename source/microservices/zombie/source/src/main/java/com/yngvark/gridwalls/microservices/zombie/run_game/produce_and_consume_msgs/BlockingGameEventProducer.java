@@ -31,14 +31,10 @@ public class BlockingGameEventProducer implements GameEventProducer {
     }
     private void tryToProduce() throws IOException {
         while (run) {
-            produceOne();
+            String msg = nextMsg();
+            outputFileWriter.write(msg);
         }
         logger.info("Game done.");
-    }
-
-    private void produceOne() throws IOException {
-        String msg = nextMsg();
-        outputFileWriter.write(msg);
     }
 
     String nextMsg() {
