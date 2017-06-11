@@ -29,7 +29,6 @@ class BlockingGameEventProducer implements GameEventProducer {
             throw new RuntimeException(e);
         }
     }
-
     private void tryToProduce() throws IOException {
         while (run) {
             produceOne();

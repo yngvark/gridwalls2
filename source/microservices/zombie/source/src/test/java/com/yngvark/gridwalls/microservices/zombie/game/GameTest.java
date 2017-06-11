@@ -12,6 +12,9 @@ import org.slf4j.Logger;
 import java.io.IOException;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -107,30 +110,10 @@ public class GameTest {
     }
 
     @Test
-    public void streamstuff() {
-        List<String> a;
-
-        Supplier<String> s = new Supplier<String>() {
-            int i = 0;
-            @Override
-            public String get() {
-                return "x" + i++;
-            }
-        };
-
-//        Executors.newCachedThreadPool().submit(() -> {
-//
-//        });
-
-        logger.info("Get: {}", s.get());
-        logger.info("Get: {}", s.get());
-
-    }
-
-    @Test
     public void should_move_within_map() {
         TestHelper testHelper = new TestHelper();
         testHelper.skipFirstMsg();
+        testHelper.skipSecondMsg();
 
         MapInfo mapInfo = new MapInfo(10, 7);
         testHelper.messageReceived(mapInfo);
@@ -174,6 +157,7 @@ public class GameTest {
         // Given
         TestHelper testHelper = new TestHelper();
         testHelper.skipFirstMsg();
+        testHelper.skipSecondMsg();
 
         testHelper.messageReceived(new MapInfo(10, 7));
 
