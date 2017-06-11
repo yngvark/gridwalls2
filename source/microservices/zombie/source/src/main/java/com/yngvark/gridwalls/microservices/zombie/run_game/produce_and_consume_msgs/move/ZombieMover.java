@@ -1,10 +1,10 @@
-package com.yngvark.gridwalls.microservices.zombie.run_game.move;
+package com.yngvark.gridwalls.microservices.zombie.run_game.produce_and_consume_msgs.move;
 
-import com.yngvark.gridwalls.microservices.zombie.run_game.get_map_info.MapInfo;
-import com.yngvark.gridwalls.microservices.zombie.run_game.Producer;
-import com.yngvark.gridwalls.microservices.zombie.run_game.ProducerContext;
+import com.yngvark.gridwalls.microservices.zombie.run_game.produce_and_consume_msgs.get_map_info.MapInfo;
+import com.yngvark.gridwalls.microservices.zombie.run_game.produce_and_consume_msgs.Producer;
+import com.yngvark.gridwalls.microservices.zombie.run_game.produce_and_consume_msgs.ProducerContext;
 import com.yngvark.gridwalls.microservices.zombie.run_game.Sleeper;
-import com.yngvark.gridwalls.microservices.zombie.run_game.serialize_events.Serializer;
+import com.yngvark.gridwalls.microservices.zombie.run_game.serialize_msgs.Serializer;
 import org.slf4j.Logger;
 
 import java.util.Random;

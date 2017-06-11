@@ -1,7 +1,7 @@
-package com.yngvark.gridwalls.microservices.zombie.run_game.greet_server;
+package com.yngvark.gridwalls.microservices.zombie.run_game.produce_and_consume_msgs.greet_server;
 
-import com.yngvark.gridwalls.microservices.zombie.run_game.Producer;
-import com.yngvark.gridwalls.microservices.zombie.run_game.ProducerContext;
+import com.yngvark.gridwalls.microservices.zombie.run_game.produce_and_consume_msgs.Producer;
+import com.yngvark.gridwalls.microservices.zombie.run_game.produce_and_consume_msgs.ProducerContext;
 
 public class ServerGreeter implements Producer {
     private final Producer nextProducer;

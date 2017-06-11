@@ -1,4 +1,4 @@
-package com.yngvark.gridwalls.microservices.zombie.run_game.serialize_events;
+package com.yngvark.gridwalls.microservices.zombie.run_game.serialize_msgs;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

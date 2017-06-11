@@ -1,11 +1,12 @@
-package com.yngvark.gridwalls.microservices.zombie.run_game;
+package com.yngvark.gridwalls.microservices.zombie.run_game.produce_and_consume_msgs;
 
 import com.yngvark.communicate_through_named_pipes.output.OutputFileWriter;
 import com.yngvark.gridwalls.microservices.zombie.run_app.NetworkMessageListener;
-import com.yngvark.gridwalls.microservices.zombie.run_game.get_map_info.MapInfo;
-import com.yngvark.gridwalls.microservices.zombie.run_game.move.Move;
-import com.yngvark.gridwalls.microservices.zombie.run_game.serialize_events.JsonSerializer;
-import com.yngvark.gridwalls.microservices.zombie.run_game.serialize_events.Serializer;
+import com.yngvark.gridwalls.microservices.zombie.run_game.GameFactory;
+import com.yngvark.gridwalls.microservices.zombie.run_game.produce_and_consume_msgs.get_map_info.MapInfo;
+import com.yngvark.gridwalls.microservices.zombie.run_game.produce_and_consume_msgs.move.Move;
+import com.yngvark.gridwalls.microservices.zombie.run_game.serialize_msgs.JsonSerializer;
+import com.yngvark.gridwalls.microservices.zombie.run_game.serialize_msgs.Serializer;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;

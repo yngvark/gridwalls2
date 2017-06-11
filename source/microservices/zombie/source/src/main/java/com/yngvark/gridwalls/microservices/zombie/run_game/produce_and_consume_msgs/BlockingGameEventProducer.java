@@ -1,14 +1,15 @@
-package com.yngvark.gridwalls.microservices.zombie.run_game;
+package com.yngvark.gridwalls.microservices.zombie.run_game.produce_and_consume_msgs;
 
 import com.yngvark.communicate_through_named_pipes.output.OutputFileWriter;
 import com.yngvark.gridwalls.microservices.zombie.run_app.GameEventProducer;
+import com.yngvark.gridwalls.microservices.zombie.run_game.produce_and_consume_msgs.ProducerContext;
 import org.slf4j.Logger;
 
 import java.io.IOException;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-class BlockingGameEventProducer implements GameEventProducer {
+public class BlockingGameEventProducer implements GameEventProducer {
     private final Logger logger = getLogger(getClass());
     private final OutputFileWriter outputFileWriter;
     private final ProducerContext producerContext;
