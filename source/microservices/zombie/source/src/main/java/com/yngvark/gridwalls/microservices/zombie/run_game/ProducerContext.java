@@ -1,6 +1,6 @@
-package com.yngvark.gridwalls.microservices.zombie.game;
+package com.yngvark.gridwalls.microservices.zombie.run_game;
 
-class ProducerContext {
+public class ProducerContext {
     private Producer currentProducer;
 
     public ProducerContext(Producer currentProducer) {

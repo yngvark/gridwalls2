@@ -1,10 +1,13 @@
-package com.yngvark.gridwalls.microservices.zombie.game;
+package com.yngvark.gridwalls.microservices.zombie.run_game;
 
 import com.yngvark.communicate_through_named_pipes.output.OutputFileWriter;
-import com.yngvark.gridwalls.microservices.zombie.app.GameEventProducer;
-import com.yngvark.gridwalls.microservices.zombie.app.NetworkMessageListener;
-import com.yngvark.gridwalls.microservices.zombie.game.serialize_events.JsonSerializer;
-import com.yngvark.gridwalls.microservices.zombie.game.serialize_events.Serializer;
+import com.yngvark.gridwalls.microservices.zombie.run_app.GameEventProducer;
+import com.yngvark.gridwalls.microservices.zombie.run_app.NetworkMessageListener;
+import com.yngvark.gridwalls.microservices.zombie.run_game.greet_server.ServerGreeter;
+import com.yngvark.gridwalls.microservices.zombie.run_game.get_map_info.MapInfoReceiver;
+import com.yngvark.gridwalls.microservices.zombie.run_game.move.ZombieMoverFactory;
+import com.yngvark.gridwalls.microservices.zombie.run_game.serialize_events.JsonSerializer;
+import com.yngvark.gridwalls.microservices.zombie.run_game.serialize_events.Serializer;
 
 import java.util.Random;
 
@@ -41,7 +44,7 @@ public class GameFactory {
     }
 
     public NetworkMessageListener createNetworkMessageListener() {
-        return new NetwMsgReceiverContext(mapInfoReceiver);
+        return new NetworkMsgListenerContext(mapInfoReceiver);
     }
 
     public GameEventProducer createEventProducer(OutputFileWriter outputFileWriter) {

@@ -1,16 +1,16 @@
-package com.yngvark.gridwalls.microservices.zombie.game;
+package com.yngvark.gridwalls.microservices.zombie.run_game;
 
-import com.yngvark.gridwalls.microservices.zombie.app.NetworkMessageListener;
+import com.yngvark.gridwalls.microservices.zombie.run_app.NetworkMessageListener;
 import org.slf4j.Logger;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-class NetwMsgReceiverContext implements NetworkMessageListener {
+public class NetworkMsgListenerContext implements NetworkMessageListener {
     private final Logger logger = getLogger(getClass());
 
-    private NetGameMsgListener currentListener;
+    private NetworkMsgListener currentListener;
 
-    public NetwMsgReceiverContext(NetGameMsgListener currentListener) {
+    public NetworkMsgListenerContext(NetworkMsgListener currentListener) {
         this.currentListener = currentListener;
     }
 
@@ -20,7 +20,7 @@ class NetwMsgReceiverContext implements NetworkMessageListener {
         currentListener.messageReceived(this, msg);
     }
 
-    public void setCurrentListener(NetGameMsgListener currentListener) {
+    public void setCurrentListener(NetworkMsgListener currentListener) {
         this.currentListener = currentListener;
     }
 }

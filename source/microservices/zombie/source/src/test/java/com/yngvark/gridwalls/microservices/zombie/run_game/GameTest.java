@@ -1,27 +1,23 @@
-package com.yngvark.gridwalls.microservices.zombie.game;
+package com.yngvark.gridwalls.microservices.zombie.run_game;
 
 import com.yngvark.communicate_through_named_pipes.output.OutputFileWriter;
-import com.yngvark.gridwalls.microservices.zombie.app.NetworkMessageListener;
-import com.yngvark.gridwalls.microservices.zombie.game.move.Move;
-import com.yngvark.gridwalls.microservices.zombie.game.serialize_events.JsonSerializer;
-import com.yngvark.gridwalls.microservices.zombie.game.serialize_events.Serializer;
+import com.yngvark.gridwalls.microservices.zombie.run_app.NetworkMessageListener;
+import com.yngvark.gridwalls.microservices.zombie.run_game.get_map_info.MapInfo;
+import com.yngvark.gridwalls.microservices.zombie.run_game.move.Move;
+import com.yngvark.gridwalls.microservices.zombie.run_game.serialize_events.JsonSerializer;
+import com.yngvark.gridwalls.microservices.zombie.run_game.serialize_events.Serializer;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Random;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingDeque;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import java.util.function.Supplier;
 
 import static java.time.Duration.ofMillis;
 import static org.junit.jupiter.api.Assertions.*;

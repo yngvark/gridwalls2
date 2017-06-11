@@ -4,9 +4,9 @@ import com.yngvark.communicate_through_named_pipes.input.InputFileOpener;
 import com.yngvark.communicate_through_named_pipes.input.InputFileReader;
 import com.yngvark.communicate_through_named_pipes.output.OutputFileOpener;
 import com.yngvark.communicate_through_named_pipes.output.OutputFileWriter;
-import com.yngvark.gridwalls.microservices.zombie.game.MapInfo;
-import com.yngvark.gridwalls.microservices.zombie.game.serialize_events.JsonSerializer;
-import com.yngvark.gridwalls.microservices.zombie.game.serialize_events.Serializer;
+import com.yngvark.gridwalls.microservices.zombie.run_game.get_map_info.MapInfo;
+import com.yngvark.gridwalls.microservices.zombie.run_game.serialize_events.JsonSerializer;
+import com.yngvark.gridwalls.microservices.zombie.run_game.serialize_events.Serializer;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 
@@ -17,7 +17,6 @@ import java.nio.file.Paths;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 
 import static org.slf4j.LoggerFactory.getLogger;
 

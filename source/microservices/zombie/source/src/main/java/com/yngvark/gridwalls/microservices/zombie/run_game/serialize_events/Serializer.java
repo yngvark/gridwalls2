@@ -1,4 +1,4 @@
-package com.yngvark.gridwalls.microservices.zombie.game.serialize_events;
+package com.yngvark.gridwalls.microservices.zombie.run_game.serialize_events;
 
 public interface Serializer {
     <T> String serialize(Object event);

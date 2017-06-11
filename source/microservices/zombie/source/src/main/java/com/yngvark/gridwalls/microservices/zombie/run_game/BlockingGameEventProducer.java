@@ -1,11 +1,10 @@
-package com.yngvark.gridwalls.microservices.zombie.game;
+package com.yngvark.gridwalls.microservices.zombie.run_game;
 
 import com.yngvark.communicate_through_named_pipes.output.OutputFileWriter;
-import com.yngvark.gridwalls.microservices.zombie.app.GameEventProducer;
+import com.yngvark.gridwalls.microservices.zombie.run_app.GameEventProducer;
 import org.slf4j.Logger;
 
 import java.io.IOException;
-import java.util.concurrent.BlockingQueue;
 
 import static org.slf4j.LoggerFactory.getLogger;
 

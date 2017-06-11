@@ -1,4 +1,4 @@
-package com.yngvark.gridwalls.microservices.zombie.game;
+package com.yngvark.gridwalls.microservices.zombie.run_game;
 
 class TestSleeper implements Sleeper {
     private long millis;

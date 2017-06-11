@@ -1,10 +1,12 @@
-package com.yngvark.gridwalls.microservices.zombie.game;
+package com.yngvark.gridwalls.microservices.zombie.run_game.move;
 
-import com.yngvark.gridwalls.microservices.zombie.game.serialize_events.Serializer;
+import com.yngvark.gridwalls.microservices.zombie.run_game.get_map_info.MapInfo;
+import com.yngvark.gridwalls.microservices.zombie.run_game.Sleeper;
+import com.yngvark.gridwalls.microservices.zombie.run_game.serialize_events.Serializer;
 
 import java.util.Random;
 
-class ZombieMoverFactory {
+public class ZombieMoverFactory {
     private final Serializer serializer;
     private final Sleeper sleeper;
     private final Random random;

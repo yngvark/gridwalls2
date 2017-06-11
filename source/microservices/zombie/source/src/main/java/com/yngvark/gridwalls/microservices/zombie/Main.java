@@ -5,7 +5,7 @@ import com.yngvark.communicate_through_named_pipes.input.InputFileOpener;
 import com.yngvark.communicate_through_named_pipes.input.InputFileReader;
 import com.yngvark.communicate_through_named_pipes.output.OutputFileOpener;
 import com.yngvark.communicate_through_named_pipes.output.OutputFileWriter;
-import com.yngvark.gridwalls.microservices.zombie.app.App;
+import com.yngvark.gridwalls.microservices.zombie.run_app.App;
 import com.yngvark.gridwalls.microservices.zombie.exit_os_process.Shutdownhook;
 import com.yngvark.os_process_exiter.ExecutorServiceExiter;
 

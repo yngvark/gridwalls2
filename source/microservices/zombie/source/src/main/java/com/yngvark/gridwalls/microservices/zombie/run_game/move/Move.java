@@ -1,4 +1,4 @@
-package com.yngvark.gridwalls.microservices.zombie.game.move;
+package com.yngvark.gridwalls.microservices.zombie.run_game.move;
 
 public class Move {
     public final int toX;

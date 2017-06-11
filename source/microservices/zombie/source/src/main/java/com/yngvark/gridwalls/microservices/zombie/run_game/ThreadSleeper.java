@@ -1,4 +1,4 @@
-package com.yngvark.gridwalls.microservices.zombie.game;
+package com.yngvark.gridwalls.microservices.zombie.run_game;
 
 class ThreadSleeper implements Sleeper {
     @Override

@@ -1,4 +1,4 @@
-package com.yngvark.gridwalls.microservices.zombie.app;
+package com.yngvark.gridwalls.microservices.zombie.run_app;
 
 import com.yngvark.communicate_through_named_pipes.input.MessageListener;
 import org.slf4j.Logger;

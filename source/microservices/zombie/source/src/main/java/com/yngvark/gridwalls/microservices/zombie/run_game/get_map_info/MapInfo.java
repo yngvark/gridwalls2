@@ -1,4 +1,4 @@
-package com.yngvark.gridwalls.microservices.zombie.game;
+package com.yngvark.gridwalls.microservices.zombie.run_game.get_map_info;
 
 public class MapInfo {
     public final int width;

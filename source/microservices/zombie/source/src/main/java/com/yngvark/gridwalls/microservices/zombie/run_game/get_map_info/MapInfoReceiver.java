@@ -1,11 +1,16 @@
-package com.yngvark.gridwalls.microservices.zombie.game;
+package com.yngvark.gridwalls.microservices.zombie.run_game.get_map_info;
 
-import com.yngvark.gridwalls.microservices.zombie.game.serialize_events.Serializer;
+import com.yngvark.gridwalls.microservices.zombie.run_game.NetworkMsgListener;
+import com.yngvark.gridwalls.microservices.zombie.run_game.NetworkMsgListenerContext;
+import com.yngvark.gridwalls.microservices.zombie.run_game.Producer;
+import com.yngvark.gridwalls.microservices.zombie.run_game.ProducerContext;
+import com.yngvark.gridwalls.microservices.zombie.run_game.move.ZombieMoverFactory;
+import com.yngvark.gridwalls.microservices.zombie.run_game.serialize_events.Serializer;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-class MapInfoReceiver implements Producer, NetGameMsgListener {
+public class MapInfoReceiver implements Producer, NetworkMsgListener {
     private final Serializer serializer;
     private final ZombieMoverFactory zombieMoverFactory;
 
@@ -36,9 +41,9 @@ class MapInfoReceiver implements Producer, NetGameMsgListener {
         }
     }
 
-    public void messageReceived(NetwMsgReceiverContext netwMsgReceiverContext, String msg) {
+    public void messageReceived(NetworkMsgListenerContext networkMsgListenerContext, String msg) {
         MapInfo mapInfo = serializer.deserialize(msg, MapInfo.class);
-        netwMsgReceiverContext.setCurrentListener(new NoOpReceiver());
+        networkMsgListenerContext.setCurrentListener(new NoOpReceiver());
 
         producerContext.setCurrentProducer(zombieMoverFactory.create(mapInfo));
         produce(producerContext.nextMsg());
