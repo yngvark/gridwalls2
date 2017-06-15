@@ -15,9 +15,11 @@ services:
     depends_on:
       - init
       - rabbitmq
-    build: netcom_forwarder
+    image: netcom_forwarder
     volumes:
       - named_pipes:/app_data
+    #external_links:
+    #  - rabbitmq:rabbithost
     command:
       - /app_data/out
       - /app_data/in
@@ -28,10 +30,10 @@ services:
       - ./init:/app_init
       - named_pipes:/app_data
     command:
-      #- bash
       - /bin/bash
+      - -c
       - /app_init/init_named_pipes.sh
-
+      
   rabbitmq:
     image: rabbitmq:3-management
     hostname: rabbithost
@@ -43,12 +45,10 @@ services:
     #    aliases:
     #      - rabbithost
 
-  zombie:
+  app:
     depends_on:
       - init
-    build: zombie
-    #external_links:
-    #  - rabbitmq:rabbithost
+    build: .
     volumes:
       - named_pipes:/app_data
     command:

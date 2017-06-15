@@ -49,11 +49,11 @@ public class GameTest {
             return serializer.deserialize(parts[1], clazz);
         }
 
-        public void skipFirstMsg() {
+        public void readAndAssertFirstMsg() {
             assertEquals("/myNameIs zombie", gameEventProducer.nextMsg());
         }
 
-        public void skipSecondMsg() {
+        public void readAndAssertSecondMsg() {
             assertEquals("/subscribeTo MapInfo", gameEventProducer.nextMsg());
         }
 
@@ -76,7 +76,7 @@ public class GameTest {
     @Test
     public void should_subscribe_to_mapinfo_after_greeting_server() {
         TestHelper testHelper = new TestHelper();
-        testHelper.skipFirstMsg();
+        testHelper.readAndAssertFirstMsg();
 
         // When
         String msg = testHelper.nextMsg();
@@ -90,8 +90,8 @@ public class GameTest {
             throws TimeoutException, ExecutionException, InterruptedException {
         // Given
         TestHelper testHelper = new TestHelper();
-        testHelper.skipFirstMsg();
-        testHelper.skipSecondMsg();
+        testHelper.readAndAssertFirstMsg();
+        testHelper.readAndAssertSecondMsg();
 
         ExecutorService executorService = Executors.newCachedThreadPool();
         Future nextMsgFuture = executorService.submit(() -> testHelper.gameEventProducer.nextMsg());
@@ -101,16 +101,16 @@ public class GameTest {
         testHelper.messageReceived(new MapInfo(3, 5));
 
         // Then
-        String nextMsg2 = testHelper.nextMsg();
+        String nextMsg = testHelper.nextMsg();
         // Check validity of move by deserializing the string
-        testHelper.deserializePublish(nextMsg2, Move.class);
+        testHelper.deserializePublish(nextMsg, Move.class);
     }
 
     @Test
     public void should_move_within_map() {
         TestHelper testHelper = new TestHelper();
-        testHelper.skipFirstMsg();
-        testHelper.skipSecondMsg();
+        testHelper.readAndAssertFirstMsg();
+        testHelper.readAndAssertSecondMsg();
 
         MapInfo mapInfo = new MapInfo(10, 7);
         testHelper.messageReceived(mapInfo);
@@ -153,14 +153,16 @@ public class GameTest {
     public void should_sleep_between_100_and_1000_ticks_between_moves() {
         // Given
         TestHelper testHelper = new TestHelper();
-        testHelper.skipFirstMsg();
-        testHelper.skipSecondMsg();
+        testHelper.readAndAssertFirstMsg();
+        testHelper.readAndAssertSecondMsg();
 
         testHelper.messageReceived(new MapInfo(10, 7));
 
         // When
         for (int i = 0; i < 1000; i++) {
             testHelper.gameEventProducer.nextMsg();
+
+            // Then
             assertTrue(
                     testHelper.testSleeper.lastSleepDurationWasBetweenInclusive(100, 1000),
                     testHelper.testSleeper.toString());

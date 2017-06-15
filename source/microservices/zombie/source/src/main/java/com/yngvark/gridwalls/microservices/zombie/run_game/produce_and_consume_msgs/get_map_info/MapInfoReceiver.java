@@ -21,10 +21,10 @@ public class MapInfoReceiver implements Producer, NetworkMsgListener {
             ZombieMoverFactory zombieMoverFactory) {
         this.serializer = serializer;
         this.zombieMoverFactory = zombieMoverFactory;
-        produce("/subscribeTo MapInfo");
+        enqueueMessage("/subscribeTo MapInfo");
     }
 
-    private void produce(String msg) {
+    private void enqueueMessage(String msg) {
         try {
             messages.put(msg);
         } catch (InterruptedException e) {
@@ -46,7 +46,7 @@ public class MapInfoReceiver implements Producer, NetworkMsgListener {
         networkMsgListenerContext.setCurrentListener(new NoOpReceiver());
 
         producerContext.setCurrentProducer(zombieMoverFactory.create(mapInfo));
-        produce(producerContext.nextMsg());
+        enqueueMessage(producerContext.nextMsg());
     }
 
 }

@@ -1,78 +1,22 @@
 TODO
 ---------------------------------------------------------------
 
-/mnt/hd2/settings/gradle-3.5/src/core/
-/mnt/hd2/settings/gradle-3.5/src/model-core/
+[ ] Lag MS som lytter på topic map_info_producer
+	Zombie /subscribeTo Zombie_rpc_fa3409m
+	Zombie /publishTo map_info_producer giveMeMapInfoOnTopic Zombie_rpc_fa3409m
+	MS /publishTo Zombie_rpc_fa3409m "mapInfo: ..."
+	Zombie onReceive Zombie_rpc_fa3409m msg:
 
-[ ] Lag bedre abstraksjon for sending til nettverk via mkfifo.
-	[x] Konsept
-		[x] Hvordan skal alle MS-ene og forwarderen kjøres?
-			- En forwarder per MS
-				zombie/run.sh (i docker):
-					mkfifo container/from_ms
-					mkfifo container/to_ms
-					./container/.../netcom/netcom container/to_ms container/from_ms
-					./container/.../bin/zombie container/from_ms container/to_ms
+[ ] Zombie
+	Burde kanskje ikke ha det State-patternet. Burde bare kanskje hatt
+[ ] NetcomForwarder
+	Bør ikke være avhengig /myname for å publishe. Bare bruk /publishTo Zomibie myZombieMove.
 
-		[x] Få mkfifo til å funke
-			PLAN
-				mkfifo out
-				mkfifo in
-
-				cd zombie
-				../netcom_forwarder/connect out in
-				zombie out in
-
-		[x] Hvordan skal graceful shutdown funke?
-			Implementer en quit-beskjed
-			- Netcom shutdownhook: Sender spesialmsg "/quit"
-			- Zombies shutdownhook: Sender spesialmsg "/quit"
-			Ved mottak "/quit", close streamen.
-			Nei, innebygd fikser det.
-
-			Sjekk at ting funker
-
-			NÅ
-				Putte til kø: cat - > mkfifo_filnavn
-				Lese kø: cat mkfifo_filnavn
-		[ ] Fiks dockeroppsett for hvert repo
-			[x] Lag build.sh som bygger med docker
-				[-] Får ikke prosjektet til å kjøre common installDist, fordi den common installDist tingen jeg lagde krever en mainClassName satt dynamisk (til prosjektets mainClassName). Jeg må derfor lage en custom plugin som erstatter den common installDist tasken ()
-
-					Target: At jeg kan skrive
-					/gradlew. build copyExecutableOutsideProjectFolder
-					og
-					/gradlew. build uploadArchives
-					og potensielt flere
-					i alle prosjekter
-					hvor implementasjonen til copyExecutableOutsideProjectFolder hentes fra en sentral JAR
-
-					HOWTO: https://docs.gradle.org/3.5/userguide/custom_tasks.html#sec:custom_tasks_standalone_project
-					TIP: Sjekk ut https://docs.gradle.org/3.5/userguide/more_about_tasks.html#sec:
-
-					[-] Lag tool for search&replace i microservices build.gradle filer?
-					[x] Gjør det samme jeg har gjort i consumer, i os_process_exiter osv.
-
-			[x] Lag run.sh
-				linking
-				network
-				> docker compose
-		[x] Få Zombie og NetcomForwarder til å vente dersom in og out ikke eksisterer. Resilience.
- 		[ ] Få NetcomForwarder til å snakke med RabbitMQ
- 			[x] App.java: inputFileReader.consume(); -> her må vi ha en handler som blir kalt når det kommer en msg fra microservice
- 				så vi kan sende den til nettverk.
- 					--------_> rename properties til uten 2tall
- 					kjør zombie og netcomforwarder og se at incoming message blir håndtert av de nye msglisternerene
- 			[x] fix gracefully stop i docker.
- 			[x] Hvordan testestrategi skal jeg egentlig ha her...
- 			[X] og motsatt vei antar jeg.. Meldinger fra microservice må forwardes til nettverket.
-
-		[ ] Vurder å lag en enklere implementasjon av Zombie som ikke har tråder.
-			while (msg = in.readLine =! null)
-				//doHardCoreLogic
-				if (msg.contains "ManMoved")
-					moveTowards(toManMovedEvent(msg).coords)
-		[ ] Lag gamelogikk!
+Hm.. Alt sammen mangler patternet
+	subscribeTo("SomeTopic", (msg) -> { 
+		// BEHANDLE meldinger her.
+	});
+	Det er fordi jeg leser fra fil (named pipe), ingen avansert måte å gjøre ting her. Om jeg vil ha mer, får jeg lage et lib eller gjøre det i MS-en.
 
 [ ] Fiks byggesystem så full bygging og kjøring av appen min blir smooth sailing
 	[ ] Fiks bygging av microservices

@@ -1,7 +1,6 @@
 version: "3"
 
 services:
-
   delpipes:
     image: alpine
     volumes:
@@ -19,8 +18,6 @@ services:
     image: netcom_forwarder
     volumes:
       - named_pipes:/app_data
-    #external_links:
-    #  - rabbitmq:rabbithost
     command:
       - /app_data/out
       - /app_data/in
@@ -41,14 +38,21 @@ services:
     ports:
       - "8080:15672"
       - 15674:15674
-    #networks:
-    #  rabbit:
-    #    aliases:
-    #      - rabbithost
+
+  map_info_producer:
+    depends_on:
+      - netcom_forwarder
+    image: map_info_producer
+    volumes:
+      - named_pipes:/app_data
+    command:
+      - /app_data/out
+      - /app_data/in
 
   app:
     depends_on:
-      - init
+      - netcom_forwarder
+      - map_info_producer
     build: .
     volumes:
       - named_pipes:/app_data
@@ -58,8 +62,3 @@ services:
 
 volumes:
   named_pipes:
-
-#networks:
-#  default:
-#    external:
-#      name: containers_rabbit
