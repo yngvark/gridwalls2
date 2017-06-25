@@ -20,19 +20,19 @@ class SubscribeToListener implements FileMessageListener {
     private final BlockingQueue blockingQueue = new LinkedBlockingQueue();
     private List<RabbitConsumer> consumers = new ArrayList<>();
 
-    private final ConsumerNameListener consumerNameListener;
+
+    private final String consumerName;
     private final RabbitMessageListenerFactory rabbitMessageListenerFactory;
     private final OutputFileWriter outputFileWriter;
     private final RabbitSubscriber rabbitSubscriber;
 
     private boolean isStopped = false;
 
-    public SubscribeToListener(
-            ConsumerNameListener consumerNameListener,
+    public SubscribeToListener(String consumerName,
             RabbitMessageListenerFactory rabbitMessageListenerFactory,
             OutputFileWriter outputFileWriter,
             RabbitSubscriber rabbitSubscriber) {
-        this.consumerNameListener = consumerNameListener;
+        this.consumerName = consumerName;
         this.rabbitMessageListenerFactory = rabbitMessageListenerFactory;
         this.outputFileWriter = outputFileWriter;
         this.rabbitSubscriber = rabbitSubscriber;
@@ -47,7 +47,6 @@ class SubscribeToListener implements FileMessageListener {
 
     @Override
     public void messageReceived(String exchange) {
-        String consumerName = consumerNameListener.getConsumerName();
         logger.info("Subscribing consumer '{}' to exchange '{}'", consumerName, exchange);
         RabbitMessageListener rabbitMessageListener = rabbitMessageListenerFactory.create(outputFileWriter, exchange);
         RabbitConsumer rabbitConsumer = rabbitSubscriber.subscribe(consumerName, exchange, rabbitMessageListener);

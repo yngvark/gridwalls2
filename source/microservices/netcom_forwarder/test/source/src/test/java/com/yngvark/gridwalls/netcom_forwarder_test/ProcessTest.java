@@ -38,7 +38,7 @@ public class ProcessTest {
 
     public App startApp() throws Exception {
         logger.info(Paths.get(".").toAbsolutePath().toString());
-        String host = "172.20.0.2";
+        String host = "172.19.0.2";
         RabbitBrokerConnecter rabbitBrokerConnecter = new RabbitBrokerConnecter(host);
         RabbitConnection rabbitConnection = rabbitBrokerConnecter.connect();
 
@@ -112,28 +112,22 @@ public class ProcessTest {
     }
 
     @Test
-    public void published_msgs_should_be_sent_to_network() throws Exception {
+    public void published_msgs_should_be_sent_to_network_on_correct_topic() throws Exception {
         // Given
         App app = startApp();
-        app.outputFileWriter.write("/myNameIs netcomForwarderTest");
 
-        int messagesToSend = 3;
-        RabbitSubscriber rabbitSubscriber = new RabbitSubscriber(app.rabbitConnection);
-
-        ExecutorService executorService = Executors.newCachedThreadPool();
-        Future<List<String>> receivePublishedMessagesFuture = executorService.submit(() ->
-            subscribeAndReceiveMessages(messagesToSend, rabbitSubscriber)
-        );
-        waitForSubscriptionQueueToAppear(app.host + ":15672");
+        int numberOfMsgsToSend = 3;
+        Future<List<String>> readMessagesFuture = readMessages(
+                app.host, app.rabbitConnection, "MyMicroService", numberOfMsgsToSend);
 
         // When
-        for (int i = 0; i < messagesToSend; i++) {
-            app.outputFileWriter.write("/publish Hi this is networkforwarderTest: i=" + i);
+        for (int i = 0; i < numberOfMsgsToSend; i++) {
+            app.outputFileWriter.write("/publishTo MyMicroService Hi this is networkforwarderTest: i=" + i);
         }
 
         // Record result
         logger.info("Waiting for our subscriber to receive published messages.");
-        List<String> recordedNetworMessages = receivePublishedMessagesFuture.get(3, TimeUnit.SECONDS);
+        List<String> networMessagesRead = readMessagesFuture.get(3, TimeUnit.SECONDS);
 
         // Cleanup
         logger.info("Closing output writer, which should make app stop by itself.");
@@ -141,18 +135,30 @@ public class ProcessTest {
         app.stopAndFreeResources();
 
         // Then
-        assertEquals(3, recordedNetworMessages.size());
-        assertEquals("Hi this is networkforwarderTest: i=0", recordedNetworMessages.get(0));
-        assertEquals("Hi this is networkforwarderTest: i=1", recordedNetworMessages.get(1));
-        assertEquals("Hi this is networkforwarderTest: i=2", recordedNetworMessages.get(2));
+        assertEquals(3, networMessagesRead.size());
+        assertEquals("Hi this is networkforwarderTest: i=0", networMessagesRead.get(0));
+        assertEquals("Hi this is networkforwarderTest: i=1", networMessagesRead.get(1));
+        assertEquals("Hi this is networkforwarderTest: i=2", networMessagesRead.get(2));
     }
 
-    private List<String> subscribeAndReceiveMessages(int messageCountToExpect, RabbitSubscriber rabbitSubscriber) {
+    private Future<List<String>> readMessages(
+            String rabbitHost, RabbitConnection rabbitConnection, String topic, int messageCountToExpect) {
+        RabbitSubscriber rabbitSubscriber = new RabbitSubscriber(rabbitConnection);
+        ExecutorService executorService = Executors.newCachedThreadPool();
+        Future<List<String>> receivePublishedMessagesFuture = executorService.submit(() ->
+            subscribeAndReceiveMessages(topic, messageCountToExpect, rabbitSubscriber)
+        );
+        waitForSubscriptionQueueToAppear(rabbitHost + ":15672");
+        return receivePublishedMessagesFuture;
+    }
+
+    private List<String> subscribeAndReceiveMessages(
+            String topic, int messageCountToExpect, RabbitSubscriber rabbitSubscriber) {
         List<String> recordedNetworMessages = new ArrayList<>();
         Lock lock = new Lock();
         Counter counter = new Counter();
 
-        rabbitSubscriber.subscribe("networkForwarderTestReader", "netcomForwarderTest", (msg) -> {
+        rabbitSubscriber.subscribe("networkForwarderTestReader", topic, (msg) -> {
             logger.info("<<< Networkmsg: " + msg);
             recordedNetworMessages.add(msg);
             counter.increase();

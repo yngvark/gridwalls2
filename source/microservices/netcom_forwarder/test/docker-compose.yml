@@ -17,3 +17,7 @@ services:
 #  default:
 #    external:
 #      name: containers_rabbit
+
+# TODO: Kjør docker run gradle test -p test/source
+# Så jeg får kjørt testkoden.
+# TODO: Hvordan gi IP til testkoden?

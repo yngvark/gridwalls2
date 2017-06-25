@@ -13,6 +13,7 @@ import com.yngvark.gridwalls.rabbitmq.RabbitSubscriber;
 import org.slf4j.Logger;
 
 import java.io.IOException;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
@@ -85,11 +86,8 @@ public class App {
         inputFileReader = inputFileOpener.openStream(retrySleeper);
         inputFileConsumer = new InputFileConsumer(inputFileReader);
 
-        ConsumerNameListener consumerNameListener = new ConsumerNameListener();
-        inputFileConsumer.addMessageListener(consumerNameListener, "/myNameIs");
-
         subscribeToListener = new SubscribeToListener(
-                consumerNameListener,
+                UUID.randomUUID().toString(),
                 rabbitMessageListenerFactory,
                 outputFileWriter,
                 rabbitSubscriber
@@ -97,8 +95,8 @@ public class App {
 
         inputFileConsumer.addMessageListener(subscribeToListener, "/subscribeTo");
         inputFileConsumer.addMessageListener(
-                new PublishListener(rabbitPublisher, consumerNameListener),
-                "/publish"
+                new PublishListener(rabbitPublisher),
+                "/publishTo"
         );
 
         Future consumeNetworkFuture = startConsumeMessagesFromNetwork(subscribeToListener, inputFileReader);
