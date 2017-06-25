@@ -14,8 +14,7 @@ services:
   netcom_forwarder:
     depends_on:
       - init
-    networks:
-      - netcom
+      - rabbitmq
     image: netcom_forwarder
     volumes:
       - named_pipes:/app_data
@@ -33,6 +32,13 @@ services:
       - -c
       - /app_init/init_named_pipes.sh
       
+  rabbitmq:
+    image: rabbitmq:3-management
+    hostname: rabbitmq
+    ports:
+      - "8080:15672"
+      - 15674:15674
+      
   app:
     depends_on:
       - netcom_forwarder
@@ -45,7 +51,3 @@ services:
 
 volumes:
   named_pipes:
-
-networks:
-  netcom:
-    external: true

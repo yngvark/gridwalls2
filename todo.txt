@@ -1,13 +1,15 @@
 TODO
 ---------------------------------------------------------------
 
-[ ] NetcomForwarder
+[X] NetcomForwarder
 	Bør ikke være avhengig /myname for å publishe. Bare bruk /publishTo Zomibie myZombieMove.
 [ ] Lag MS som lytter på topic map_info_producer
 	Zombie /subscribeTo Zombie_rpc_fa3409m
 	Zombie /publishTo map_info_producer giveMeMapInfoOnTopic Zombie_rpc_fa3409m
 	MS /publishTo Zombie_rpc_fa3409m "mapInfo: ..."
 	Zombie onReceive Zombie_rpc_fa3409m msg:
+[ ] Må fikse så netcom_forwarder -> test kan automatiseres. Testen trenger rabbitmq-s ip, som er variabel.
+
 
 [ ] Zombie
 	Burde kanskje ikke ha det State-patternet. Burde bare kanskje hatt
