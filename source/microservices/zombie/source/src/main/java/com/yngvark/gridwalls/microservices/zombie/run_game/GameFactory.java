@@ -8,7 +8,6 @@ import com.yngvark.gridwalls.microservices.zombie.run_game.produce_and_consume_m
 import com.yngvark.gridwalls.microservices.zombie.run_game.produce_and_consume_msgs.NetworkMsgListenerContext;
 import com.yngvark.gridwalls.microservices.zombie.run_game.produce_and_consume_msgs.Producer;
 import com.yngvark.gridwalls.microservices.zombie.run_game.produce_and_consume_msgs.ProducerContext;
-import com.yngvark.gridwalls.microservices.zombie.run_game.produce_and_consume_msgs.greet_server.ServerGreeter;
 import com.yngvark.gridwalls.microservices.zombie.run_game.produce_and_consume_msgs.get_map_info.MapInfoReceiver;
 import com.yngvark.gridwalls.microservices.zombie.run_game.produce_and_consume_msgs.move.ZombieMoverFactory;
 import com.yngvark.gridwalls.microservices.zombie.run_game.serialize_msgs.JsonSerializer;
@@ -36,13 +35,11 @@ public class GameFactory {
                 )
         );
 
-        ServerGreeter serverGreeter = new ServerGreeter(mapInfoReceiver);
-
-        return new GameFactory(mapInfoReceiver, serverGreeter);
+        return new GameFactory(mapInfoReceiver, mapInfoReceiver);
     }
 
 
-    public GameFactory(
+    private GameFactory(
             NetworkMsgListener networkMsgListener,
             Producer producer) {
         this.networkMsgListener = networkMsgListener;

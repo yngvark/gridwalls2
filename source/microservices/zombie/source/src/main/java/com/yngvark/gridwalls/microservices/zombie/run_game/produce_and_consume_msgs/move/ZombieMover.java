@@ -30,7 +30,7 @@ class ZombieMover implements Producer {
     public String nextMsg(ProducerContext producerContext) {
         sleeper.sleep(100 + random.nextInt(901));
         Move move = getNextMove();
-        return "/publish " + serializer.serialize(move, Move.class);
+        return "/publishTo Zombie " + serializer.serialize(move, Move.class);
     }
 
     private Move getNextMove() {

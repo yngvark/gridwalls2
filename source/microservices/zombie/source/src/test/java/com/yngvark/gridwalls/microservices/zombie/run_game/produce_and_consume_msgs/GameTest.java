@@ -11,7 +11,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 
-import java.io.IOException;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -43,17 +42,14 @@ public class GameTest {
         }
 
         public Move deserializePublish(String msg, Class<Move> clazz) {
-            String[] parts = StringUtils.split(msg, " ", 2);
-            assertEquals("/publish", parts[0]);
+            assertTrue(msg.startsWith("/publishTo Zombie "));
 
-            return serializer.deserialize(parts[1], clazz);
+            String[] parts = StringUtils.split(msg, " ", 3);
+            return serializer.deserialize(parts[2], clazz);
         }
 
-        public void readAndAssertFirstMsg() {
-            assertEquals("/myNameIs zombie", gameEventProducer.nextMsg());
-        }
 
-        public void readAndAssertSecondMsg() {
+        public void readAndAssertSubscription() {
             assertEquals("/subscribeTo MapInfo", gameEventProducer.nextMsg());
         }
 
@@ -63,20 +59,8 @@ public class GameTest {
     }
 
     @Test
-    public void should_start_by_greeting_serrver() throws IOException {
+    public void first_output_should_Besubscribe_to_mapinfo() {
         TestHelper testHelper = new TestHelper();
-
-        // When
-        String msg = testHelper.nextMsg();
-
-        // Then
-        assertEquals("/myNameIs zombie", msg);
-    }
-
-    @Test
-    public void should_subscribe_to_mapinfo_after_greeting_server() {
-        TestHelper testHelper = new TestHelper();
-        testHelper.readAndAssertFirstMsg();
 
         // When
         String msg = testHelper.nextMsg();
@@ -90,8 +74,7 @@ public class GameTest {
             throws TimeoutException, ExecutionException, InterruptedException {
         // Given
         TestHelper testHelper = new TestHelper();
-        testHelper.readAndAssertFirstMsg();
-        testHelper.readAndAssertSecondMsg();
+        testHelper.readAndAssertSubscription();
 
         ExecutorService executorService = Executors.newCachedThreadPool();
         Future nextMsgFuture = executorService.submit(() -> testHelper.gameEventProducer.nextMsg());
@@ -109,8 +92,7 @@ public class GameTest {
     @Test
     public void should_move_within_map() {
         TestHelper testHelper = new TestHelper();
-        testHelper.readAndAssertFirstMsg();
-        testHelper.readAndAssertSecondMsg();
+        testHelper.readAndAssertSubscription();
 
         MapInfo mapInfo = new MapInfo(10, 7);
         testHelper.messageReceived(mapInfo);
@@ -153,8 +135,7 @@ public class GameTest {
     public void should_sleep_between_100_and_1000_ticks_between_moves() {
         // Given
         TestHelper testHelper = new TestHelper();
-        testHelper.readAndAssertFirstMsg();
-        testHelper.readAndAssertSecondMsg();
+        testHelper.readAndAssertSubscription();
 
         testHelper.messageReceived(new MapInfo(10, 7));
 

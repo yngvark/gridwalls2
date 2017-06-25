@@ -2,6 +2,7 @@ package com.yngvark.gridwalls.microservices.zombie.run_game.serialize_msgs;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 
 public class JsonSerializer implements Serializer {
     private final Gson gson = new GsonBuilder().create();
@@ -18,6 +19,10 @@ public class JsonSerializer implements Serializer {
 
     @Override
     public <T> T deserialize(String msg, Class<T> clazz) {
-        return gson.fromJson(msg, clazz);
+        try {
+            return gson.fromJson(msg, clazz);
+        } catch (JsonSyntaxException e) {
+            throw new RuntimeException("Could not deserialize: " + msg, e);
+        }
     }
 }
