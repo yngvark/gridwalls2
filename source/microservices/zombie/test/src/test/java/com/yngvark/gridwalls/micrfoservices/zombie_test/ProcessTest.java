@@ -28,8 +28,8 @@ public class ProcessTest {
     public final Logger logger = getLogger(ProcessTest.class);
 
     public App startApp() throws Exception {
-        String to = "build/to_microservice";
-        String from = "build/from_microservice";
+        String to = "build/fifo_to_microservice";
+        String from = "build/fifo_from_microservice";
 
         Path toPath = Paths.get(from);
         if (Files.exists(toPath)) {

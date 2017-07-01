@@ -37,6 +37,7 @@ dependencies {
 
 }
 
+// --- Create application executable -----------------------------------------------------------
 apply plugin: 'application'
 mainClassName = 'com.yngvark.gridwalls.microservices.zombie.Main'
 applicationName = 'run'
@@ -45,3 +46,10 @@ distributions {
         baseName = 'app'
     }
 }
+
+task dist(type: Copy) {
+    dependsOn "installDist"
+    from "build/install/app"
+    into '../build/install/app'
+}
+// --------------------------------------------------------------------------------------------
