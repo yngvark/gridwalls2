@@ -13,7 +13,7 @@ import static org.slf4j.LoggerFactory.getLogger;
  * Taken from http://stackoverflow.com/questions/2950338/how-can-i-kill-a-linux-process-in-java-with-sigkill-process-destroy-does-sigte/2951193#2951193
  * Thanks to Martijn Courteaux, http://stackoverflow.com/users/155137/martijn-courteaux
  */
-public class ProcessKiller {
+class ProcessKiller {
     private static final Logger logger = getLogger(ProcessKiller.class);
 
     public static void killUnixProcess(Process process) throws NoSuchFieldException, IllegalAccessException, IOException, InterruptedException {
