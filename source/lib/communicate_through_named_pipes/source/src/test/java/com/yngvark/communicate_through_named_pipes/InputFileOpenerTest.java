@@ -1,10 +1,18 @@
 package com.yngvark.communicate_through_named_pipes;
 
+import com.yngvark.communicate_through_named_pipes.input.InputFileReader;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
+import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -18,7 +26,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.slf4j.LoggerFactory.getLogger;
 
 class InputFileOpenerTest {
@@ -30,7 +38,7 @@ class InputFileOpenerTest {
         Path buildDir = Paths.get("build");
         String file = "build/toConsume";
 
-        initFiles(buildDir, file);
+        createFileIfNotExists(buildDir, file);
 
         Map<String, Boolean> testResult = new HashMap<>();
 
@@ -75,7 +83,7 @@ class InputFileOpenerTest {
         Files.delete(Paths.get(file));
     }
 
-    private void initFiles(Path buildDir, String file) throws IOException {
+    private void createFileIfNotExists(Path buildDir, String file) throws IOException {
         if (!Files.exists(buildDir)) {
             Files.createDirectories(buildDir);
         }
@@ -83,6 +91,26 @@ class InputFileOpenerTest {
         if (Files.exists(Paths.get(file))) {
             Files.delete(Paths.get(file));
         }
+    }
+
+    @Test
+    public void should_read_one_line() throws IOException {
+        // Given
+        PipedOutputStream pipedOutputStream = new PipedOutputStream();
+        Writer writer = new BufferedWriter(new OutputStreamWriter(pipedOutputStream));
+
+        PipedInputStream pipedInputStream = new PipedInputStream();
+        pipedInputStream.connect(pipedOutputStream);
+        InputFileReader inputFileReader = new InputFileReader(
+                new BufferedReader(new InputStreamReader(pipedInputStream)));
+
+        writer.write("Hei");
+
+        // When
+        String msg = inputFileReader.consumeOne(100, TimeUnit.MILLISECONDS);
+
+        // Then
+        assertEquals("Hei", msg);
     }
 
 }

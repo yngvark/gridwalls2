@@ -18,8 +18,8 @@ public class App {
     private final Logger logger = getLogger(getClass());
 
     private final ExecutorService executorService;
-    private final InputFileReader netcomReader;
-    private final OutputFileWriter netcomWriter;
+    private final InputFileReader inputFileReader;
+    private final OutputFileWriter outputFileWriter;
     private final NetworkMessageReceiver networkMessageReceiver;
     private final GameEventProducer eventProducer;
 
@@ -42,12 +42,12 @@ public class App {
     }
 
     public App(ExecutorService executorService,
-            InputFileReader netcomReader, OutputFileWriter netcomWriter,
+            InputFileReader inputFileReader, OutputFileWriter outputFileWriter,
             NetworkMessageReceiver networkMessageReceiver,
             GameEventProducer eventProducer) {
         this.executorService = executorService;
-        this.netcomReader = netcomReader;
-        this.netcomWriter = netcomWriter;
+        this.inputFileReader = inputFileReader;
+        this.outputFileWriter = outputFileWriter;
         this.networkMessageReceiver = networkMessageReceiver;
         this.eventProducer = eventProducer;
     }
@@ -58,10 +58,13 @@ public class App {
 
         Future allFutures = executorService.submit(() -> {
             try {
-                logger.info("Waiting for gameFuture to return.");
+                logger.info("Waiting for producerFuture to return...");
                 netcomProducerFuture.get();
-                logger.info("Waiting, with timeout, for netcomConsumerFuture to return.");
+                logger.info("Waiting for producerFuture to return... done.");
+
+                logger.info("Waiting, with timeout, for netcomConsumerFuture to return...");
                 netcomConsumerFuture.get(3, TimeUnit.SECONDS);
+                logger.info("Waiting, with timeout, for netcomConsumerFuture to return... done.");
             } catch (InterruptedException | ExecutionException | TimeoutException e) {
                 e.printStackTrace();
             }
@@ -71,13 +74,13 @@ public class App {
         allFutures.get();
         logger.info("Waiting for allFutures to return... done.");
 
-        netcomWriter.closeStream();
+        outputFileWriter.closeStream();
     }
 
     private Future startConsumeEvents() throws IOException {
         return executorService.submit(() -> {
             try {
-                netcomReader.consume(networkMessageReceiver);
+                inputFileReader.consume(networkMessageReceiver);
                 eventProducer.stop();
             } catch (IOException e) {
                 logger.info("Exception occurred");
@@ -89,7 +92,7 @@ public class App {
     private Future startProduceEvents() {
         return executorService.submit(() -> {
             eventProducer.produce();
-            netcomReader.closeStream(); // TODO should throw ioexception?
+            inputFileReader.closeStream(); // TODO should throw ioexception?
         });
     }
 

@@ -20,28 +20,14 @@ repositories {
 }
 
 dependencies {
-    compile('org.slf4j:slf4j-api:1.7.+')
-    compile('org.slf4j:slf4j-simple:1.7.+')
+    testCompile('org.slf4j:slf4j-api:1.7.+')
+    testCompile('org.slf4j:slf4j-simple:1.7.+')
 
     testCompile("org.junit.jupiter:junit-jupiter-api:5.0.0-M4")
     testRuntime("org.junit.jupiter:junit-jupiter-engine:5.0.0-M4")
-    testCompile "org.mockito:mockito-core:2.+"
 
-    compile 'com.yngvark:os_process_exiter:1.0.+'
-    compile 'com.yngvark:communicate_through_named_pipes:1.0.+'
     testCompile 'com.yngvark:process_test_helper:1.0.+'
-
-    testCompile("org.apache.commons:commons-lang3:3.5")
-
-    compile('com.google.code.gson:gson:2.8.+')
-
+    testCompile 'com.yngvark:os_process_exiter:1.0.+'
+    testCompile 'com.yngvark:communicate_through_named_pipes:1.0.+'
 }
 
-apply plugin: 'application'
-mainClassName = 'com.yngvark.gridwalls.microservices.zombie.Main'
-applicationName = 'run'
-distributions {
-    main {
-        baseName = 'app'
-    }
-}

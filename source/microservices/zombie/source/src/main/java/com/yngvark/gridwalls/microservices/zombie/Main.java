@@ -25,17 +25,21 @@ public class Main {
         String fifoInputFilename = args[0];
         String fifoOutputFilename = args[1];
 
-        // Dependencies
-        ExecutorService executorService = Executors.newCachedThreadPool();
-
         OutputFileOpener outputFileOpener = new OutputFileOpener(fifoOutputFilename);
         InputFileOpener inputFileOpener = new InputFileOpener(fifoInputFilename);
 
-        RetrySleeper retrySleeper = () -> Thread.sleep(1000);
-        InputFileReader netcomReader = inputFileOpener.openStream(retrySleeper);
-        OutputFileWriter netcomWriter = outputFileOpener.openStream(retrySleeper);
+        main(outputFileOpener, inputFileOpener);
+    }
 
-        App app = App.create(executorService, netcomReader, netcomWriter);
+    static void main(OutputFileOpener outputFileOpener, InputFileOpener inputFileOpener) {
+        // Dependencies
+        ExecutorService executorService = Executors.newCachedThreadPool();
+
+        RetrySleeper retrySleeper = () -> Thread.sleep(1000);
+        InputFileReader inputFileReader = inputFileOpener.openStream(retrySleeper);
+        OutputFileWriter outputFileWriter = outputFileOpener.openStream(retrySleeper);
+
+        App app = App.create(executorService, inputFileReader, outputFileWriter);
 
         // Shutdownhook
         Shutdownhook shutdownhook = new Shutdownhook(app);

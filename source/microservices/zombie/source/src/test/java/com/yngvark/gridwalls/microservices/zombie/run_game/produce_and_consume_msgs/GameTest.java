@@ -62,7 +62,7 @@ public class GameTest {
     public void first_output_should_Besubscribe_to_mapinfo() {
         TestHelper testHelper = new TestHelper();
 
-        // When
+        // Whenf
         String msg = testHelper.nextMsg();
 
         // Then
