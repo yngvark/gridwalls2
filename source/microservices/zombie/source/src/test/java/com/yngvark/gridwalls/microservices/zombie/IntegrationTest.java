@@ -8,6 +8,7 @@ import com.yngvark.communicate_through_named_pipes.output.OutputFileWriter;
 import com.yngvark.gridwalls.microservices.zombie.run_game.produce_and_consume_msgs.get_map_info.MapInfo;
 import com.yngvark.gridwalls.microservices.zombie.run_game.serialize_msgs.JsonSerializer;
 import com.yngvark.gridwalls.microservices.zombie.run_game.serialize_msgs.Serializer;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 
@@ -34,6 +35,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.slf4j.LoggerFactory.getLogger;
 
+@Disabled
 class IntegrationTest {
     private final Logger logger = getLogger(getClass());
 

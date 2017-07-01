@@ -1,2 +1,2 @@
-./source/gradlew -p source installDist
+./source/gradlew -p source clean installDist
 docker-compose build

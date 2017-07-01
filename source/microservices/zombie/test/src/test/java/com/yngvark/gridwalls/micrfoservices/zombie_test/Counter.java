@@ -1,4 +1,4 @@
-package com.yngvark.gridwalls.micrfoservices.zombie_test.netcom_forwarder_test;
+package com.yngvark.gridwalls.micrfoservices.zombie_test;
 
 class Counter {
     private int value = 0;

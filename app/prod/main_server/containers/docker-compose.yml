@@ -9,20 +9,18 @@ services:
       - "8080:15672"
       - 15674:15674
     networks:
-      rabbit:
-        aliases:
-          - rabbithost
+      - netcom
 
-  web_server:
-    #build: web_server
-    image: nginx
-    ports:
-      - "80:80"
-    volumes:
-      #- ../../microservices/front_end/html:/usr/share/nginx/html
-      - ../../../../source/front_end/html:/usr/share/nginx/html
-    links:
-      - rabbitmq
+  #web_server:
+    ##build: web_server
+    #image: nginx
+    #ports:
+    #  - "80:80"
+    #volumes:
+    #  #- ../../microservices/front_end/html:/usr/share/nginx/html
+    #  - ../../../../source/front_end/html:/usr/share/nginx/html
+    #links:
+    #  - rabbitmq
 
 networks:
-  rabbit:
+  netcom:

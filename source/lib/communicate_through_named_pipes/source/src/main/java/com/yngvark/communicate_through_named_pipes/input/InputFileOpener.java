@@ -24,6 +24,8 @@ public class InputFileOpener {
 
         RetryWaiter retryWaiter = new RetryWaiter(retrySleeper);
         retryWaiter.waitUntilFileExists(fifoInputFilename);
+
+        logger.debug("File exists. Opening stream.");
         FileInputStream fileInputStream = openFileStream(fifoInputFilename);
 
         logger.info("Opening input file... done.");
