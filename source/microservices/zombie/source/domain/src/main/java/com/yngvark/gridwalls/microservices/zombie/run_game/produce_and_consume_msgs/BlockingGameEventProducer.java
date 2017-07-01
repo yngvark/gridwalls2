@@ -7,8 +7,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-import static org.slf4j.LoggerFactory.getLogger;
-
 public class BlockingGameEventProducer implements GameEventProducer {
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final OutputFileWriter outputFileWriter;
@@ -29,15 +27,16 @@ public class BlockingGameEventProducer implements GameEventProducer {
             throw new RuntimeException(e);
         }
     }
+
     private void tryToProduce() throws IOException {
         while (run) {
-            String msg = nextMsg();
+            String msg = produceNext();
             outputFileWriter.write(msg);
         }
         logger.info("Game done.");
     }
 
-    String nextMsg() {
+    public String produceNext() {
         String msg = producerContext.nextMsg();
         logger.info(">>> {}", msg);
         return msg;
