@@ -1,7 +1,7 @@
 package com.yngvark.gridwalls.micrfoservices.zombie_test;
 
-import com.yngvark.process_test_helper.App;
-import com.yngvark.process_test_helper.AppFactory;
+import com.yngvark.process_test_helper.TestableApp;
+import com.yngvark.process_test_helper.TestableAppFactory;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 
@@ -22,7 +22,7 @@ public class ProcessTest {
     @Test
     public void can_read_message_from_process() throws Exception {
         // Given
-        App app = AppFactory.start();
+        TestableApp app = TestableAppFactory.start();
 
         ExecutorService executorService = Executors.newCachedThreadPool();
         Future<List<String>> consumeExpectedMessagesFuture = executorService.submit(() ->
@@ -39,7 +39,7 @@ public class ProcessTest {
         app.stop();
     }
 
-    private List<String> consumeExpectedMessages(App app, int expectedMessageCount) {
+    private List<String> consumeExpectedMessages(TestableApp app, int expectedMessageCount) {
         List<String> receivedMessages = new ArrayList<>();
         Counter counter = new Counter();
 

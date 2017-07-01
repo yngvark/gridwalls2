@@ -23,5 +23,5 @@ dependencies {
 
     testCompile 'com.yngvark:process_test_helper:1.0.+'
     testCompile('com.google.code.gson:gson:2.8.+')
-
+    testCompile 'org.apache.commons:commons-lang3:3.5'
 }

@@ -44,8 +44,8 @@ public class Main {
         Gson gson = new GsonBuilder().create();
         String mapInfo = gson.toJson(new MapInfo(15, 10));
 
-        while (true) {
-            outputFileWriter.write(mapInfo);
+        for (int i = 0; i < 3; i++) {
+            outputFileWriter.write("/publishTo MapInfo " + mapInfo);
             Thread.sleep(3000);
         }
     }
