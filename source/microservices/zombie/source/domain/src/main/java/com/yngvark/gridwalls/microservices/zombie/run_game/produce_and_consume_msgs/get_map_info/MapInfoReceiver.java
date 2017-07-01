@@ -27,7 +27,7 @@ public class MapInfoReceiver implements Producer, NetworkMsgListener {
     private void enqueueMessage(String msg) {
         try {
             messages.put(msg);
-        } catch (InterruptedException e) {
+        } catch (InterruptedException e) {m
             throw new RuntimeException(e);
         }
     }

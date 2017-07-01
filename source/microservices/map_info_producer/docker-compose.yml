@@ -1,10 +1,21 @@
 version: "3"
 
 services:
+  delpipes:
+    image: alpine
+    volumes:
+      - named_pipes:/app_data
+    command:
+      - sh
+      - -c
+      - echo Doing nothing
+      #- rm -f /app_data/* && ls /app_data
+
   netcom_forwarder:
     depends_on:
       - init
-      - rabbitmq
+    networks:
+      - netcom
     image: netcom_forwarder
     volumes:
       - named_pipes:/app_data
@@ -22,17 +33,9 @@ services:
       - -c
       - /app_init/init_named_pipes.sh
       
-  rabbitmq:
-    image: rabbitmq:3-management
-    hostname: rabbithost
-    ports:
-      - "8080:15672"
-      - 15674:15674
-
   app:
     depends_on:
       - netcom_forwarder
-      - map_info_producer
     build: .
     volumes:
       - named_pipes:/app_data
@@ -42,3 +45,7 @@ services:
 
 volumes:
   named_pipes:
+
+networks:
+  netcom:
+    external: true

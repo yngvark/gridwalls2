@@ -1,11 +1,12 @@
 package com.yngvark.gridwalls.map_info_receiver_test;
 
-import com.yngvark.process_test_helper.App;
-import com.yngvark.process_test_helper.AppFactory;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -20,7 +21,7 @@ public class ProcessTest {
     public final Logger logger = getLogger(ProcessTest.class);
 
     @Test
-    public void should_send_() throws Exception {
+    public void should_send_map_info() throws Exception {
         // Given
         App app = AppFactory.start();
 
@@ -33,7 +34,8 @@ public class ProcessTest {
         List<String> messages = consumeExpectedMessagesFuture.get(1, TimeUnit.SECONDS);
 
         // Then
-        assertTrue(messages.get(0).length() > 0);
+        Gson gson = new GsonBuilder().create();
+        gson.fromJson(messages.get(0), MapInfo.class);
 
         // Finally
         app.stop();

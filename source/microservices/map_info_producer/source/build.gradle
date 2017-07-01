@@ -27,4 +27,14 @@ dependencies {
     testRuntime("org.junit.jupiter:junit-jupiter-engine:5.0.0-M4")
 
     compile 'com.yngvark:communicate_through_named_pipes:1.0.+'
+    compile('com.google.code.gson:gson:2.8.+')
+}
+
+apply plugin: 'application'
+mainClassName = 'com.yngvark.gridwalls.microservices.map_info_producer.Main'
+applicationName = 'run'
+distributions {
+    main {
+        baseName = 'app'
+    }
 }
