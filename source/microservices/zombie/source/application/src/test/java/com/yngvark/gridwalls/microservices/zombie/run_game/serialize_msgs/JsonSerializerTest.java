@@ -1,5 +1,6 @@
 package com.yngvark.gridwalls.microservices.zombie.run_game.serialize_msgs;
 
+import com.yngvark.gridwalls.microservices.zombie.run_app.JsonSerializer;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

@@ -1,8 +1,9 @@
-package com.yngvark.gridwalls.microservices.zombie.run_game.serialize_msgs;
+package com.yngvark.gridwalls.microservices.zombie.run_app;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
+import com.yngvark.gridwalls.microservices.zombie.run_game.serialize_msgs.Serializer;
 
 public class JsonSerializer implements Serializer {
     private final Gson gson = new GsonBuilder().create();

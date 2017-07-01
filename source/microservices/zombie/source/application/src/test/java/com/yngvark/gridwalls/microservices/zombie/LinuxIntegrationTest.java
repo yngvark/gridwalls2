@@ -1,23 +1,7 @@
 package com.yngvark.gridwalls.microservices.zombie;
 
-import com.yngvark.communicate_through_named_pipes.input.InputFileOpener;
-import com.yngvark.communicate_through_named_pipes.input.InputFileReader;
-import com.yngvark.communicate_through_named_pipes.output.OutputFileOpener;
-import com.yngvark.communicate_through_named_pipes.output.OutputFileWriter;
-import com.yngvark.gridwalls.microservices.zombie.run_game.produce_and_consume_msgs.get_map_info.MapInfo;
-import com.yngvark.gridwalls.microservices.zombie.run_game.serialize_msgs.JsonSerializer;
-import com.yngvark.gridwalls.microservices.zombie.run_game.serialize_msgs.Serializer;
 import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import static org.slf4j.LoggerFactory.getLogger;
 

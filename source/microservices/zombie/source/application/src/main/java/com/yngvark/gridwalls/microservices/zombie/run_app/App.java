@@ -2,10 +2,12 @@ package com.yngvark.gridwalls.microservices.zombie.run_app;
 
 import com.yngvark.communicate_through_named_pipes.input.InputFileReader;
 import com.yngvark.communicate_through_named_pipes.output.OutputFileWriter;
+import com.yngvark.gridwalls.microservices.zombie.run_game.GameEventProducer;
 import com.yngvark.gridwalls.microservices.zombie.run_game.GameFactory;
 import org.slf4j.Logger;
 
 import java.io.IOException;
+import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
@@ -28,7 +30,11 @@ public class App {
             InputFileReader netcomReader,
             OutputFileWriter netcomWriter
     ) {
-        GameFactory gameFactory = GameFactory.create();
+        GameFactory gameFactory = GameFactory.create(
+                new ThreadSleeper(),
+                new Random(),
+                new JsonSerializer()
+        );
 
         return new App(
                 executorService,

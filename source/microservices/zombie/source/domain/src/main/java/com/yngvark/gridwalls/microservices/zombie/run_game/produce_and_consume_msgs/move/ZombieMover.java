@@ -6,13 +6,14 @@ import com.yngvark.gridwalls.microservices.zombie.run_game.produce_and_consume_m
 import com.yngvark.gridwalls.microservices.zombie.run_game.Sleeper;
 import com.yngvark.gridwalls.microservices.zombie.run_game.serialize_msgs.Serializer;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Random;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
 class ZombieMover implements Producer {
-    private final Logger logger = getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
     private final Serializer serializer;
     private final Sleeper sleeper;
     private final Random random;

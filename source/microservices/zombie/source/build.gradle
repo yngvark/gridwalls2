@@ -1,6 +1,34 @@
 group 'com.yngvark.gridwalls.microservices.zombie'
 version '1.0-SNAPSHOT'
 
-apply plugin: 'java'
-sourceCompatibility = 1.8
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0-M4'
+    }
+}
+
+subprojects {
+    apply plugin: 'java'
+    sourceCompatibility = 1.8
+
+    apply plugin: 'org.junit.platform.gradle.plugin'
+
+    repositories {
+        mavenCentral()
+        mavenLocal()
+    }
+
+    dependencies {
+        compile('org.slf4j:slf4j-api:1.7.+')
+        compile('org.slf4j:slf4j-simple:1.7.+')
+
+        compile "com.yngvark:communicate_through_named_pipes:1.0.+"
+
+        testCompile("org.junit.jupiter:junit-jupiter-api:5.0.0-M4")
+        testRuntime("org.junit.jupiter:junit-jupiter-engine:5.0.0-M4")
+    }
+}
 

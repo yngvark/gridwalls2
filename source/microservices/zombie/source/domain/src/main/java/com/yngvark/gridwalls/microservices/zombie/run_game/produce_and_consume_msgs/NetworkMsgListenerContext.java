@@ -1,12 +1,11 @@
 package com.yngvark.gridwalls.microservices.zombie.run_game.produce_and_consume_msgs;
 
-import com.yngvark.gridwalls.microservices.zombie.run_app.NetworkMessageListener;
+import com.yngvark.gridwalls.microservices.zombie.run_game.NetworkMessageListener;
 import org.slf4j.Logger;
-
-import static org.slf4j.LoggerFactory.getLogger;
+import org.slf4j.LoggerFactory;
 
 public class NetworkMsgListenerContext implements NetworkMessageListener {
-    private final Logger logger = getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private NetworkMsgListener currentListener;
 

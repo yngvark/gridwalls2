@@ -1,38 +1,11 @@
 package com.yngvark.gridwalls.microservices.zombie;
 
-import com.yngvark.communicate_through_named_pipes.input.InputFileOpener;
-import com.yngvark.communicate_through_named_pipes.input.InputFileReader;
-import com.yngvark.communicate_through_named_pipes.input.MessageListener;
-import com.yngvark.communicate_through_named_pipes.output.OutputFileOpener;
-import com.yngvark.communicate_through_named_pipes.output.OutputFileWriter;
-import com.yngvark.gridwalls.microservices.zombie.run_game.produce_and_consume_msgs.get_map_info.MapInfo;
-import com.yngvark.gridwalls.microservices.zombie.run_game.serialize_msgs.JsonSerializer;
-import com.yngvark.gridwalls.microservices.zombie.run_game.serialize_msgs.Serializer;
 import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import static org.slf4j.LoggerFactory.getLogger;
 
 @Disabled

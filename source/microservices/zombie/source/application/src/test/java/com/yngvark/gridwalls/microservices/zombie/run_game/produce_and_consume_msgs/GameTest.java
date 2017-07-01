@@ -1,11 +1,11 @@
 package com.yngvark.gridwalls.microservices.zombie.run_game.produce_and_consume_msgs;
 
 import com.yngvark.communicate_through_named_pipes.output.OutputFileWriter;
-import com.yngvark.gridwalls.microservices.zombie.run_app.NetworkMessageListener;
+import com.yngvark.gridwalls.microservices.zombie.run_game.NetworkMessageListener;
 import com.yngvark.gridwalls.microservices.zombie.run_game.GameFactory;
 import com.yngvark.gridwalls.microservices.zombie.run_game.produce_and_consume_msgs.get_map_info.MapInfo;
 import com.yngvark.gridwalls.microservices.zombie.run_game.produce_and_consume_msgs.move.Move;
-import com.yngvark.gridwalls.microservices.zombie.run_game.serialize_msgs.JsonSerializer;
+import com.yngvark.gridwalls.microservices.zombie.run_app.JsonSerializer;
 import com.yngvark.gridwalls.microservices.zombie.run_game.serialize_msgs.Serializer;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
@@ -29,12 +29,13 @@ public class GameTest {
 
     class TestHelper {
         TestSleeper testSleeper = new TestSleeper();
-        GameFactory gameFactory = GameFactory.create(testSleeper, new Random(12345));
+        Serializer serializer = new JsonSerializer();
+
+        GameFactory gameFactory = GameFactory.create(testSleeper, new Random(12345), serializer);
         NetworkMessageListener networkMessageListener = gameFactory.createNetworkMessageListener();
         OutputFileWriter outputFileWriter = mock(OutputFileWriter.class);
         BlockingGameEventProducer gameEventProducer = (BlockingGameEventProducer)
                 gameFactory.createEventProducer(outputFileWriter);
-        Serializer serializer = new JsonSerializer();
 
         void messageReceived(Object event) {
             String eventStr = serializer.serialize(event);
