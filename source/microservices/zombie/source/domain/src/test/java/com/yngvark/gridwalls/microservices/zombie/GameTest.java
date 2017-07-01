@@ -24,7 +24,7 @@ public class GameTest {
         TestHelper testHelper = new TestHelper();
 
         // When
-        String msg = testHelper.nextMsg();
+        String msg = testHelper.game.produceNext();
 
         // Then
         assertEquals("/subscribeTo MapInfo", msg);
@@ -38,14 +38,18 @@ public class GameTest {
         testHelper.readAndAssertSubscription();
 
         ExecutorService executorService = Executors.newCachedThreadPool();
-        Future nextMsgFuture = executorService.submit(() -> testHelper.gameEventProducer.produceNext());
-        assertThrows(TimeoutException.class, () -> nextMsgFuture.get(300, TimeUnit.MILLISECONDS));
 
         // When
-        testHelper.messageReceived(new MapInfo(3, 5));
+        Future nextMsgFuture = executorService.submit(() -> testHelper.game.produceNext());
 
         // Then
-        String nextMsg = testHelper.nextMsg();
+        assertThrows(TimeoutException.class, () -> nextMsgFuture.get(300, TimeUnit.MILLISECONDS));
+
+        // And when
+        testHelper.messageReceived(new MapInfo(3, 5));
+        String nextMsg = testHelper.game.produceNext();
+
+        // Then
         // Check validity of move by deserializing the string
         testHelper.deserializePublish(nextMsg, Move.class);
     }
@@ -60,7 +64,7 @@ public class GameTest {
 
         // When
         for (int i = 0; i < 1000; i++) {
-            String msg = testHelper.gameEventProducer.produceNext();
+            String msg = testHelper.game.produceNext();
             Move move = testHelper.deserializePublish(msg, Move.class);
             gatherMinMax(move);
 
@@ -102,7 +106,7 @@ public class GameTest {
 
         // When
         for (int i = 0; i < 1000; i++) {
-            testHelper.gameEventProducer.produceNext();
+            testHelper.game.produceNext();
 
             // Then
             assertTrue(

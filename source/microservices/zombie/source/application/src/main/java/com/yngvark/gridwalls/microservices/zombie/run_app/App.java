@@ -2,7 +2,7 @@ package com.yngvark.gridwalls.microservices.zombie.run_app;
 
 import com.yngvark.communicate_through_named_pipes.input.InputFileReader;
 import com.yngvark.communicate_through_named_pipes.output.OutputFileWriter;
-import com.yngvark.gridwalls.microservices.zombie.run_game.GameEventProducer;
+import com.yngvark.gridwalls.microservices.zombie.run_game.Game;
 import com.yngvark.gridwalls.microservices.zombie.run_game.GameFactory;
 import org.slf4j.Logger;
 
@@ -23,7 +23,7 @@ public class App {
     private final InputFileReader inputFileReader;
     private final OutputFileWriter outputFileWriter;
     private final NetworkMessageReceiver networkMessageReceiver;
-    private final GameEventProducer eventProducer;
+    private final Game game;
 
     public static App create(
             ExecutorService executorService,
@@ -40,22 +40,22 @@ public class App {
                 executorService,
                 netcomReader,
                 netcomWriter,
-                new NetworkMessageReceiver(
-                        gameFactory.createNetworkMessageListener()
-                ),
-                gameFactory.createEventProducer(netcomWriter)
+                new NetworkMessageReceiver(gameFactory.createNetworkMessageListener()),
+                gameFactory.create(netcomWriter)
                 );
     }
 
-    public App(ExecutorService executorService,
-            InputFileReader inputFileReader, OutputFileWriter outputFileWriter,
+    public App(
+            ExecutorService executorService,
+            InputFileReader inputFileReader,
+            OutputFileWriter outputFileWriter,
             NetworkMessageReceiver networkMessageReceiver,
-            GameEventProducer eventProducer) {
+            Game game) {
         this.executorService = executorService;
         this.inputFileReader = inputFileReader;
         this.outputFileWriter = outputFileWriter;
         this.networkMessageReceiver = networkMessageReceiver;
-        this.eventProducer = eventProducer;
+        this.game = game;
     }
 
     public void run() throws Throwable {
@@ -87,7 +87,7 @@ public class App {
         return executorService.submit(() -> {
             try {
                 inputFileReader.consume(networkMessageReceiver);
-                eventProducer.stop();
+                game.stop();
             } catch (IOException e) {
                 logger.info("Exception occurred");
                 throw new RuntimeException(e);
@@ -97,16 +97,16 @@ public class App {
 
     private Future startProduceEvents() {
         return executorService.submit(() -> {
-            eventProducer.produce();
+            game.produce();
             inputFileReader.closeStream(); // TODO should throw ioexception?
         });
     }
 
     public void stop() {
         logger.info("Stopping app.");
-        if (eventProducer == null)
+        if (game == null)
             return;
 
-        eventProducer.stop();
+        game.stop();
     }
 }

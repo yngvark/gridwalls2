@@ -1,7 +1,7 @@
 package com.yngvark.gridwalls.microservices.zombie.run_game;
 
 import com.yngvark.communicate_through_named_pipes.output.OutputFileWriter;
-import com.yngvark.gridwalls.microservices.zombie.run_game.produce_and_consume_msgs.BlockingGameEventProducer;
+import com.yngvark.gridwalls.microservices.zombie.run_game.produce_and_consume_msgs.BlockingGame;
 import com.yngvark.gridwalls.microservices.zombie.run_game.produce_and_consume_msgs.NetworkMsgListener;
 import com.yngvark.gridwalls.microservices.zombie.run_game.produce_and_consume_msgs.NetworkMsgListenerContext;
 import com.yngvark.gridwalls.microservices.zombie.run_game.produce_and_consume_msgs.Producer;
@@ -29,7 +29,6 @@ public class GameFactory {
         return new GameFactory(mapInfoReceiver, mapInfoReceiver);
     }
 
-
     private GameFactory(
             NetworkMsgListener networkMsgListener,
             Producer producer) {
@@ -37,15 +36,15 @@ public class GameFactory {
         this.producer = producer;
     }
 
-    public NetworkMessageListener createNetworkMessageListener() {
-        return new NetworkMsgListenerContext(networkMsgListener);
-    }
-
-    public GameEventProducer createEventProducer(OutputFileWriter outputFileWriter) {
-        return new BlockingGameEventProducer(
+    public Game create(OutputFileWriter outputFileWriter) {
+        return new BlockingGame(
                 outputFileWriter,
                 new ProducerContext(producer)
         );
+    }
+
+    public NetworkMessageListener createNetworkMessageListener() {
+        return new NetworkMsgListenerContext(networkMsgListener);
     }
 
 }

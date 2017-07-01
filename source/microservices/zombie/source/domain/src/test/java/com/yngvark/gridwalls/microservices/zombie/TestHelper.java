@@ -3,17 +3,14 @@ package com.yngvark.gridwalls.microservices.zombie;
 import com.yngvark.communicate_through_named_pipes.output.OutputFileWriter;
 import com.yngvark.gridwalls.microservices.zombie.run_game.GameFactory;
 import com.yngvark.gridwalls.microservices.zombie.run_game.NetworkMessageListener;
-import com.yngvark.gridwalls.microservices.zombie.run_game.produce_and_consume_msgs.BlockingGameEventProducer;
+import com.yngvark.gridwalls.microservices.zombie.run_game.produce_and_consume_msgs.BlockingGame;
 import com.yngvark.gridwalls.microservices.zombie.run_game.produce_and_consume_msgs.move.Move;
 import com.yngvark.gridwalls.microservices.zombie.run_game.serialize_msgs.Serializer;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Random;
 
-import static java.time.Duration.ofMillis;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
 class TestHelper {
@@ -23,8 +20,7 @@ class TestHelper {
     GameFactory gameFactory = GameFactory.create(testSleeper, new Random(12345), serializer);
     NetworkMessageListener networkMessageListener = gameFactory.createNetworkMessageListener();
     OutputFileWriter outputFileWriter = mock(OutputFileWriter.class);
-    BlockingGameEventProducer gameEventProducer = (BlockingGameEventProducer)
-            gameFactory.createEventProducer(outputFileWriter);
+    BlockingGame game = (BlockingGame) gameFactory.create(outputFileWriter);
 
     void messageReceived(Object event) {
         String eventStr = serializer.serialize(event);
@@ -39,10 +35,6 @@ class TestHelper {
     }
 
     public void readAndAssertSubscription() {
-        assertEquals("/subscribeTo MapInfo", gameEventProducer.produceNext());
-    }
-
-    public String nextMsg() {
-        return assertTimeoutPreemptively(ofMillis(300), () -> gameEventProducer.produceNext());
+        assertEquals("/subscribeTo MapInfo", game.produceNext());
     }
 }
