@@ -1,6 +1,6 @@
 package com.yngvark.gridwalls.microservices.zombie.run_game;
 
-public interface Game {
+public interface GameEventProducer {
     void produce();
     void stop();
 }

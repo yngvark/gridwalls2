@@ -2,7 +2,7 @@ package com.yngvark.gridwalls.microservices.zombie.run_app;
 
 import com.yngvark.communicate_through_named_pipes.input.InputFileReader;
 import com.yngvark.communicate_through_named_pipes.output.OutputFileWriter;
-import com.yngvark.gridwalls.microservices.zombie.run_game.Game;
+import com.yngvark.gridwalls.microservices.zombie.run_game.GameEventProducer;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -28,12 +28,12 @@ class AppTest {
             throw new MyTestException();
         })).when(inputFileReader).consume(any());
 
-        Game game = mock(Game.class);
+        GameEventProducer gameEventProducer = mock(GameEventProducer.class);
         BlockingQueue<String> gameProduceLock = new LinkedBlockingQueue();
         doAnswer((invocation) -> {
             gameProduceLock.take();
             return Void.TYPE;
-        }).when(game).produce();
+        }).when(gameEventProducer).produce();
 
         ExecutorService executorService = Executors.newCachedThreadPool();
         App app = new App(
@@ -41,7 +41,7 @@ class AppTest {
                 inputFileReader,
                 mock(OutputFileWriter.class),
                 mock(NetworkMessageReceiver.class),
-                game
+                gameEventProducer
                 );
 
         // When + Then
@@ -68,10 +68,10 @@ class AppTest {
             return Void.TYPE;
         })).when(inputFileReader).consume(any());
 
-        Game game = mock(Game.class);
+        GameEventProducer gameEventProducer = mock(GameEventProducer.class);
         doAnswer((invocation) -> {
             throw new MyTestException();
-        }).when(game).produce();
+        }).when(gameEventProducer).produce();
 
         ExecutorService executorService = Executors.newCachedThreadPool();
         App app = new App(
@@ -79,7 +79,7 @@ class AppTest {
                 inputFileReader,
                 mock(OutputFileWriter.class),
                 mock(NetworkMessageReceiver.class),
-                game
+                gameEventProducer
         );
 
         // When + Then
