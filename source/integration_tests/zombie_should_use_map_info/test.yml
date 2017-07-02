@@ -1,0 +1,68 @@
+version: "3"
+
+services:
+  test:
+    depends_on:
+      - init
+      - netcom_forwarder_test
+    image: openjdk:8-jdk
+    volumes:
+      - ~/.m2:/root/.m2
+      - gradle:/root/.gradle
+      - named_pipes:/app_data
+      - ./test:/app/test
+    command:
+      # /app/test/gradlew -p /app/test test -Dtest.fifo_input_filename=/app_data/in -Dtest.fifo_output_filename=/app_data/out
+      - /app/test/gradlew
+      - --no-daemon
+      - -p
+      - /app/test
+      - clean
+      - test
+      - -Dtest.fifo_input_filename=/app_data/in
+      - -Dtest.fifo_output_filename=/app_data/out
+
+  init:
+    image: ubuntu
+    volumes:
+      - ./init:/app_init
+      - named_pipes:/app_data
+    command:
+      - /bin/bash
+      - -c
+      - /app_init/init_named_pipes.sh
+
+  netcom_forwarder_test:
+    depends_on:
+      - init
+    external_links:
+      - rabbitmq
+    networks:
+      - netcom
+    image: netcom_forwarder
+    volumes:
+      - named_pipes:/app_data
+    command:
+      - /app_data/out
+      - /app_data/in
+
+  delpipes:
+    image: alpine
+    volumes:
+      - named_pipes:/app_data
+    command:
+      - sh
+      - -c
+      - echo Doing nothing
+      #- rm -f /app_data/* && ls /app_data
+
+    ## TODO SHUt down netcom forwarder somehow.
+
+
+volumes:
+  named_pipes:
+  gradle:
+
+networks:
+  netcom:
+    external: true

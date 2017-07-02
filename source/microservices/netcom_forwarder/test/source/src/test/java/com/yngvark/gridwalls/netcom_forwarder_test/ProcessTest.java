@@ -3,7 +3,6 @@ package com.yngvark.gridwalls.netcom_forwarder_test;
 import com.yngvark.gridwalls.rabbitmq.RabbitConnection;
 import com.yngvark.gridwalls.rabbitmq.RabbitPublisher;
 import com.yngvark.gridwalls.rabbitmq.RabbitSubscriber;
-import com.yngvark.process_test_helper.App;
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;

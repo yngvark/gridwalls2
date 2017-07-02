@@ -1,0 +1,44 @@
+group 'com.yngvark.gridwalls.integration_tests'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+sourceCompatibility = 1.8
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0-M4'
+    }
+}
+apply plugin: 'org.junit.platform.gradle.plugin'
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencies {
+    testCompile('org.slf4j:slf4j-api:1.7.+')
+    testCompile('org.slf4j:slf4j-simple:1.7.+')
+
+    testCompile("org.junit.jupiter:junit-jupiter-api:5.0.0-M4")
+    testRuntime("org.junit.jupiter:junit-jupiter-engine:5.0.0-M4")
+
+    testCompile 'com.yngvark:communicate_through_named_pipes:1.0.+'
+    testCompile('com.google.code.gson:gson:2.8.+')
+    testCompile("org.apache.commons:commons-lang3:3.5")
+}
+
+// HACK: https://stackoverflow.com/a/43641005
+// This should work, but doesnt, because junit is not supported or something by gradle team.
+//test {
+//    systemProperty 'env', System.properties['env']
+//}
+// Until then, do this hack:
+afterEvaluate {
+    def junitPlatformTestTask = tasks.getByName('junitPlatformTest')
+    junitPlatformTestTask.systemProperty 'test.fifo_input_filename', System.getProperty('test.fifo_input_filename')
+    junitPlatformTestTask.systemProperty 'test.fifo_output_filename', System.getProperty('test.fifo_output_filename')
+}

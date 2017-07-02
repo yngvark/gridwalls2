@@ -1,7 +1,31 @@
 TODO
 ---------------------------------------------------------------
 
-[ ] Zombie publisher ikke Zombie Moves.
+[ ] netcomforwarder: should_get_exception_when_producer_throws_exception
+
+[ ] Integrasjonstest
+	[ ] Hvordan kan jeg få stoppet zombie_should_use_map_info etter suksess? Problemet er at rabbitmq bare henger.
+		[ ] Mulig: rabbitmctl (ellernoe) for å stoppe rabbitmq programmatisk.
+		[ ] Kanskje docker api for å drepe containeren?
+		[ ] Det beste: La netcom forwarder eller helst egen ms eller noe med en rabbit connection stoppe hele brokeren, sånn at dockercontaineren stopper.
+	[ ] Og hvordan får jeg stoppet Zombie? Og MapInfo producer?
+	[ ] Og hvordan skal jeg i det hele tatt kjøre testen?
+[x] Jeg må ikke svelge exceptions i appen.!
+-Hvorfor fikk ikke GameTest exception!?? Jo, fordi den funka.
+    [ ] Trenger integrasjonstest mellom Zombie og MapInfoProducer.
+    	source/integration_tests/zombie_should_use_map_info
+    		run by running ./gradlew test
+    		test.java:
+	    		/subscribeTo Zombie
+	    		wait max 3 seconds for first message to appeaer
+	    		for i < 3
+	    			msg = getMsg;
+	    			assert that duration since last message is below 1,2 sec
+	    			assert that message is a valid ZombieMove
+
+-Game burde kanskje både produce og consume
+
+[x] Zombie publisher ikke Zombie Moves.
 [ ] Må fikse så netcom_forwarder -> test kan automatiseres. Testen trenger rabbitmq-s ip, som er variabel.
 
 

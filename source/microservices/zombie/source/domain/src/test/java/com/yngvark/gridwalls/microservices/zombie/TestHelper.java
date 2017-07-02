@@ -22,9 +22,9 @@ class TestHelper {
     OutputFileWriter outputFileWriter = mock(OutputFileWriter.class);
     BlockingGameEventProducer game = (BlockingGameEventProducer) gameFactory.create(outputFileWriter);
 
-    void messageReceived(Object event) {
-        String eventStr = serializer.serialize(event);
-        networkMessageListener.messageReceived(eventStr);
+    void messageReceived(String topic, Object event) {
+        String serializedEvent = serializer.serialize(event);
+        networkMessageListener.messageReceived("[" + topic + "] " + serializedEvent);
     }
 
     public Move deserializePublish(String msg, Class<Move> clazz) {

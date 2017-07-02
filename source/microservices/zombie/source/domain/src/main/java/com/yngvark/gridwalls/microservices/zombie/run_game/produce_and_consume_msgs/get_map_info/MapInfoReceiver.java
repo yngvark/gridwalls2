@@ -6,6 +6,7 @@ import com.yngvark.gridwalls.microservices.zombie.run_game.produce_and_consume_m
 import com.yngvark.gridwalls.microservices.zombie.run_game.produce_and_consume_msgs.ProducerContext;
 import com.yngvark.gridwalls.microservices.zombie.run_game.produce_and_consume_msgs.move.ZombieMoverFactory;
 import com.yngvark.gridwalls.microservices.zombie.run_game.serialize_msgs.Serializer;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,7 +49,9 @@ public class MapInfoReceiver implements Producer, NetworkMsgListener {
 
     public void messageReceived(NetworkMsgListenerContext networkMsgListenerContext, String msg) {
         logger.info("Received: {}", msg);
-        MapInfo mapInfo = serializer.deserialize(msg, MapInfo.class);
+        String[] parts = StringUtils.split(msg, " ", 2);
+
+        MapInfo mapInfo = serializer.deserialize(parts[1], MapInfo.class);
 
         logger.info("Deserialize done.");
         networkMsgListenerContext.setCurrentListener(new NoOpReceiver());

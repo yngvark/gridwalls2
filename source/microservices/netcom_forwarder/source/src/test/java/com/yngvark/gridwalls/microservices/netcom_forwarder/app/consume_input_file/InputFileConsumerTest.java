@@ -15,16 +15,12 @@ import static org.mockito.Mockito.mock;
 
 class InputFileConsumerTest {
     @Test
-    void addMessageListener() {
-    }
-
-    @Test
     void consume() throws IOException {
         InputFileReader inputFileReader = mock(InputFileReader.class);
 
         InputFileConsumer inputFileConsumer = new InputFileConsumer(inputFileReader);
         doAnswer((invocation) -> {
-            System.out.println("HEHHER");
+            System.out.println("doAnswer");
             MessageListener messageListener = invocation.getArgument(0);
             System.out.println(messageListener);
 
@@ -34,7 +30,7 @@ class InputFileConsumerTest {
 
         List<String> commandCalled = new ArrayList<>();
         inputFileConsumer.addMessageListener((msg) -> {
-            System.out.println("HEHHER222222222");
+            System.out.println("msg received");
             commandCalled.add(msg);
         }, "/join");
 
@@ -44,7 +40,7 @@ class InputFileConsumerTest {
         inputFileConsumer.consume();
 
         // Then
-        assertEquals("hello", commandCalled.get(0));
+        assertEquals("something", commandCalled.get(0));
     }
 
     class Arne implements FileMessageListener {
