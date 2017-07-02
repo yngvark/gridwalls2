@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.yngvark.gridwalls.microservices.zombie.run_game.serialize_msgs.Serializer;
 
-class TestSerializer implements Serializer {
+public class TestSerializer implements Serializer {
     private final Gson gson = new GsonBuilder().create();
 
     @Override

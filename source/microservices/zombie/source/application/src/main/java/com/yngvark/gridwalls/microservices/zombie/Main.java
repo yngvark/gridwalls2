@@ -10,7 +10,9 @@ import com.yngvark.gridwalls.microservices.zombie.exit_os_process.Shutdownhook;
 import com.yngvark.os_process_exiter.ExecutorServiceExiter;
 
 import java.io.IOException;
+import java.util.concurrent.CompletionService;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -34,12 +36,13 @@ public class Main {
     static void main(OutputFileOpener outputFileOpener, InputFileOpener inputFileOpener) {
         // Dependencies
         ExecutorService executorService = Executors.newCachedThreadPool();
+        CompletionService completionService = new ExecutorCompletionService(executorService);
 
         RetrySleeper retrySleeper = () -> Thread.sleep(1000);
         InputFileReader inputFileReader = inputFileOpener.openStream(retrySleeper);
         OutputFileWriter outputFileWriter = outputFileOpener.openStream(retrySleeper);
 
-        App app = App.create(executorService, inputFileReader, outputFileWriter);
+        App app = App.create(completionService, inputFileReader, outputFileWriter);
 
         // Shutdownhook
         Shutdownhook shutdownhook = new Shutdownhook(app);

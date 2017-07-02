@@ -17,7 +17,7 @@ public class NetworkMessageReceiver implements MessageListener {
 
     @Override
     public void messageReceived(String msg) {
-        logger.info("<<< From network: " + msg);
+        logger.debug("<<< From network: " + msg);
         networkMessageListener.messageReceived(msg);
     }
 }

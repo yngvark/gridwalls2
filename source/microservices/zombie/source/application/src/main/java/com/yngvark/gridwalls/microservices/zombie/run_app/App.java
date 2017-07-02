@@ -6,27 +6,25 @@ import com.yngvark.gridwalls.microservices.zombie.run_game.Game;
 import com.yngvark.gridwalls.microservices.zombie.run_game.GameFactory;
 import org.slf4j.Logger;
 
-import java.io.IOException;
 import java.util.Random;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.CompletionService;
+import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class App {
     private final Logger logger = getLogger(getClass());
 
-    private final ExecutorService executorService;
+    private final CompletionService completionService;
     private final InputFileReader inputFileReader;
     private final OutputFileWriter outputFileWriter;
     private final NetworkMessageReceiver networkMessageReceiver;
     private final Game game;
 
     public static App create(
-            ExecutorService executorService,
+            CompletionService completionService,
             InputFileReader netcomReader,
             OutputFileWriter netcomWriter
     ) {
@@ -37,7 +35,7 @@ public class App {
         );
 
         return new App(
-                executorService,
+                completionService,
                 netcomReader,
                 netcomWriter,
                 new NetworkMessageReceiver(gameFactory.createNetworkMessageListener()),
@@ -45,13 +43,11 @@ public class App {
                 );
     }
 
-    public App(
-            ExecutorService executorService,
+    public App(CompletionService completionService,
             InputFileReader inputFileReader,
             OutputFileWriter outputFileWriter,
-            NetworkMessageReceiver networkMessageReceiver,
-            Game game) {
-        this.executorService = executorService;
+            NetworkMessageReceiver networkMessageReceiver, Game game) {
+        this.completionService = completionService;
         this.inputFileReader = inputFileReader;
         this.outputFileWriter = outputFileWriter;
         this.networkMessageReceiver = networkMessageReceiver;
@@ -59,46 +55,40 @@ public class App {
     }
 
     public void run() throws Throwable {
-        Future netcomConsumerFuture = startConsumeEvents();
-        Future netcomProducerFuture = startProduceEvents();
+        startConsumeEvents();
+        startProduceEvents();
 
-        Future allFutures = executorService.submit(() -> {
-            try {
-                logger.info("Waiting for producerFuture to return...");
-                netcomProducerFuture.get();
-                logger.info("Waiting for producerFuture to return... done.");
-
-                logger.info("Waiting, with timeout, for netcomConsumerFuture to return...");
-                netcomConsumerFuture.get(3, TimeUnit.SECONDS);
-                logger.info("Waiting, with timeout, for netcomConsumerFuture to return... done.");
-            } catch (InterruptedException | ExecutionException | TimeoutException e) {
-                e.printStackTrace();
-            }
-        });
-
-        logger.info("Waiting for allFutures to return...");
-        allFutures.get();
-        logger.info("Waiting for allFutures to return... done.");
+        // Thanks to https://stackoverflow.com/questions/19348248/waiting-on-a-list-of-future
+        logger.info("Waiting for game consumer and producer to return...");
+        for (int i = 0; i < 2; i++) {
+            Future<String> consumeOrProduceFuture = completionService.take();
+            String whichFuture = consumeOrProduceFuture.get();
+            logger.info("A completion service returned: {}", whichFuture);
+        }
+        logger.info("Waiting for game consumer and producer to return... done.");
 
         outputFileWriter.closeStream();
     }
 
-    private Future startConsumeEvents() throws IOException {
-        return executorService.submit(() -> {
-            try {
-                inputFileReader.consume(networkMessageReceiver);
-                game.stop();
-            } catch (IOException e) {
-                logger.info("Exception occurred");
-                throw new RuntimeException(e);
-            }
+    private void startConsumeEvents() {
+        completionService.submit(() -> {
+            logger.debug("Consuming events...");
+            inputFileReader.consume(networkMessageReceiver);
+            logger.debug("Consuming events... done.");
+
+            game.stop();
+            return "Consumer";
         });
     }
 
-    private Future startProduceEvents() {
-        return executorService.submit(() -> {
+    private void startProduceEvents() {
+        completionService.submit(() -> {
+            logger.debug("Producing events...");
             game.produce();
+            logger.debug("Producing events... done.");
+
             inputFileReader.closeStream(); // TODO should throw ioexception?
+            return "PRodycer";
         });
     }
 

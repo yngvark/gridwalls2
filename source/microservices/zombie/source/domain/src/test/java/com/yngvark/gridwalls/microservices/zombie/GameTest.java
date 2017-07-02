@@ -5,6 +5,7 @@ import com.yngvark.gridwalls.microservices.zombie.run_game.produce_and_consume_m
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 
+import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -13,6 +14,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verify;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class GameTest {
@@ -52,6 +55,25 @@ public class GameTest {
         // Then
         // Check validity of move by deserializing the string
         testHelper.deserializePublish(nextMsg, Move.class);
+    }
+
+
+    @Test
+    public void should_wait_for_map_info_before_moving_2()
+            throws TimeoutException, ExecutionException, InterruptedException, IOException {
+        // Given
+        TestHelper testHelper = new TestHelper();
+
+        ExecutorService executorService = Executors.newCachedThreadPool();
+        Future produceFuture = executorService.submit(() -> testHelper.game.produce());
+
+        verify(testHelper.outputFileWriter).write(eq("/subscribeTo MapInfo"));
+        testHelper.messageReceived(new MapInfo(3, 5));
+
+        verify(testHelper.outputFileWriter).write(eq("/publishTo Zombie {\"toX\":2,\"toY\":2}"));
+
+        testHelper.game.stop();
+        produceFuture.get(1, TimeUnit.SECONDS);
     }
 
     @Test
