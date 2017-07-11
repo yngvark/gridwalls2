@@ -16,12 +16,12 @@ import java.nio.file.Paths;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class NetworkAppFactory {
+class NetworkAppFactory {
     public static final Logger logger = getLogger(NetworkAppFactory.class);
 
     public static NetworkApp start() throws Exception {
         logger.info(Paths.get(".").toAbsolutePath().toString());
-        String host = "172.21.0.2";
+        String host = "172.21.0.2"; // TODO Make dynamic.
         RabbitBrokerConnecter rabbitBrokerConnecter = new RabbitBrokerConnecter(host);
         RabbitConnection rabbitConnection = rabbitBrokerConnecter.connect();
 

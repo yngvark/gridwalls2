@@ -1,19 +1,15 @@
 version: "3"
 
 services:
-  delpipes:
-    image: alpine
+  map_info_producer:
+    build: .
     volumes:
       - named_pipes:/app_data
     command:
-      - sh
-      - -c
-      - echo Doing nothing
-      #- rm -f /app_data/* && ls /app_data
+      - /app_data/in
+      - /app_data/out
 
-  netcom_forwarder:
-    depends_on:
-      - init
+  map_info_producer_netcom_forwarder:
     networks:
       - netcom
     image: netcom_forwarder
@@ -32,16 +28,16 @@ services:
       - /bin/bash
       - -c
       - /app_init/init_named_pipes.sh
-      
-  app:
-    depends_on:
-      - netcom_forwarder
-    build: .
+
+  delpipes:
+    image: alpine
     volumes:
       - named_pipes:/app_data
     command:
-      - /app_data/in
-      - /app_data/out
+      - sh
+      - -c
+      - echo Doing nothing
+      #- rm -f /app_data/* && ls /app_data
 
 volumes:
   named_pipes:

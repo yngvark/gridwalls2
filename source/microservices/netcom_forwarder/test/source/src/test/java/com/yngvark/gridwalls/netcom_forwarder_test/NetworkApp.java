@@ -8,7 +8,7 @@ import com.yngvark.process_test_helper.ProcessKiller;
 
 import java.util.concurrent.TimeUnit;
 
-public class NetworkApp {
+class NetworkApp {
     String host;
     RabbitConnection rabbitConnection;
     Process process;

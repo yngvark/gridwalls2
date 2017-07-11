@@ -25,6 +25,8 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class ProcessTest {
     public final Logger logger = getLogger(getClass());
 
+    // TODO: should_connect_to_broker_before_names_pipes
+
     @Test
     public void published_msgs_should_be_sent_to_network_on_correct_topic() throws Exception {
         // Given

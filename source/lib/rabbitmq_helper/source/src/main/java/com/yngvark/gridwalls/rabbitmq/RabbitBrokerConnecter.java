@@ -15,46 +15,58 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class RabbitBrokerConnecter {
     private final Logger logger = getLogger(getClass());
     private final String host;
+    private final ConnectionFactory connectionFactory;
+    private final Sleeper sleeper;
 
     public RabbitBrokerConnecter(String host) {
         this.host = host;
+        connectionFactory = new ConnectionFactory();
+        sleeper = initSleeper();
+    }
+
+    private Sleeper initSleeper() {
+        return (millis) -> {
+            try {
+                Thread.sleep(millis);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        };
+    }
+
+    RabbitBrokerConnecter(String host, ConnectionFactory connectionFactory, Sleeper sleeper) {
+        this.host = host;
+        this.connectionFactory = connectionFactory;
+        this.sleeper = sleeper;
     }
 
     public RabbitConnection connect() {
-
         while (true) {
             Map<String, Object> clientProperties = new HashMap<>();
             clientProperties.put("consumer_cancel_notify", true);
 
-            ConnectionFactory factory = new ConnectionFactory();
-            factory.setConnectionTimeout(0);
-            factory.setClientProperties(clientProperties);
-            factory.setHost(host);
-            factory.setRequestedHeartbeat(20);
-            factory.setAutomaticRecoveryEnabled(true);
+            connectionFactory.setConnectionTimeout(0);
+            connectionFactory.setClientProperties(clientProperties);
+            connectionFactory.setHost(host);
+            connectionFactory.setRequestedHeartbeat(20);
+            connectionFactory.setAutomaticRecoveryEnabled(true);
 
             logger.info("Connecting to " + host);
             try {
-                Connection connection = factory.newConnection();
+                Connection connection = connectionFactory.newConnection();
                 logger.info("Connected!");
                 return new RabbitConnection(connection);
-            } catch (ConnectException e) {
-                String causeReason = e.getCause() == null ? "" : e.getCause().getMessage();
-                String reason = e.getMessage() + " - " + causeReason;
-                logger.info("Could not connect. Retrying soon. Reason: {}", reason);
-                sleep();
             } catch (IOException | TimeoutException e) {
-                throw new RuntimeException("Could not connect to host: " + host, e);
+                logError(e);
+                sleeper.sleep(3000l);
             }
         }
     }
 
-    private void sleep() {
-        try {
-            Thread.sleep(3000l);
-        } catch (InterruptedException ie) {
-            throw new RuntimeException(ie);
-        }
+    private void logError(Exception e) {
+        String causeReason = e.getCause() == null ? "" : e.getCause().getMessage();
+        String reason = e.getMessage() + " - " + causeReason;
+        logger.info("Could not connect. Retrying soon. Exception: {}. Cause: {}", e.getClass().getSimpleName(), reason);
     }
 }
 

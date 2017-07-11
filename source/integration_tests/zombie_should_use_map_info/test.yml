@@ -1,10 +1,7 @@
 version: "3"
 
 services:
-  test:
-    depends_on:
-      - init
-      - netcom_forwarder_test
+  zombie_should_use_map_info:
     image: openjdk:8-jdk
     volumes:
       - ~/.m2:/root/.m2
@@ -21,7 +18,6 @@ services:
       - test
       - -Dtest.fifo_input_filename=/app_data/in
       - -Dtest.fifo_output_filename=/app_data/out
-
   init:
     image: ubuntu
     volumes:
@@ -32,9 +28,7 @@ services:
       - -c
       - /app_init/init_named_pipes.sh
 
-  netcom_forwarder_test:
-    depends_on:
-      - init
+  zombie_should_use_map_info_netcom_forwarder:
     external_links:
       - rabbitmq
     networks:
@@ -45,6 +39,14 @@ services:
     command:
       - /app_data/out
       - /app_data/in
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "8080:15672"
+      - 15674:15674
+    networks:
+      - netcom
 
   delpipes:
     image: alpine
@@ -66,3 +68,5 @@ volumes:
 networks:
   netcom:
     external: true
+
+# TODO put network here

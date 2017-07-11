@@ -24,13 +24,12 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class App {
     private final Logger logger = getLogger(getClass());
     private final CompletionService completionService;
-    private final RabbitBrokerConnecter rabbitBrokerConnecter;
+    private final RabbitConnection rabbitConnection;
     private final RetrySleeper retrySleeper;
     private final InputFileReader inputFileReader;
     private final OutputFileWriter outputFileWriter;
     private final RabbitMessageListenerFactory rabbitMessageListenerFactory;
 
-    private RabbitConnection rabbitConnection;
     private RabbitSubscriber rabbitSubscriber;
     private RabbitPublisher rabbitPublisher;
 
@@ -42,15 +41,15 @@ public class App {
 
     public static App create(
             CompletionService completionService,
+            RabbitConnection rabbitConnection,
             InputFileReader inputFileReader,
-            OutputFileWriter outputFileWriter,
-            String host
+            OutputFileWriter outputFileWriter
     ) {
         RetrySleeper retrySleeper = () -> Thread.sleep(3000);
 
         return new App(
                 completionService,
-                new RabbitBrokerConnecter(host),
+                rabbitConnection,
                 retrySleeper,
                 inputFileReader,
                 outputFileWriter,
@@ -59,12 +58,13 @@ public class App {
     }
 
     public App(CompletionService completionService,
-            RabbitBrokerConnecter rabbitBrokerConnecter,
-            RetrySleeper retrySleeper, InputFileReader inputFileReader,
+            RabbitConnection rabbitConnection,
+            RetrySleeper retrySleeper,
+            InputFileReader inputFileReader,
             OutputFileWriter outputFileWriter,
             RabbitMessageListenerFactory rabbitMessageListenerFactory) {
         this.completionService = completionService;
-        this.rabbitBrokerConnecter = rabbitBrokerConnecter;
+        this.rabbitConnection = rabbitConnection;
         this.retrySleeper = retrySleeper;
         this.inputFileReader = inputFileReader;
         this.outputFileWriter = outputFileWriter;
@@ -73,7 +73,7 @@ public class App {
 
     public void run() throws Throwable {
         logger.info("Starting network forwarder.");
-        rabbitConnection = rabbitBrokerConnecter.connect();
+
         rabbitSubscriber = new RabbitSubscriber(rabbitConnection);
         rabbitPublisher = new RabbitPublisher(rabbitConnection);
 

@@ -7,6 +7,8 @@ import com.yngvark.communicate_through_named_pipes.output.OutputFileOpener;
 import com.yngvark.communicate_through_named_pipes.output.OutputFileWriter;
 import com.yngvark.gridwalls.microservices.netcom_forwarder.app.App;
 import com.yngvark.gridwalls.microservices.netcom_forwarder.exit_os_process.Shutdownhook;
+import com.yngvark.gridwalls.rabbitmq.RabbitBrokerConnecter;
+import com.yngvark.gridwalls.rabbitmq.RabbitConnection;
 import com.yngvark.os_process_exiter.ExecutorServiceExiter;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -47,11 +49,16 @@ public class Main {
         ExecutorService executorService = Executors.newCachedThreadPool();
         CompletionService completionService = new ExecutorCompletionService(executorService);
 
+        RabbitBrokerConnecter rabbitBrokerConnecter = new RabbitBrokerConnecter(host);
+        logger.info("Connecting to network...");
+        RabbitConnection rabbitConnection = rabbitBrokerConnecter.connect();
+        logger.info("Connecting to network... done.");
+
         RetrySleeper retrySleeper = () -> Thread.sleep(1000);
         OutputFileWriter outputFileWriter = outputFileOpener.openStream(retrySleeper);
         InputFileReader inputFileReader = inputFileOpener.openStream(retrySleeper);
 
-        App app = App.create(completionService, inputFileReader, outputFileWriter, host);
+        App app = App.create(completionService, rabbitConnection, inputFileReader, outputFileWriter);
 
         // Shutdownhook
         Shutdownhook shutdownhook = new Shutdownhook(app);

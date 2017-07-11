@@ -22,7 +22,7 @@ public class RabbitSubscriber {
 
     public RabbitConsumer subscribe(String consumerName, String exchange, RabbitMessageListener rabbitMessageListener) {
         boolean exchangeDurable = false;
-        boolean exchangeAutoDelete = true;
+        boolean exchangeAutoDelete = Config.AUTO_DELETE;
         Map<String, Object> standardArgs = null;
 
         Channel eventsFromServerChannel;

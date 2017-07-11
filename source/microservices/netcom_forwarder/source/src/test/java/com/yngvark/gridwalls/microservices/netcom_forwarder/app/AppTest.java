@@ -4,6 +4,7 @@ import com.yngvark.communicate_through_named_pipes.RetrySleeper;
 import com.yngvark.communicate_through_named_pipes.input.InputFileReader;
 import com.yngvark.communicate_through_named_pipes.output.OutputFileWriter;
 import com.yngvark.gridwalls.rabbitmq.RabbitBrokerConnecter;
+import com.yngvark.gridwalls.rabbitmq.RabbitConnection;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -30,7 +31,7 @@ class AppTest {
         ExecutorService executorService = Executors.newCachedThreadPool();
         App app = new App(
                 new ExecutorCompletionService(executorService),
-                mock(RabbitBrokerConnecter.class),
+                mock(RabbitConnection.class),
                 mock(RetrySleeper.class),
                 inputFileReader,
                 mock(OutputFileWriter.class),

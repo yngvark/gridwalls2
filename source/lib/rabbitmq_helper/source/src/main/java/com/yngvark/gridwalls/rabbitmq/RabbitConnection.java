@@ -25,7 +25,7 @@ public class RabbitConnection {
         if (exchangeChannnels.get(exchange) == null) {
             Channel channel = connection.createChannel();
             exchangeChannnels.put(exchange, channel);
-            channel.exchangeDeclare(exchange, "fanout", false, true, null);
+            channel.exchangeDeclare(exchange, "fanout", false, Config.AUTO_DELETE, null);
         }
 
         return exchangeChannnels.get(exchange);
