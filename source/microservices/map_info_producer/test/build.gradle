@@ -21,7 +21,8 @@ dependencies {
     testCompile("org.junit.jupiter:junit-jupiter-api:5.0.0-M4")
     testRuntime("org.junit.jupiter:junit-jupiter-engine:5.0.0-M4")
 
-    testCompile 'com.yngvark:process_test_helper:1.0.+'
+    testCompile 'com.yngvark:named_pipe_process_starter:1.0.+'
+
     testCompile('com.google.code.gson:gson:2.8.+')
     testCompile 'org.apache.commons:commons-lang3:3.5'
 }

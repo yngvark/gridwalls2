@@ -88,12 +88,11 @@ public class ProcessTest {
     }
 
     @Test
-    public void we_should_receive_messages_from_queue_we_subscribe_to() throws Exception {
+    public void we_should_receive_messages_from_topic_we_subscribe_to() throws Exception {
         // Given
         NetworkApp app = NetworkAppFactory.start();
 
-        app.outputFileWriter.write("/myNameIs netcomForwarderTest");
-        app.outputFileWriter.write("/subscribeTo zombie");
+        app.outputFileWriter.write("/subscribeTo Zombie");
         waitForSubscriptionQueueToAppear(app.host + ":15672");
 
         // When
@@ -101,7 +100,7 @@ public class ProcessTest {
         RabbitPublisher rabbitPublisher = new RabbitPublisher(app.rabbitConnection);
         int messagesToSend = 3;
         for (int i = 0; i < messagesToSend; i++) {
-            rabbitPublisher.publish("zombie", "Hello this is Zombie " + i);
+            rabbitPublisher.publish("Zombie", "Hello this is Zombie " + i);
         }
 
         // Capture published messages
@@ -116,7 +115,7 @@ public class ProcessTest {
         // Then
         assertEquals(messagesToSend, receivedMessages.size());
         for (int i = 0; i < messagesToSend; i++) {
-            assertEquals("[zombie] Hello this is Zombie " + i, receivedMessages.get(i));
+            assertEquals("[Zombie] Hello this is Zombie " + i, receivedMessages.get(i));
         }
     }
 

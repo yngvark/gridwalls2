@@ -27,7 +27,6 @@ public class Main {
         OutputFileOpener outputFileOpener = new OutputFileOpener(fifoOutputFilename);
         InputFileOpener inputFileOpener = new InputFileOpener(fifoInputFilename);
 
-
         try {
             main(outputFileOpener, inputFileOpener);
         } catch (Throwable e) {
