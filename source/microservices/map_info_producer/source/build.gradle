@@ -28,6 +28,7 @@ dependencies {
 
     compile 'com.yngvark:communicate_through_named_pipes:1.0.+'
     compile('com.google.code.gson:gson:2.8.+')
+    compile 'org.apache.commons:commons-lang3:3.5'
 }
 
 apply plugin: 'application'

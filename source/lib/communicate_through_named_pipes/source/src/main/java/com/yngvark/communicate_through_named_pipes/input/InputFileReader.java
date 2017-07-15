@@ -18,9 +18,20 @@ public class InputFileReader {
         this.reader = reader;
     }
 
-    public void consume(MessageListener messageListener) throws IOException {
+    public void consume(MessageListener messageListener) throws RuntimeException {
         logger.debug("Consume: start.");
 
+        try {
+            tryToConsume(messageListener);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        logger.debug("");
+        logger.debug("Consume: done.");
+    }
+
+    private void tryToConsume(MessageListener messageListener) throws IOException {
         String msg = null;
         while (run) {
             msg = reader.readLine();
@@ -36,9 +47,6 @@ public class InputFileReader {
         }
 
         reader.close();
-
-        logger.debug("");
-        logger.debug("Consume: done.");
     }
 
     public void closeStream() {

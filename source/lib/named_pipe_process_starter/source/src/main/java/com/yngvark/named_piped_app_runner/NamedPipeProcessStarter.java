@@ -26,23 +26,37 @@ public class NamedPipeProcessStarter {
         return namedPipeProcess;
     }
 
-    public static String createFifo(String filename) throws IOException, InterruptedException {
+    public static String createFifo(String filename) {
         Path file = Paths.get(filename);
         if (Files.exists(file)) {
-            Files.delete(file);
+            try {
+                Files.delete(file);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
-        Runtime.getRuntime().exec("mkfifo " + filename).waitFor();
+
+        try {
+            Runtime.getRuntime().exec("mkfifo " + filename).waitFor();
+        } catch (InterruptedException | IOException e) {
+            throw new RuntimeException(e);
+        }
         String absolutePath = Paths.get(filename).toAbsolutePath().toString();
         logger.info("Fifo: {}", absolutePath);
         return absolutePath;
     }
 
-    private static void startProcess(String toAbsolutePath, String fromAbsolutePath) throws IOException {
+    private static void startProcess(String toAbsolutePath, String fromAbsolutePath) {
         logger.info("Current directory: {}", Paths.get("").toAbsolutePath());
-        Process process = ProcessStarter.startProcess(
-                "../source/build/install/app/bin/run",
-                toAbsolutePath,
-                fromAbsolutePath);
+        Process process = null;
+        try {
+            process = ProcessStarter.startProcess(
+                    "../source/build/install/app/bin/run",
+                    toAbsolutePath,
+                    fromAbsolutePath);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         namedPipeProcess.process = process;
 
         InputStreamListener stdoutListener = new InputStreamListener();
@@ -54,7 +68,7 @@ public class NamedPipeProcessStarter {
         namedPipeProcess.stderrListener = stderrListener;
     }
 
-    private static void openFifos(String toAbsolutePath, String fromAbsolutePath) throws IOException {
+    private static void openFifos(String toAbsolutePath, String fromAbsolutePath) {
         InputFileOpener inputFileOpener = new InputFileOpener(fromAbsolutePath);
         OutputFileOpener outputFileOpener = new OutputFileOpener(toAbsolutePath);
 
@@ -67,7 +81,6 @@ public class NamedPipeProcessStarter {
         namedPipeProcess.inputFileReader = inputFileReader;
         namedPipeProcess.outputFileWriter = outputFileWriter;
     }
-
 
     public static NamedPipeProcess initFifos() throws Exception {
         String toAbsolutePath = createFifo("build/fifo_to_microservice");

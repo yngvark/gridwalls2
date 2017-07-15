@@ -17,8 +17,18 @@ public class OutputFileWriter {
         this.writer = writer;
     }
 
-    public void write(String msg) throws IOException {
-        writeRaw(msg);
+    /**
+     * Writes the message to the output.
+     *
+     * @param msg The message to write.
+     * @throws RuntimeException if an {@link IOException} occurs.
+     */
+    public void write(String msg) throws RuntimeException {
+        try {
+            writeRaw(msg);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void writeRaw(String msg) throws IOException {
