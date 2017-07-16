@@ -1,7 +1,7 @@
 package com.yngvark.named_piped_app_runner;
 
+import com.yngvark.communicate_through_named_pipes.input.InputFileLineReader;
 import com.yngvark.communicate_through_named_pipes.input.InputFileOpener;
-import com.yngvark.communicate_through_named_pipes.input.InputFileReader;
 import com.yngvark.communicate_through_named_pipes.output.OutputFileOpener;
 import com.yngvark.communicate_through_named_pipes.output.OutputFileWriter;
 import org.slf4j.Logger;
@@ -75,10 +75,10 @@ public class NamedPipeProcessStarter {
         logger.info("Opening output.");
         OutputFileWriter outputFileWriter = outputFileOpener.openStream(() -> Thread.sleep(3000));
         logger.info("Opening input.");
-        InputFileReader inputFileReader = inputFileOpener.openStream(() -> Thread.sleep(3000));
+        InputFileLineReader inputFileLineReader = inputFileOpener.openLineStream(() -> Thread.sleep(3000));
         logger.info("Streams opened.");
 
-        namedPipeProcess.inputFileReader = inputFileReader;
+        namedPipeProcess.inputFileLineReader = inputFileLineReader;
         namedPipeProcess.outputFileWriter = outputFileWriter;
     }
 

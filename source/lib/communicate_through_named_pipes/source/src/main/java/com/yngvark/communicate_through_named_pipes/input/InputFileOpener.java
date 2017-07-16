@@ -19,7 +19,10 @@ public class InputFileOpener {
         this.fifoInputFilename = fifoInputFilename;
     }
 
-    public InputFileReader openStream(RetrySleeper retrySleeper) {
+    /**
+     * @throws FileNotFoundRuntimeException If a {@link FileNotFoundException} occurs.
+     */
+    public InputFileReader openStream(RetrySleeper retrySleeper) throws FileNotFoundRuntimeException {
         logger.info("Opening input file... " + fifoInputFilename);
 
         RetryWaiter retryWaiter = new RetryWaiter(retrySleeper);
@@ -39,8 +42,24 @@ public class InputFileOpener {
         try {
             f = new FileInputStream(file);
         } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+            throw new FileNotFoundRuntimeException(e);
         }
         return f;
     }
+
+    public InputFileLineReader openLineStream(RetrySleeper retrySleeper) {
+        logger.info("Opening input file... " + fifoInputFilename);
+
+        RetryWaiter retryWaiter = new RetryWaiter(retrySleeper);
+        retryWaiter.waitUntilFileExists(fifoInputFilename);
+
+        logger.debug("File exists. Opening stream.");
+        FileInputStream fileInputStream = openFileStream(fifoInputFilename);
+
+        logger.info("Opening input file... done.");
+
+        BufferedReader in = new BufferedReader(new InputStreamReader(fileInputStream));
+        return new InputFileLineReader(in);
+    }
+
 }

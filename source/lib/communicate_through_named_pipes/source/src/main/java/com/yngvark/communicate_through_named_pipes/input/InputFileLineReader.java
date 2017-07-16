@@ -1,55 +1,31 @@
 package com.yngvark.communicate_through_named_pipes.input;
 
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 
-import static org.slf4j.LoggerFactory.getLogger;
-
-public class InputFileReader {
-    private final Logger logger = getLogger(getClass());
+public class InputFileLineReader {
+    private final Logger logger = LoggerFactory.getLogger(getClass());
     private final BufferedReader bufferedReader;
 
     private boolean run = true;
     private boolean streamClosed = false;
 
-    public InputFileReader(BufferedReader bufferedReader) {
+    public InputFileLineReader(BufferedReader bufferedReader) {
         this.bufferedReader = bufferedReader;
     }
 
     /**
      * @throws IORuntimeException If an {@link java.io.IOException} occurs.
      */
-    public void consume(MessageListener messageListener) throws RuntimeException {
-        logger.debug("Consume: start.");
-
+    public String readLine() throws IORuntimeException {
         try {
-            tryToConsume(messageListener);
+            return bufferedReader.readLine();
         } catch (IOException e) {
             throw new IORuntimeException(e);
         }
-
-        logger.debug("");
-        logger.debug("Consume: done.");
-    }
-
-    private void tryToConsume(MessageListener messageListener) throws IOException {
-        String msg = null;
-        while (run) {
-            msg = bufferedReader.readLine();
-            if (msg == null)
-                break;
-
-            logger.trace("<<< From other side: " + msg);
-            messageListener.messageReceived(msg);
-        }
-
-        if (msg == null) {
-            logger.debug("Consume file stream was closed from other side.");
-        }
-
-        bufferedReader.close();
     }
 
     public synchronized void closeStream() {

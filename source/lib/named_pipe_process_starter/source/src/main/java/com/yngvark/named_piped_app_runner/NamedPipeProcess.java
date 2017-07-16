@@ -1,5 +1,6 @@
 package com.yngvark.named_piped_app_runner;
 
+import com.yngvark.communicate_through_named_pipes.input.InputFileLineReader;
 import com.yngvark.communicate_through_named_pipes.input.InputFileReader;
 import com.yngvark.communicate_through_named_pipes.output.OutputFileWriter;
 
@@ -9,14 +10,14 @@ public class NamedPipeProcess {
     public Process process;
     public InputStreamListener stdoutListener;
     public InputStreamListener stderrListener;
-    public InputFileReader inputFileReader;
+    public InputFileLineReader inputFileLineReader;
     public OutputFileWriter outputFileWriter;
 
     public void stop() throws Exception {
         stdoutListener.stopListening();
         stderrListener.stopListening();
 
-        inputFileReader.closeStream();
+        inputFileLineReader.closeStream();
         outputFileWriter.closeStream();
 
         ProcessKiller.killUnixProcess(process);

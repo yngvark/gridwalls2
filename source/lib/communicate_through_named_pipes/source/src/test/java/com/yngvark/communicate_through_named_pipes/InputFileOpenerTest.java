@@ -1,18 +1,12 @@
 package com.yngvark.communicate_through_named_pipes;
 
-import com.yngvark.communicate_through_named_pipes.input.InputFileReader;
+import com.yngvark.communicate_through_named_pipes.input.InputFileLineReader;
+import com.yngvark.communicate_through_named_pipes.input.InputFileOpener;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
-import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -93,24 +87,23 @@ class InputFileOpenerTest {
         }
     }
 
-    @Test // TODO
+    @Test
     public void should_read_one_line() throws IOException {
         // Given
-        PipedOutputStream pipedOutputStream = new PipedOutputStream();
-        Writer writer = new BufferedWriter(new OutputStreamWriter(pipedOutputStream));
+        String testFilename = getClass().getResource("/test.txt").getPath();
+        InputFileOpener inputFileOpener = new InputFileOpener(testFilename);
 
-        PipedInputStream pipedInputStream = new PipedInputStream();
-        pipedInputStream.connect(pipedOutputStream);
-        InputFileReader inputFileReader = new InputFileReader(
-                new BufferedReader(new InputStreamReader(pipedInputStream)));
-
-        writer.write("Hei");
-
-        // When
-        // String msg = inputFileReader.consumeOne(100, TimeUnit.MILLISECONDS);
+        InputFileLineReader lineReader = inputFileOpener.openLineStream(() -> {
+            throw new RuntimeException("Should not retry");
+        });
 
         // Then
-        // assertEquals("Hei", msg);
+        assertEquals("Hei", lineReader.readLine());
+        assertEquals("på", lineReader.readLine());
+        assertEquals("deg", lineReader.readLine());
+
+        // Finally
+        lineReader.closeStream();
     }
 
 }
