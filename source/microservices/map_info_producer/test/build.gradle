@@ -23,6 +23,6 @@ dependencies {
 
     testCompile 'com.yngvark:named_pipe_process_starter:1.0.+'
 
-    testCompile('com.google.code.gson:gson:2.8.+')
+    testCompile 'com.google.code.gson:gson:2.8.+'
     testCompile 'org.apache.commons:commons-lang3:3.5'
 }
