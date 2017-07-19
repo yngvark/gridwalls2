@@ -25,7 +25,11 @@ public class MapInfoReceiver implements Producer, NetworkMsgListener {
             ZombieMoverFactory zombieMoverFactory) {
         this.serializer = serializer;
         this.zombieMoverFactory = zombieMoverFactory;
-        enqueueMessage("/subscribeTo MapInfo");
+        enqueueMessage("/subscribeTo Zombie_MapInfo");
+
+        String mapInfoRequest = serializer.serialize(
+                new MapInfoRequest().replyToTopic("Zombie_MapInfo"));
+        enqueueMessage("/publishTo MapInfoRequests " + mapInfoRequest);
     }
 
     private void enqueueMessage(String msg) {

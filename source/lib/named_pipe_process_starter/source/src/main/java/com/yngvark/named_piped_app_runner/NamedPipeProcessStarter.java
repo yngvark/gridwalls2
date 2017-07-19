@@ -17,10 +17,10 @@ public class NamedPipeProcessStarter {
     public static final Logger logger = getLogger(NamedPipeProcessStarter.class);
     private static NamedPipeProcess namedPipeProcess = new NamedPipeProcess();
 
-    public static NamedPipeProcess start() throws Exception {
+    public static NamedPipeProcess start(String args) throws Exception {
         String toAbsolutePath = createFifo("build/fifo_to_microservice");
         String fromAbsolutePath = createFifo("build/fifo_from_microservice");
-        startProcess(toAbsolutePath, fromAbsolutePath);
+        startProcess(toAbsolutePath, fromAbsolutePath, args);
         openFifos(toAbsolutePath, fromAbsolutePath);
 
         return namedPipeProcess;
@@ -46,14 +46,15 @@ public class NamedPipeProcessStarter {
         return absolutePath;
     }
 
-    private static void startProcess(String toAbsolutePath, String fromAbsolutePath) {
+    private static void startProcess(String toAbsolutePath, String fromAbsolutePath, String args) {
         logger.info("Current directory: {}", Paths.get("").toAbsolutePath());
         Process process = null;
         try {
             process = ProcessStarter.startProcess(
                     "../source/build/install/app/bin/run",
                     toAbsolutePath,
-                    fromAbsolutePath);
+                    fromAbsolutePath,
+                    args);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

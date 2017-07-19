@@ -1,4 +1,4 @@
-package com.yngvark.gridwalls.microservices.zombie.run_app;
+package com.yngvark.gridwalls.microservices.zombie;
 
 import com.yngvark.gridwalls.microservices.zombie.run_game.Sleeper;
 

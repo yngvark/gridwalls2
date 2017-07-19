@@ -37,9 +37,7 @@ public class BlockingGameEventProducer implements GameEventProducer {
     }
 
     public String produceNext() {
-        String msg = producerContext.nextMsg();
-        logger.info(">>> {}", msg);
-        return msg;
+        return producerContext.nextMsg();
     }
 
     public void stop() {

@@ -2,10 +2,8 @@ group 'com.yngvark.gridwalls.microservices.zombie'
 version '1.0-SNAPSHOT'
 
 dependencies {
-    testCompile 'com.yngvark:process_test_helper:1.0.+'
-
+    testCompile 'com.yngvark:named_pipe_process_starter:1.+'
     compile 'com.yngvark:os_process_exiter:1.0.+'
-
     compile (project(':domain'))
 }
 

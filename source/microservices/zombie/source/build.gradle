@@ -25,7 +25,7 @@ subprojects {
         compile('org.slf4j:slf4j-api:1.7.+')
         compile('org.slf4j:slf4j-simple:1.7.+')
 
-        compile "com.yngvark:communicate_through_named_pipes:1.0.+"
+        compile "com.yngvark:communicate_through_named_pipes:1.1.+"
         compile("org.apache.commons:commons-lang3:3.5")
 
         testCompile("org.junit.jupiter:junit-jupiter-api:5.0.0-M4")

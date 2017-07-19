@@ -32,7 +32,7 @@ public class OutputFileWriter {
     }
 
     private void writeRaw(String msg) throws IOException {
-        logger.info(">>> Sending: " + msg);
+        logger.trace("Writing: {}", msg);
 
         writer.write(msg);
         writer.newLine();

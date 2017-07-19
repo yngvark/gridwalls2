@@ -1,4 +1,0 @@
-- Jeg må ikke svelge exceptions i appen.!
--Hvorfor fikk ikke GameTest exception!?? Jo, fordi den funka.
-    [ ] Trenger integrasjonstest mellom Zombie og MapInfoProducer.
--Game burde kanskje både produce og consume

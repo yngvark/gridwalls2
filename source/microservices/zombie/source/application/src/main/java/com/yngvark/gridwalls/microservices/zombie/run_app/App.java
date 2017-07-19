@@ -4,6 +4,7 @@ import com.yngvark.communicate_through_named_pipes.input.InputFileReader;
 import com.yngvark.communicate_through_named_pipes.output.OutputFileWriter;
 import com.yngvark.gridwalls.microservices.zombie.run_game.GameEventProducer;
 import com.yngvark.gridwalls.microservices.zombie.run_game.GameFactory;
+import com.yngvark.gridwalls.microservices.zombie.run_game.Sleeper;
 import org.slf4j.Logger;
 
 import java.util.Random;
@@ -22,13 +23,15 @@ public class App {
     private final GameEventProducer gameEventProducer;
 
     public static App create(
+            Sleeper sleeper,
+            Random random,
             CompletionService completionService,
             InputFileReader inputFileReader,
             OutputFileWriter outputFileWriter
     ) {
         GameFactory gameFactory = GameFactory.create(
-                new ThreadSleeper(),
-                new Random(),
+                sleeper,
+                random,
                 new JsonSerializer()
         );
 
