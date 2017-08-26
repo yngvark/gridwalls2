@@ -46,24 +46,15 @@ public class MapInfoReceiverTest {
 
         for (int i = 0; i < 2; i++) {
             logger.info("Waiting for map info request... Attempt: {}", i);
-            String mapInfoRequest = assertTimeoutPreemptively(
+            // When
+            String mapInfoRequestRaw = assertTimeoutPreemptively(
                     Duration.ofMillis(2000l),
-                    () -> {
-                        try {
-                            return app.inputFileLineReader.readLine();
-                        } catch (Throwable e) {
-                            return "Farsken";
-                        }
-                    });
-//
-//            String mapInfoRequest2 = assertTimeoutPreemptively(
-//                    Duration.ofMillis(5l),
-//                    () -> "hei");
+                    app.inputFileLineReader::readLine);
 
+            // Then
+            MapInfoRequest mapInfoRequest = gson.fromJson(mapInfoRequestRaw, MapInfoRequest.class);
             logger.info("Result: " + mapInfoRequest);
         }
-
-        logger.info("-------------- EXITING --------------");
     }
 
 
