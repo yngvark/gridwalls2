@@ -42,10 +42,13 @@ public class MapInfoReceiver implements Producer, NetworkMsgListener {
     }
 
     public String nextMsg(ProducerContext producerContext) {
-        logger.info("Producing next.");
+        logger.debug("Producing next.");
         try {
             this.producerContext = producerContext;
-            return messages.take();
+            logger.debug("Waiting for message in queue...");
+            String msg = messages.take();
+            logger.debug("Waiting for message in queue... Done: {}", msg);
+            return msg;
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }

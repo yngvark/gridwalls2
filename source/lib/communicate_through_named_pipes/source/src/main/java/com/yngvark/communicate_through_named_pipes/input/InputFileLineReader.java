@@ -5,12 +5,12 @@ import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class InputFileLineReader {
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final BufferedReader bufferedReader;
 
-    private boolean run = true;
     private boolean streamClosed = false;
 
     public InputFileLineReader(BufferedReader bufferedReader) {
@@ -35,8 +35,8 @@ public class InputFileLineReader {
             return;
         }
 
-        run = false;
         try {
+            logger.trace("Closing buffered reader.");
             bufferedReader.close();
             streamClosed = true;
         } catch (IOException e) {

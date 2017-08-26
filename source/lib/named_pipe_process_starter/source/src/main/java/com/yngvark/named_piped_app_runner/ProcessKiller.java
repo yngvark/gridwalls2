@@ -18,7 +18,7 @@ public  class ProcessKiller {
 
     public static void killUnixProcess(Process process) throws NoSuchFieldException, IllegalAccessException, IOException, InterruptedException {
         int pid = getUnixPID(process);
-        System.out.println("Killing process with pid: " + pid);
+        logger.info("Killing process with pid: {}", pid);
         Runtime.getRuntime().exec("kill " + pid).waitFor();
 
     }

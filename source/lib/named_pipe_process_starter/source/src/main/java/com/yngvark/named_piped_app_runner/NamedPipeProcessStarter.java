@@ -17,6 +17,10 @@ public class NamedPipeProcessStarter {
     public static final Logger logger = getLogger(NamedPipeProcessStarter.class);
     private static NamedPipeProcess namedPipeProcess = new NamedPipeProcess();
 
+    public static NamedPipeProcess start() throws Exception {
+        return start("");
+    }
+
     public static NamedPipeProcess start(String args) throws Exception {
         String toAbsolutePath = createFifo("build/fifo_to_microservice");
         String fromAbsolutePath = createFifo("build/fifo_from_microservice");
@@ -60,11 +64,11 @@ public class NamedPipeProcessStarter {
         }
         namedPipeProcess.process = process;
 
-        InputStreamListener stdoutListener = new InputStreamListener();
+        InputStreamListener stdoutListener = new InputStreamListener("stdoutListener");
         stdoutListener.listenInNewThreadOn(process.getInputStream());
         namedPipeProcess.stdoutListener = stdoutListener;
 
-        InputStreamListener stderrListener = new InputStreamListener();
+        InputStreamListener stderrListener = new InputStreamListener("stderrListener");
         stderrListener.listenInNewThreadOn(process.getErrorStream());
         namedPipeProcess.stderrListener = stderrListener;
     }
@@ -73,11 +77,9 @@ public class NamedPipeProcessStarter {
         InputFileOpener inputFileOpener = new InputFileOpener(fromAbsolutePath);
         OutputFileOpener outputFileOpener = new OutputFileOpener(toAbsolutePath);
 
-        logger.info("Opening output.");
         OutputFileWriter outputFileWriter = outputFileOpener.openStream(() -> Thread.sleep(3000));
-        logger.info("Opening input.");
         InputFileLineReader inputFileLineReader = inputFileOpener.openLineStream(() -> Thread.sleep(3000));
-        logger.info("Streams opened.");
+        logger.info("Both output and input streams opened.");
 
         namedPipeProcess.inputFileLineReader = inputFileLineReader;
         namedPipeProcess.outputFileWriter = outputFileWriter;

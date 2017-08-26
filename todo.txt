@@ -1,8 +1,32 @@
 TODO
 ---------------------------------------------------------------
 
+[ ] FIks blocking bufferedreader. Lag test i comm prosjektet.
+	Løsning: Close inputstreamen til bufferedreaderen.
+[ ] Fiks kubernetes.
+[ ] Finn ut hvordan jeg gjør det med timing.
 [ ] netcomforwarder: should_get_exception_when_producer_throws_exception
+	[ ] Zombie RPC-er til MapInfoProducer før den er oppe. Sender melding som ikke blir forwardet til en queue, fordi queuen ikke eksisterer enda.
+		Mulige løsninger
+		[ ] App-logikk: Retrier.
+			+ msgbus-agnostisk
+			+ gir mening. Noen MÅ se beskjeden for at den skal gi mening.
 
+		Gå for dette,
+
+		[ ] NetCom-forwarder: Detekter publish fails, og retry sending av melding.
+			=mandatory=true
+			+ slipper applogikk
+			- mer stress å bytte til annen msg bus provider.
+
+
+		[ ] Ha en initfase der alle konsumenter får tid til å lage kø først.
+
+		[ ] Installere cache på 20 meldinger.
+		[ ] Velge noe annet enn RabbitMq som støtter dette. Hva da? Kafka?
+		[ ] producer må opprette køen.
+			- Bryter med pubsub
+			
 [ ] Integrasjonstest
 	[ ] Hvordan kan jeg få stoppet zombie_should_use_map_info etter suksess? Problemet er at rabbitmq bare henger.
 		[ ] Mulig: rabbitmctl (ellernoe) for å stoppe rabbitmq programmatisk.
@@ -10,34 +34,6 @@ TODO
 		[ ] Det beste: La netcom forwarder eller helst egen ms eller noe med en rabbit connection stoppe hele brokeren, sånn at dockercontaineren stopper.
 	[ ] Og hvordan får jeg stoppet Zombie? Og MapInfo producer?
 	[ ] Og hvordan skal jeg i det hele tatt kjøre testen?
-[x] Jeg må ikke svelge exceptions i appen.!
--Hvorfor fikk ikke GameTest exception!?? Jo, fordi den funka.
-    [ ] Trenger integrasjonstest mellom Zombie og MapInfoProducer.
-    	source/integration_tests/zombie_should_use_map_info
-    		run by running ./gradlew test
-    		test.java:
-	    		/subscribeTo Zombie
-	    		wait max 3 seconds for first message to appeaer
-	    		for i < 3
-	    			msg = getMsg;
-	    			assert that duration since last message is below 1,2 sec
-	    			assert that message is a valid ZombieMove
-
--Game burde kanskje både produce og consume
-
-[x] Zombie publisher ikke Zombie Moves.
-[ ] Må fikse så netcom_forwarder -> test kan automatiseres. Testen trenger rabbitmq-s ip, som er variabel.
-
-
-[ ] Zombie
-	Burde kanskje ikke ha det State-patternet. Burde bare kanskje hatt
-
-
-Hm.. Alt sammen mangler patternet
-	subscribeTo("SomeTopic", (msg) -> { 
-		// BEHANDLE meldinger her.
-	});
-	Det er fordi jeg leser fra fil (named pipe), ingen avansert måte å gjøre ting her. Om jeg vil ha mer, får jeg lage et lib eller gjøre det i MS-en.
 
 [ ] Fiks byggesystem så full bygging og kjøring av appen min blir smooth sailing
 	[ ] Fiks bygging av microservices

@@ -55,7 +55,6 @@ public class InputFileOpener {
 
         logger.debug("File exists. Opening stream.");
         FileInputStream fileInputStream = openFileStream(fifoInputFilename);
-
         logger.info("Opening input file... done.");
 
         BufferedReader in = new BufferedReader(new InputStreamReader(fileInputStream));

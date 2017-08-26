@@ -55,12 +55,13 @@ public class InputFileReader {
     public synchronized void closeStream() {
         logger.debug("Stopping consuming input file...");
         if (streamClosed) {
-            logger.warn("Already stopped.");
+            logger.info("Already stopped.");
             return;
         }
 
         run = false;
         try {
+            logger.trace("Closing buffered reader.");
             bufferedReader.close();
             streamClosed = true;
         } catch (IOException e) {

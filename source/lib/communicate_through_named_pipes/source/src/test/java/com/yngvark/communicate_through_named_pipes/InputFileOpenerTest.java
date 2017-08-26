@@ -1,7 +1,5 @@
 package com.yngvark.communicate_through_named_pipes;
 
-import com.yngvark.communicate_through_named_pipes.input.InputFileLineReader;
-import com.yngvark.communicate_through_named_pipes.input.InputFileOpener;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 
@@ -30,8 +28,7 @@ class InputFileOpenerTest {
     void should_retry_if_file_is_not_available() throws IOException, ExecutionException, InterruptedException {
         // Given
         Path buildDir = Paths.get("build");
-        String file = "build/toConsume";
-
+        String file = "build/toConsume_should_retry_if_file_is_not_available";
         createFileIfNotExists(buildDir, file);
 
         Map<String, Boolean> testResult = new HashMap<>();
@@ -87,23 +84,5 @@ class InputFileOpenerTest {
         }
     }
 
-    @Test
-    public void should_read_one_line() throws IOException {
-        // Given
-        String testFilename = getClass().getResource("/test.txt").getPath();
-        InputFileOpener inputFileOpener = new InputFileOpener(testFilename);
-
-        InputFileLineReader lineReader = inputFileOpener.openLineStream(() -> {
-            throw new RuntimeException("Should not retry");
-        });
-
-        // Then
-        assertEquals("Hei", lineReader.readLine());
-        assertEquals("på", lineReader.readLine());
-        assertEquals("deg", lineReader.readLine());
-
-        // Finally
-        lineReader.closeStream();
-    }
 
 }

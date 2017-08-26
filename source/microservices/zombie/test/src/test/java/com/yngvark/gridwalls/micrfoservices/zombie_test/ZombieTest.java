@@ -20,12 +20,13 @@ import java.util.regex.Pattern;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class ProcessTest {
-    public final Logger logger = getLogger(ProcessTest.class);
+public class ZombieTest {
+    public final Logger logger = getLogger(ZombieTest.class);
     private NamedPipeProcess app;
 
     @AfterEach
     public void afterEach() throws Exception {
+        logger.info("--- afterEach");
         app.stop();
     }
 
@@ -37,14 +38,14 @@ public class ProcessTest {
         MaxMinGatherer gatherer = new MaxMinGatherer();
 
         // When
-        String subscription = readLine(app);
+        String subscription = AppLineReader.readLine(app);
 
         // Then
         assertEquals("/subscribeTo Zombie_MapInfo", subscription);
 
         String mapInfoRequest = gson.toJson(
                 new MapInfoRequest().replyToTopic("Zombie_MapInfo"));
-        String publish = readLine(app);
+        String publish = AppLineReader.readLine(app);
         assertEquals("/publishTo MapInfoRequests " + mapInfoRequest, publish);
 
         // And given
@@ -86,10 +87,6 @@ public class ProcessTest {
         gatherer.add("y", m.toY);
     }
 
-    private String readLine(NamedPipeProcess app) {
-        return assertTimeoutPreemptively(Duration.ofMillis(200), app.inputFileLineReader::readLine);
-    }
-
     @Test
     public void moves_should_be_deterministic_given_seed() throws Exception {
         // Given
@@ -97,11 +94,10 @@ public class ProcessTest {
         Gson gson = new Gson();
         MaxMinGatherer gatherer = new MaxMinGatherer();
 
-        readLine(app);
-        readLine(app);
+        AppLineReader.readLine(app); // subscription
+        AppLineReader.readLine(app); // request for map info
 
-        String mapInfo = gson.toJson(
-                new MapInfo(15, 10));
+        String mapInfo = gson.toJson(new MapInfo(15, 10));
         app.outputFileWriter.write("[Zombie_MapInfo] " + mapInfo);
 
         BufferedReader expectedMovesReader = new BufferedReader(new InputStreamReader(
