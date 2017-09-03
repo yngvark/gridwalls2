@@ -4,12 +4,14 @@ import com.yngvark.communicate_through_named_pipes.input.InputFileLineReader;
 import com.yngvark.communicate_through_named_pipes.input.InputFileOpener;
 import com.yngvark.communicate_through_named_pipes.output.OutputFileOpener;
 import com.yngvark.communicate_through_named_pipes.output.OutputFileWriter;
+import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -21,7 +23,7 @@ public class NamedPipeProcessStarter {
         return start("");
     }
 
-    public static NamedPipeProcess start(String args) throws Exception {
+    public static NamedPipeProcess start(String... args) throws Exception {
         String toAbsolutePath = createFifo("build/fifo_to_microservice");
         String fromAbsolutePath = createFifo("build/fifo_from_microservice");
         startProcess(toAbsolutePath, fromAbsolutePath, args);
@@ -50,15 +52,12 @@ public class NamedPipeProcessStarter {
         return absolutePath;
     }
 
-    private static void startProcess(String toAbsolutePath, String fromAbsolutePath, String args) {
+    private static void startProcess(String toAbsolutePath, String fromAbsolutePath, String... args) {
         logger.info("Current directory: {}", Paths.get("").toAbsolutePath());
-        Process process = null;
+        Process process;
         try {
-            process = ProcessStarter.startProcess(
-                    "../source/build/install/app/bin/run",
-                    toAbsolutePath,
-                    fromAbsolutePath,
-                    args);
+            String[] path = mergeStringsWithArray(toAbsolutePath, fromAbsolutePath, args);
+            process = ProcessStarter.startProcess(path);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -71,6 +70,17 @@ public class NamedPipeProcessStarter {
         InputStreamListener stderrListener = new InputStreamListener("stderrListener");
         stderrListener.listenInNewThreadOn(process.getErrorStream());
         namedPipeProcess.stderrListener = stderrListener;
+    }
+
+    private static String[] mergeStringsWithArray(String toAbsolutePath, String fromAbsolutePath, String[] args) {
+        return ArrayUtils.addAll(
+                        new String[] {
+                                "../source/build/install/app/bin/run",
+                                toAbsolutePath,
+                                fromAbsolutePath
+                        },
+                        args
+                );
     }
 
     private static void openFifos(String toAbsolutePath, String fromAbsolutePath) {
