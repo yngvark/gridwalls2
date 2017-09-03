@@ -1,6 +1,8 @@
 TODO
 ---------------------------------------------------------------
 
+should_not_resend_map_info_request_after_receiving_map_info
+
 [ ] netcomforwarder: should_get_exception_when_producer_throws_exception
 	[ ] Zombie RPC-er til MapInfoProducer før den er oppe. Sender melding som ikke blir forwardet til en queue, fordi queuen ikke eksisterer enda.
 		Mulige løsninger

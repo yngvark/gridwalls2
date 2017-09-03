@@ -5,8 +5,8 @@ import com.yngvark.communicate_through_named_pipes.input.InputFileOpener;
 import com.yngvark.communicate_through_named_pipes.input.InputFileReader;
 import com.yngvark.communicate_through_named_pipes.output.OutputFileOpener;
 import com.yngvark.communicate_through_named_pipes.output.OutputFileWriter;
-import com.yngvark.gridwalls.microservices.zombie.run_app.App;
 import com.yngvark.gridwalls.microservices.zombie.exit_os_process.Shutdownhook;
+import com.yngvark.gridwalls.microservices.zombie.run_app.App;
 import com.yngvark.gridwalls.microservices.zombie.run_game.Sleeper;
 import com.yngvark.os_process_exiter.ExecutorServiceExiter;
 import org.apache.commons.lang3.ArrayUtils;
@@ -16,11 +16,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Random;
-import java.util.concurrent.CompletionService;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorCompletionService;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 public class Main {
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
@@ -44,8 +42,7 @@ public class Main {
 
     static void main(OutputFileOpener outputFileOpener, InputFileOpener inputFileOpener, String[] args) {
         // Dependencies
-        ExecutorService executorService = Executors.newCachedThreadPool();
-        CompletionService completionService = new ExecutorCompletionService(executorService);
+        ScheduledExecutorService executorService = Executors.newScheduledThreadPool(4);
 
         RetrySleeper retrySleeper = () -> Thread.sleep(1000);
         InputFileReader inputFileReader = inputFileOpener.openStream(retrySleeper);
@@ -53,7 +50,7 @@ public class Main {
 
         Sleeper sleeper = createSleeper(args);
         Random random = createRandom(args);
-        App app = App.create(sleeper, random, completionService, inputFileReader, outputFileWriter);
+        App app = App.create(sleeper, random, inputFileReader, outputFileWriter, executorService);
 
         // Shutdownhook
         Shutdownhook shutdownhook = new Shutdownhook(app);

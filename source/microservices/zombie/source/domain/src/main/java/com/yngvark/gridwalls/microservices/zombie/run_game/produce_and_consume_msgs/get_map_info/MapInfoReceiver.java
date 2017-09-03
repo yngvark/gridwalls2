@@ -11,22 +11,33 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
+/**
+ * This class is used by TWO threads, produing messages and consuming messages.
+ */
 public class MapInfoReceiver implements Producer, NetworkMsgListener {
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final Serializer serializer;
     private final ZombieMoverFactory zombieMoverFactory;
+    private final ScheduledExecutorService scheduledExecutorService;
 
     private BlockingQueue<String> messages = new LinkedBlockingQueue<>();
     private ProducerContext producerContext;
+    private Future futureMapInfoRequest;
 
     public MapInfoReceiver(Serializer serializer,
-            ZombieMoverFactory zombieMoverFactory) {
+            ZombieMoverFactory zombieMoverFactory,
+            ScheduledExecutorService scheduledExecutorService) {
         this.serializer = serializer;
         this.zombieMoverFactory = zombieMoverFactory;
+        this.scheduledExecutorService = scheduledExecutorService;
         subscribeToMapInfo();
         requestMapInfo();
+        requestMapInfoAgainAndAgainIfNotReceived();
     }
 
     private void subscribeToMapInfo() {
@@ -48,21 +59,27 @@ public class MapInfoReceiver implements Producer, NetworkMsgListener {
         enqueueMessage("/publishTo MapInfoRequests " + mapInfoRequest);
     }
 
+    private void requestMapInfoAgainAndAgainIfNotReceived() {
+        futureMapInfoRequest = scheduledExecutorService.scheduleWithFixedDelay(
+                this::requestMapInfo,
+                2, 2, TimeUnit.SECONDS);
+    }
+
     public String nextMsg(ProducerContext producerContext) {
         logger.debug("Producing next.");
         try {
             this.producerContext = producerContext;
-            String msg = waitForNextMessageToBeProduced();
+            String msg = waitForNextEnqueuedMessage();
             return msg;
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private String waitForNextMessageToBeProduced() throws InterruptedException {
+    private String waitForNextEnqueuedMessage() throws InterruptedException {
         logger.debug("Waiting for message in queue...");
         String msg = messages.take();
-        logger.debug("Waiting for message in queue... Done: {}", msg);
+        logger.debug("Waiting for message in queue... Done!");
         return msg;
     }
 
@@ -76,11 +93,11 @@ public class MapInfoReceiver implements Producer, NetworkMsgListener {
     }
 
     private MapInfo getMapInfoFrom(String msg) {
-        String[] parts = getFirstWordIn(msg);
+        String[] parts = getSecondWordIn(msg);
         return serializer.deserialize(parts[1], MapInfo.class);
     }
 
-    private String[] getFirstWordIn(String msg) {
+    private String[] getSecondWordIn(String msg) {
         return StringUtils.split(msg, " ", 2);
     }
 

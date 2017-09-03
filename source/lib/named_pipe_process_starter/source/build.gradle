@@ -14,6 +14,7 @@ dependencies {
 
     compile "org.junit.jupiter:junit-jupiter-api:5.0.0-M4"
     runtime "org.junit.jupiter:junit-jupiter-engine:5.0.0-M4"
+    compile "org.apache.commons:commons-lang3:3.5"
 
     compile 'com.yngvark:communicate_through_named_pipes:1.1.+'
 }

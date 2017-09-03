@@ -11,19 +11,25 @@ import com.yngvark.gridwalls.microservices.zombie.run_game.produce_and_consume_m
 import com.yngvark.gridwalls.microservices.zombie.run_game.serialize_msgs.Serializer;
 
 import java.util.Random;
+import java.util.concurrent.ScheduledExecutorService;
 
 public class GameFactory {
     private final NetworkMsgListener networkMsgListener;
     private final Producer producer;
 
-    public static GameFactory create(Sleeper sleeper, Random random, Serializer serializer) {
+    public static GameFactory create(
+            Sleeper sleeper,
+            Random random,
+            Serializer serializer,
+            ScheduledExecutorService scheduledExecutorService) {
         MapInfoReceiver mapInfoReceiver = new MapInfoReceiver(
                 serializer,
                 new ZombieMoverFactory(
                         serializer,
                         sleeper,
                         random
-                )
+                ),
+                scheduledExecutorService
         );
 
         return new GameFactory(mapInfoReceiver, mapInfoReceiver);

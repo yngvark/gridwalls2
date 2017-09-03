@@ -111,7 +111,7 @@ public class ZombieTest {
             Move m = gson.fromJson(parts[2], Move.class);
 
             Move expectedMove = getNextExpectedMove(gson, expectedMovesReader);
-            //assertEquals(expectedMove, m);
+            assertEquals(expectedMove, m);
         }
 
         // Then

@@ -9,14 +9,16 @@ import org.slf4j.Logger;
 
 import java.util.Random;
 import java.util.concurrent.CompletionService;
+import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class App {
     private final Logger logger = getLogger(getClass());
 
-    private final CompletionService completionService;
+    private final CompletionService<String> completionService;
     private final InputFileReader inputFileReader;
     private final OutputFileWriter outputFileWriter;
     private final NetworkMessageReceiver networkMessageReceiver;
@@ -25,18 +27,19 @@ public class App {
     public static App create(
             Sleeper sleeper,
             Random random,
-            CompletionService completionService,
             InputFileReader inputFileReader,
-            OutputFileWriter outputFileWriter
+            OutputFileWriter outputFileWriter,
+            ScheduledExecutorService scheduledExecutorService
     ) {
         GameFactory gameFactory = GameFactory.create(
                 sleeper,
                 random,
-                new JsonSerializer()
+                new JsonSerializer(),
+                scheduledExecutorService
         );
 
         return new App(
-                completionService,
+                new ExecutorCompletionService<>(scheduledExecutorService),
                 inputFileReader,
                 outputFileWriter,
                 new NetworkMessageReceiver(gameFactory.createNetworkMessageListener()),
@@ -44,7 +47,7 @@ public class App {
                 );
     }
 
-    public App(CompletionService completionService,
+    public App(CompletionService<String> completionService,
             InputFileReader inputFileReader,
             OutputFileWriter outputFileWriter,
             NetworkMessageReceiver networkMessageReceiver,
