@@ -25,11 +25,12 @@ public class MapInfoReceiver implements Producer, NetworkMsgListener {
             ZombieMoverFactory zombieMoverFactory) {
         this.serializer = serializer;
         this.zombieMoverFactory = zombieMoverFactory;
-        enqueueMessage("/subscribeTo Zombie_MapInfo");
+        subscribeToMapInfo();
+        requestMapInfo();
+    }
 
-        String mapInfoRequest = serializer.serialize(
-                new MapInfoRequest().replyToTopic("Zombie_MapInfo"));
-        enqueueMessage("/publishTo MapInfoRequests " + mapInfoRequest);
+    private void subscribeToMapInfo() {
+        enqueueMessage("/subscribeTo Zombie_MapInfo");
     }
 
     private void enqueueMessage(String msg) {
@@ -41,29 +42,55 @@ public class MapInfoReceiver implements Producer, NetworkMsgListener {
         }
     }
 
+    private void requestMapInfo() {
+        String mapInfoRequest = serializer.serialize(
+                new MapInfoRequest().replyToTopic("Zombie_MapInfo"));
+        enqueueMessage("/publishTo MapInfoRequests " + mapInfoRequest);
+    }
+
     public String nextMsg(ProducerContext producerContext) {
         logger.debug("Producing next.");
         try {
             this.producerContext = producerContext;
-            logger.debug("Waiting for message in queue...");
-            String msg = messages.take();
-            logger.debug("Waiting for message in queue... Done: {}", msg);
+            String msg = waitForNextMessageToBeProduced();
             return msg;
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
 
+    private String waitForNextMessageToBeProduced() throws InterruptedException {
+        logger.debug("Waiting for message in queue...");
+        String msg = messages.take();
+        logger.debug("Waiting for message in queue... Done: {}", msg);
+        return msg;
+    }
+
     public void messageReceived(NetworkMsgListenerContext networkMsgListenerContext, String msg) {
         logger.info("Received: {}", msg);
-        String[] parts = StringUtils.split(msg, " ", 2);
+        MapInfo mapInfo = getMapInfoFrom(msg);
+        logger.trace("Deserialize done.");
 
-        MapInfo mapInfo = serializer.deserialize(parts[1], MapInfo.class);
+        stopListeningForMessages(networkMsgListenerContext);
+        startProducingZombieEvents(mapInfo);
+    }
 
-        logger.info("Deserialize done.");
+    private MapInfo getMapInfoFrom(String msg) {
+        String[] parts = getFirstWordIn(msg);
+        return serializer.deserialize(parts[1], MapInfo.class);
+    }
+
+    private String[] getFirstWordIn(String msg) {
+        return StringUtils.split(msg, " ", 2);
+    }
+
+    private void stopListeningForMessages(NetworkMsgListenerContext networkMsgListenerContext) {
         networkMsgListenerContext.setCurrentListener(new NoOpReceiver());
+    }
 
-        producerContext.setCurrentProducer(zombieMoverFactory.create(mapInfo));
+    private void startProducingZombieEvents(MapInfo mapInfo) {
+        Producer currentProducer = zombieMoverFactory.create(mapInfo);
+        producerContext.setCurrentProducer(currentProducer);
         enqueueMessage(producerContext.nextMsg());
     }
 
