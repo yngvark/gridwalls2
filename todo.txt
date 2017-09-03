@@ -1,10 +1,6 @@
 TODO
 ---------------------------------------------------------------
 
-[ ] FIks blocking bufferedreader. Lag test i comm prosjektet.
-	Løsning: Close inputstreamen til bufferedreaderen.
-[ ] Fiks kubernetes.
-[ ] Finn ut hvordan jeg gjør det med timing.
 [ ] netcomforwarder: should_get_exception_when_producer_throws_exception
 	[ ] Zombie RPC-er til MapInfoProducer før den er oppe. Sender melding som ikke blir forwardet til en queue, fordi queuen ikke eksisterer enda.
 		Mulige løsninger
@@ -32,21 +28,26 @@ TODO
 		[ ] Mulig: rabbitmctl (ellernoe) for å stoppe rabbitmq programmatisk.
 		[ ] Kanskje docker api for å drepe containeren?
 		[ ] Det beste: La netcom forwarder eller helst egen ms eller noe med en rabbit connection stoppe hele brokeren, sånn at dockercontaineren stopper.
-	[ ] Og hvordan får jeg stoppet Zombie? Og MapInfo producer?
-	[ ] Og hvordan skal jeg i det hele tatt kjøre testen?
 
+
+Clean code
+[ ] MapInfoReceiver osv: Liker ikker at ZombieMoverFactory er i konstruktør. Stegene blir koblet til hverandre.
+	Vurder om det går an å CLEANLY frakoble dette og fortelle rekkefølgen et annet sted.
+	Å fragi kontrollen for produsering og konsumering av neste beskjed blir da også renere.
+		notifyControllerStopReceive feks i stedet for setCurrentListenerNoOp.
+
+Lengre sikt
+[ ] Finn ut hvordan jeg gjør det med timing av gamet.
 [ ] Fiks byggesystem så full bygging og kjøring av appen min blir smooth sailing
-	[ ] Fiks bygging av microservices
-		[x] For å bygge: ms/build.sh
-		[ ] For å teste: kjør microservice_git_repo/test.sh
-	[ ] Fiks så jeg kan gjenbruke en pipeline ("microservices.pipeline") for flere micro services.
-[ ] neste microservice
+	[ ] Make eller Kubernetes-oppsett
+[ ] Neste microservice
 	[ ] Skriv kun til å bruke stdin og stdout.
+	[ ] Tror kanskje også jeg burde gå for lesing og skriving i samme tråd.
 [ ] Få til fungerende bygg av alle microservices
 [x] Har nå laga det mye enklere å legge til standardprogs (dropbox, cryfs, sublime, double commander) på VirtualbBox.
 [ ] Få det opp på nett
 [x] Lage webklient som consumer events
-[ ] Logger i stedet for System.out.println. Sjekk sl4j ikke statisk mulighet.
+[x] Logger i stedet for System.out.println. Sjekk sl4j ikke statisk mulighet.
 
 LANGITDS
 ---------------------------------------------------------------
