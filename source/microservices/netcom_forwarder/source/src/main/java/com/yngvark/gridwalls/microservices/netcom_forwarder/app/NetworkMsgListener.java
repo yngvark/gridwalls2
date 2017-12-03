@@ -22,10 +22,6 @@ class NetworkMsgListener implements RabbitMessageListener {
     public void messageReceived(String msgFromNetwork) {
         logger.info("From network: " + msgFromNetwork);
         String msgToMs = "[" + exchange + "] " + msgFromNetwork;
-        try {
-            microserviceWriter.write(msgToMs);
-        } catch (IOException e) {
-            throw new RuntimeException("Error when forwarding message to microservice.", e);
-        }
+        microserviceWriter.write(msgToMs);
     }
 }

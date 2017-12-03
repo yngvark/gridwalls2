@@ -1,0 +1,27 @@
+version: '2'
+
+services:
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    #hostname: rabbithost
+    ports:
+      - "8080:15672"
+      - 15674:15674
+    networks:
+      - netcom
+
+  #web_server:
+    ##build: web_server
+    #image: nginx
+    #ports:
+    #  - "80:80"
+    #volumes:
+    #  #- ../../microservices/front_end/html:/usr/share/nginx/html
+    #  - ../../../../source/front_end/html:/usr/share/nginx/html
+    #links:
+    #  - rabbitmq
+
+networks:
+  netcom:
+    external: true
