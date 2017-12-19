@@ -1,0 +1,6 @@
+rootProject.name = 'zombie-light-test'
+
+println "------------------------- hei"
+
+include ':source'
+project(':source').projectDir = new File('../source')
