@@ -26,3 +26,13 @@ dependencies {
     testRuntime("org.junit.jupiter:junit-jupiter-engine:5.0.0-M4")
 }
 
+apply plugin: 'application'
+mainClassName = 'com.yngvark.gridwalls.microservices.zombie.Main'
+applicationName = 'run'
+distributions {
+    main {
+        baseName = 'app'
+    }
+}
+
+
