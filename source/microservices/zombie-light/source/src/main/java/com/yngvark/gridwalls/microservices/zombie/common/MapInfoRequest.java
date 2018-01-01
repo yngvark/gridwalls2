@@ -1,4 +1,4 @@
-package com.yngvark.gridwalls.microservices.zombie;
+package com.yngvark.gridwalls.microservices.zombie.common;
 
 public class MapInfoRequest {
     private String replyToTopic = "";

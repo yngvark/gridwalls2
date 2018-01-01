@@ -5,7 +5,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import com.yngvark.gridwalls.microservices.zombie.move_zombie.MapInfo;
+import com.yngvark.gridwalls.microservices.zombie.common.MapInfo;
 import com.yngvark.gridwalls.microservices.zombie.move_zombie.Move;
 import com.yngvark.gridwalls.microservices.zombie.move_zombie.Zombie;
 import com.yngvark.gridwalls.microservices.zombie.move_zombie.ZombieFactory;
@@ -64,7 +64,7 @@ public class GameLoopTest {
         // Given
         Sleeper sleeper = (timeUnit, count) -> {};
 
-        Zombie zombie = ZombieFactory.create();
+        Zombie zombie = ZombieFactory.create(new MapInfo(15, 10));
         Gson gson = new Gson();
 
         GameLoopRunner gameLoopRunner = new GameLoopRunner(
@@ -92,7 +92,7 @@ public class GameLoopTest {
         // Given
         Sleeper sleeper = (timeUnit, count) -> {};
 
-        Zombie zombie = ZombieFactory.create();
+        Zombie zombie = ZombieFactory.create(new MapInfo(15, 10));
         Gson gson = new Gson();
 
         GameLoopRunner gameLoopRunner = new GameLoopRunner(
@@ -135,7 +135,7 @@ public class GameLoopTest {
         // Given
         Sleeper sleeper = (timeUnit, count) -> {};
 
-        Zombie zombie = ZombieFactory.create();
+        Zombie zombie = ZombieFactory.create(new MapInfo(15, 10));
         Gson gson = new Gson();
         Random random = new Random(345983);
 

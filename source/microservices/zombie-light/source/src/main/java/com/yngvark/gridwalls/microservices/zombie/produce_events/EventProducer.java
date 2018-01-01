@@ -1,6 +1,7 @@
 package com.yngvark.gridwalls.microservices.zombie.produce_events;
 
 import com.google.gson.Gson;
+import com.yngvark.gridwalls.microservices.zombie.common.Serializer;
 import com.yngvark.gridwalls.microservices.zombie.gameloop.Event;
 import com.yngvark.gridwalls.microservices.zombie.move_zombie.Zombie;
 

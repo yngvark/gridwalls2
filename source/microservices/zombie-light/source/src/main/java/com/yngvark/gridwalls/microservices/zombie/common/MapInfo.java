@@ -1,4 +1,4 @@
-package com.yngvark.gridwalls.microservices.zombie.move_zombie;
+package com.yngvark.gridwalls.microservices.zombie.common;
 
 public class MapInfo {
     private final int width;

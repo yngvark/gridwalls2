@@ -1,7 +1,6 @@
 package com.yngvark.gridwalls.microservices.zombie.gameloop;
 
 import com.yngvark.gridwalls.microservices.zombie.move_zombie.Zombie;
-import com.yngvark.gridwalls.microservices.zombie.move_zombie.ZombieFactory;
 import com.yngvark.gridwalls.microservices.zombie.produce_events.EventProducer;
 import com.yngvark.gridwalls.microservices.zombie.react_to_events.EventHandler;
 import org.slf4j.Logger;
@@ -24,7 +23,11 @@ public class GameLoopRunner {
     private final Sleeper sleeper;
     private final Random random;
 
-    public GameLoopRunner(BufferedReader bufferedReader, EventHandler eventHandler, EventProducer eventProducer, Sleeper sleeper,
+    public GameLoopRunner(
+            BufferedReader bufferedReader,
+            EventHandler eventHandler,
+            EventProducer eventProducer,
+            Sleeper sleeper,
             Random random) {
         this.bufferedReader = bufferedReader;
         this.eventHandler = eventHandler;
@@ -33,8 +36,10 @@ public class GameLoopRunner {
         this.random = random;
     }
 
-    public static GameLoopRunner create(BufferedReader bufferedReader, BufferedWriter bufferedWriter) {
-        Zombie zombie = ZombieFactory.create();
+    public static GameLoopRunner create(
+            BufferedReader bufferedReader,
+            BufferedWriter bufferedWriter,
+            Zombie zombie) {
 
         return new GameLoopRunner(
                 bufferedReader,

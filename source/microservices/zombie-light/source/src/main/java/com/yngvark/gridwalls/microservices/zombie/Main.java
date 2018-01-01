@@ -1,20 +1,21 @@
 package com.yngvark.gridwalls.microservices.zombie;
 
+import com.google.gson.Gson;
 import com.yngvark.communicate_through_named_pipes.RetrySleeper;
-import com.yngvark.communicate_through_named_pipes.input.InputFileLineReader;
 import com.yngvark.communicate_through_named_pipes.input.InputFileOpener;
-import com.yngvark.communicate_through_named_pipes.input.InputFileReader;
 import com.yngvark.communicate_through_named_pipes.output.OutputFileOpener;
-import com.yngvark.communicate_through_named_pipes.output.OutputFileWriter;
+import com.yngvark.gridwalls.microservices.zombie.common.MapInfo;
+import com.yngvark.gridwalls.microservices.zombie.common.Serializer;
 import com.yngvark.gridwalls.microservices.zombie.gameloop.GameLoopRunner;
+import com.yngvark.gridwalls.microservices.zombie.move_zombie.Zombie;
+import com.yngvark.gridwalls.microservices.zombie.move_zombie.ZombieFactory;
+import com.yngvark.gridwalls.microservices.zombie.receive_map_info.MapInfoReceiver;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 
 public class Main {
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
@@ -45,7 +46,14 @@ public class Main {
         BufferedReader bufferedReader = inputFileOpener.createReader(retrySleeper);
         BufferedWriter bufferedWriter = outputFileOpener.createWriter(retrySleeper);
 
-        GameLoopRunner gameLoopRunner = GameLoopRunner.create(bufferedReader, bufferedWriter);
+        MapInfoReceiver mapInfoReceiver = new MapInfoReceiver(
+                bufferedReader,
+                bufferedWriter,
+                new Serializer(new Gson()));
+        MapInfo mapInfo = mapInfoReceiver.getMapInfo();
+        Zombie zombie = ZombieFactory.create(mapInfo);
+
+        GameLoopRunner gameLoopRunner = GameLoopRunner.create(bufferedReader, bufferedWriter, zombie);
         gameLoopRunner.run();
     }
 

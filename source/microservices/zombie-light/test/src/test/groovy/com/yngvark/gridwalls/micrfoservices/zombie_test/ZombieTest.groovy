@@ -1,8 +1,8 @@
 package com.yngvark.gridwalls.micrfoservices.zombie_test
 
 import com.google.gson.Gson
-import com.yngvark.gridwalls.microservices.zombie.MapInfoRequest
-import com.yngvark.gridwalls.microservices.zombie.move_zombie.MapInfo
+import com.yngvark.gridwalls.microservices.zombie.common.MapInfoRequest
+import com.yngvark.gridwalls.microservices.zombie.common.MapInfo
 import com.yngvark.gridwalls.microservices.zombie.move_zombie.Move
 import com.yngvark.named_piped_app_runner.NamedPipeProcess
 import com.yngvark.named_piped_app_runner.NamedPipeProcessStarter
@@ -38,6 +38,7 @@ class ZombieTest {
         String subscription = AppLineReader.readLine(app)
 
         // Then
+        logger.debug(subscription)
         assertEquals("/subscribeTo Zombie_MapInfo", subscription)
 
         String mapInfoRequest = gson.toJson(

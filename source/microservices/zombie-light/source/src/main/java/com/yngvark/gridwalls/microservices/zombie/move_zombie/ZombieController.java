@@ -10,8 +10,8 @@ class ZombieController implements Zombie {
     @Override
     public Move move() {
         Container container = zombie.move();
-        zombie = container.getNewZombie();
-        return container.getMove();
+        zombie = container.newZombie;
+        return container.move;
     }
 
 //    @Override
