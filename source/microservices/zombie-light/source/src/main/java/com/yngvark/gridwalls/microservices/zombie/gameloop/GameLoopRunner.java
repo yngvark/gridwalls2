@@ -43,7 +43,8 @@ public class GameLoopRunner {
     }
 
     public void run() {
-        while (true) {
+        int i = 0;
+        while (i++ < 20) {
             runOneIteration();
         }
     }

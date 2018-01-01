@@ -21,9 +21,11 @@ repositories {
 
 dependencies {
     compile 'com.google.code.gson:gson:2.8.2'
+    compile "com.yngvark:communicate_through_named_pipes:1.2.+"
+    compile "org.apache.commons:commons-lang3:3.5"
 
-    testCompile("org.junit.jupiter:junit-jupiter-api:5.0.0-M4")
-    testRuntime("org.junit.jupiter:junit-jupiter-engine:5.0.0-M4")
+    testCompile 'org.junit.jupiter:junit-jupiter-api:5.0.2'
+    testRuntime 'org.junit.jupiter:junit-jupiter-engine:5.0.2'
 }
 
 apply plugin: 'application'
@@ -34,5 +36,4 @@ distributions {
         baseName = 'app'
     }
 }
-
 

@@ -1,6 +1,9 @@
 package com.yngvark.gridwalls.micrfoservices.zombie_test
 
 import com.google.gson.Gson
+import com.yngvark.gridwalls.microservices.zombie.MapInfoRequest
+import com.yngvark.gridwalls.microservices.zombie.move_zombie.MapInfo
+import com.yngvark.gridwalls.microservices.zombie.move_zombie.Move
 import com.yngvark.named_piped_app_runner.NamedPipeProcess
 import com.yngvark.named_piped_app_runner.NamedPipeProcessStarter
 import org.apache.commons.lang3.StringUtils
@@ -8,9 +11,6 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import zombie.MapInfoRequest
-import zombie.move_zombie.MapInfo
-import zombie.move_zombie.Move
 
 import java.time.Duration
 import java.time.LocalDateTime
@@ -79,8 +79,8 @@ class ZombieTest {
     }
 
     private void gatherMinMax(MaxMinGatherer gatherer, Move m) {
-        gatherer.add("x", m.toX)
-        gatherer.add("y", m.toY)
+        gatherer.add("x", m.getX())
+        gatherer.add("y", m.getY())
     }
 
 }

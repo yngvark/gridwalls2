@@ -1,6 +1,7 @@
 package com.yngvark.gridwalls.micrfoservices.zombie_test;
 
 import com.yngvark.named_piped_app_runner.NamedPipeProcess;
+import groovy.transform.PackageScope;
 
 import java.time.Duration;
 

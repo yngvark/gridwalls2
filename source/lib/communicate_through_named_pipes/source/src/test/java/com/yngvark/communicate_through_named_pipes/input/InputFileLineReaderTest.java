@@ -3,9 +3,7 @@ package com.yngvark.communicate_through_named_pipes.input;
 import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.StringReader;
 
 import static org.junit.jupiter.api.Assertions.*;
