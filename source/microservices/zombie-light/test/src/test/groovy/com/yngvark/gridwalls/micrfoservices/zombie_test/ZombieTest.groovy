@@ -34,7 +34,7 @@ class ZombieTest {
     @Test
     void should_move_within_map_after_receiving_map_info() throws Exception {
         // Given
-        app = NamedPipeProcessStarter.start("--nosleep -seed=123")
+        app = NamedPipeProcessStarter.start("--nosleep", "-seed=123")
         def gson = new Gson()
         def gatherer = new MaxMinGatherer()
 
@@ -74,13 +74,17 @@ class ZombieTest {
             gatherMinMax(gatherer, m)
 
             // Then
-            assertTrue(m.getX() <= 10 && m.getX() >= 1
-                    && m.getY() <= 15 && m.getY() >= 1)
+            assertTrue(m.getX() <= 15 && m.getX() >= 1
+                    && m.getY() <= 10 && m.getY() >= 1,
+                    "x: " + m.getX() + ", y: " + m.getY())
         }
 
         // Then
-        assertEquals(10, gatherer.max("x"))
-        assertEquals(15, gatherer.max("y"))
+        assertEquals(1, gatherer.min("x"))
+        assertEquals(15, gatherer.max("x"))
+
+        assertEquals(1, gatherer.min("y"))
+        assertEquals(10, gatherer.max("y"))
     }
 
     private void gatherMinMax(MaxMinGatherer gatherer, Move m) {

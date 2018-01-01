@@ -24,8 +24,6 @@ public class Main {
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
 
     public static void main(String[] args) {
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> logger.info("Shutting down.")));
-
         logger.info("Args length: {}. Args: {}", args.length, StringUtils.join(args, ", "));
 
         // Args
@@ -59,6 +57,12 @@ public class Main {
         Zombie zombie = ZombieFactory.create(mapInfo);
 
         GameLoopRunner gameLoopRunner = GameLoopRunner.create(bufferedReader, bufferedWriter, sleeper, zombie);
+
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            logger.info("Shutting down.");
+            gameLoopRunner.stop();
+        }));
+
         gameLoopRunner.run();
     }
 

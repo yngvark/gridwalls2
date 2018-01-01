@@ -23,6 +23,8 @@ public class GameLoopRunner {
     private final Sleeper sleeper;
     private final Random random;
 
+    private boolean run = true;
+
     public GameLoopRunner(
             BufferedReader bufferedReader,
             EventHandler eventHandler,
@@ -55,13 +57,9 @@ public class GameLoopRunner {
     public void run() {
         logger.info("--- STARTING GAME ---------------------------------------------------------");
 
-        int i = 0;
-        while (i++ < 100) {
-            logger.info("Running iteration: {}", i);
+        while (run) {
             runOneIteration();
         }
-
-        logger.info("Running iteration: {}", i);
     }
 
     void runOneIteration() {
@@ -106,5 +104,9 @@ public class GameLoopRunner {
         Duration duration = Duration.between(beforeReadingMessagesFromNetwork, LocalDateTime.now());
         long millisToWait = 1000 - duration.toMillis();
         sleeper.sleep(TimeUnit.MILLISECONDS, millisToWait);
+    }
+
+    public void stop() {
+        run = false;
     }
 }

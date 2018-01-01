@@ -24,8 +24,9 @@ class ProcessTest {
 
     @Test
     void should_exit_when_killing_process() throws Exception {
+
         // Given
-        app = NamedPipeProcessStarter.start("--nosleep -seed=123")
+        app = NamedPipeProcessStarter.start("--nosleep", "-seed=123")
         def gson = new Gson()
 
         // When
