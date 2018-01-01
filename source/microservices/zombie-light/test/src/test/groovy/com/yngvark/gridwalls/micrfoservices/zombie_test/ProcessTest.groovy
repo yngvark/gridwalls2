@@ -61,7 +61,7 @@ class ProcessTest {
     @Test
     void turn_time_should_be_below_50ms_when_using_nosleep() throws Exception {
         // Given
-        app = NamedPipeProcessStarter.start("--nosleep -seed=123")
+        app = NamedPipeProcessStarter.start("--nosleep", "-seed=123")
         def gson = new Gson()
 
         // When
@@ -81,7 +81,7 @@ class ProcessTest {
         app.outputFileWriter.write("[Zombie_MapInfo] " + mapInfo)
 
         LocalDateTime last = LocalDateTime.now()
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 30; i++) {
             // When
             String move = app.inputFileLineReader.readLine()
             logger.info("{}: {}", i, move)
@@ -92,7 +92,7 @@ class ProcessTest {
             // Then
             long turnTimeMillis = turnTime.toMillis()
             logger.info("Turn time (millis): {}", turnTimeMillis)
-            assertTrue(turnTimeMillis < 50)
+            assertTrue(turnTimeMillis < 50, "Turn time was: " + turnTimeMillis)
         }
 
         // Finally

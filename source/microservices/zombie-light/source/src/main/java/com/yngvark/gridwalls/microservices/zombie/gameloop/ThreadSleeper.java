@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.TimeUnit;
 
-class ThreadSleeper implements Sleeper {
+public class ThreadSleeper implements Sleeper {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override

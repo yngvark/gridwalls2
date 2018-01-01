@@ -39,6 +39,7 @@ public class GameLoopRunner {
     public static GameLoopRunner create(
             BufferedReader bufferedReader,
             BufferedWriter bufferedWriter,
+            Sleeper sleeper,
             Zombie zombie) {
 
         return new GameLoopRunner(
@@ -47,7 +48,7 @@ public class GameLoopRunner {
                 EventProducer.create(
                         zombie,
                         bufferedWriter),
-                new ThreadSleeper(),
+                sleeper,
                 new Random());
     }
 
@@ -55,7 +56,7 @@ public class GameLoopRunner {
         logger.info("--- STARTING GAME ---------------------------------------------------------");
 
         int i = 0;
-        while (i++ < 20) {
+        while (i++ < 100) {
             logger.info("Running iteration: {}", i);
             runOneIteration();
         }

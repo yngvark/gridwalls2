@@ -7,9 +7,12 @@ import com.yngvark.communicate_through_named_pipes.output.OutputFileOpener;
 import com.yngvark.gridwalls.microservices.zombie.common.MapInfo;
 import com.yngvark.gridwalls.microservices.zombie.common.Serializer;
 import com.yngvark.gridwalls.microservices.zombie.gameloop.GameLoopRunner;
+import com.yngvark.gridwalls.microservices.zombie.gameloop.Sleeper;
+import com.yngvark.gridwalls.microservices.zombie.gameloop.ThreadSleeper;
 import com.yngvark.gridwalls.microservices.zombie.move_zombie.Zombie;
 import com.yngvark.gridwalls.microservices.zombie.move_zombie.ZombieFactory;
 import com.yngvark.gridwalls.microservices.zombie.receive_map_info.MapInfoReceiver;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,6 +49,8 @@ public class Main {
         BufferedReader bufferedReader = inputFileOpener.createReader(retrySleeper);
         BufferedWriter bufferedWriter = outputFileOpener.createWriter(retrySleeper);
 
+        Sleeper sleeper = createSleeper(args);
+
         MapInfoReceiver mapInfoReceiver = new MapInfoReceiver(
                 bufferedReader,
                 bufferedWriter,
@@ -53,8 +58,19 @@ public class Main {
         MapInfo mapInfo = mapInfoReceiver.getMapInfo();
         Zombie zombie = ZombieFactory.create(mapInfo);
 
-        GameLoopRunner gameLoopRunner = GameLoopRunner.create(bufferedReader, bufferedWriter, zombie);
+        GameLoopRunner gameLoopRunner = GameLoopRunner.create(bufferedReader, bufferedWriter, sleeper, zombie);
         gameLoopRunner.run();
     }
 
+    private static Sleeper createSleeper(String[] args) {
+        Sleeper sleeper;
+        if (ArrayUtils.contains(args, "--nosleep")) {
+            logger.info("Using zero-wait sleeper.");
+            sleeper = (timeUnit, count) -> {};
+        } else {
+            logger.info("Using regular-wait sleeper.");
+            sleeper = new ThreadSleeper();
+        }
+        return sleeper;
+    }
 }
