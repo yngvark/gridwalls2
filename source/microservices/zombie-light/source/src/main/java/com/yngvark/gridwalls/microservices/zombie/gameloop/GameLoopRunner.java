@@ -4,6 +4,8 @@ import com.yngvark.gridwalls.microservices.zombie.move_zombie.Zombie;
 import com.yngvark.gridwalls.microservices.zombie.move_zombie.ZombieFactory;
 import com.yngvark.gridwalls.microservices.zombie.produce_events.EventProducer;
 import com.yngvark.gridwalls.microservices.zombie.react_to_events.EventHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -14,6 +16,8 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 public class GameLoopRunner {
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
     private final BufferedReader bufferedReader;
     private final EventHandler eventHandler;
     private final EventProducer eventProducer;
@@ -45,8 +49,11 @@ public class GameLoopRunner {
     public void run() {
         int i = 0;
         while (i++ < 20) {
+            logger.info("Running iteration: {}", i);
             runOneIteration();
         }
+
+        logger.info("Running iteration: {}", i);
     }
 
     void runOneIteration() {
@@ -62,19 +69,29 @@ public class GameLoopRunner {
     }
 
     private boolean existsMessageFromNetwork() {
+        boolean result;
         try {
-            return bufferedReader.ready();
+            result = bufferedReader.ready();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+        logger.trace("existsMessageFromNetwork: {}", result);
+        return result;
     }
 
     private String readIncomingEvent() {
+        logger.debug("Reading incoming event... ");
+
+        String result;
         try {
-            return bufferedReader.readLine();
+            result = bufferedReader.readLine();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+        logger.debug("Reading incoming event... {}", result);
+        return result;
     }
 
     private void waitRemainderOfTurn(LocalDateTime beforeReadingMessagesFromNetwork) {

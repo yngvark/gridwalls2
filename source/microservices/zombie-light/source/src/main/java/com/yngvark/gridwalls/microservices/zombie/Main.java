@@ -20,6 +20,8 @@ public class Main {
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
 
     public static void main(String[] args) {
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> logger.info("Shutting down.")));
+
         logger.info("Args length: {}. Args: {}", args.length, StringUtils.join(args, ", "));
 
         // Args
@@ -35,13 +37,10 @@ public class Main {
         InputFileOpener inputFileOpener = new InputFileOpener(fifoInputFilename);
 
         main(outputFileOpener, inputFileOpener, args);
-
     }
 
     static void main(OutputFileOpener outputFileOpener, InputFileOpener inputFileOpener, String[] args) {
         // Dependencies
-        ScheduledExecutorService executorService = Executors.newScheduledThreadPool(4);
-
         RetrySleeper retrySleeper = () -> Thread.sleep(1000);
         BufferedReader bufferedReader = inputFileOpener.createReader(retrySleeper);
         BufferedWriter bufferedWriter = outputFileOpener.createWriter(retrySleeper);

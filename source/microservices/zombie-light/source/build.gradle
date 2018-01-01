@@ -20,6 +20,9 @@ repositories {
 }
 
 dependencies {
+    compile 'org.slf4j:slf4j-api:1.7.+'
+    compile 'org.slf4j:slf4j-simple:1.7.+'
+
     compile 'com.google.code.gson:gson:2.8.2'
     compile "com.yngvark:communicate_through_named_pipes:1.2.+"
     compile "org.apache.commons:commons-lang3:3.5"
