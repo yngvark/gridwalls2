@@ -19,6 +19,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.util.Arrays;
+import java.util.Random;
 
 public class Main {
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
@@ -54,7 +56,8 @@ public class Main {
                 bufferedWriter,
                 new Serializer(new Gson()));
         MapInfo mapInfo = mapInfoReceiver.getMapInfo();
-        Zombie zombie = ZombieFactory.create(mapInfo);
+        Random random = SeedArgParser.createRandom(args);
+        Zombie zombie = ZombieFactory.create(mapInfo, random);
 
         GameLoopRunner gameLoopRunner = GameLoopRunner.create(bufferedReader, bufferedWriter, sleeper, zombie);
 

@@ -64,7 +64,7 @@ public class GameLoopTest {
         // Given
         Sleeper sleeper = (timeUnit, count) -> {};
 
-        Zombie zombie = ZombieFactory.create(new MapInfo(15, 10));
+        Zombie zombie = ZombieFactory.create(new MapInfo(15, 10), new Random(54645));
         Gson gson = new Gson();
 
         GameLoopRunner gameLoopRunner = new GameLoopRunner(
@@ -73,8 +73,7 @@ public class GameLoopTest {
                 EventProducer.create(
                         zombie,
                         bufferedToTestWriter),
-                sleeper,
-                new Random(2342));
+                sleeper);
 
         // When
         gameLoopRunner.runOneIteration();
@@ -92,7 +91,7 @@ public class GameLoopTest {
         // Given
         Sleeper sleeper = (timeUnit, count) -> {};
 
-        Zombie zombie = ZombieFactory.create(new MapInfo(15, 10));
+        Zombie zombie = ZombieFactory.create(new MapInfo(15, 10), new Random(54645));
         Gson gson = new Gson();
 
         GameLoopRunner gameLoopRunner = new GameLoopRunner(
@@ -101,8 +100,8 @@ public class GameLoopTest {
                 EventProducer.create(
                         zombie,
                         bufferedToTestWriter),
-                sleeper,
-                new Random(54645));
+                sleeper
+        );
 
         MapInfo mapInfo = new MapInfo(15, 10);
         bufferedToGameWriter.write(new Gson().toJson(mapInfo));
@@ -129,45 +128,4 @@ public class GameLoopTest {
 //        TODO usikker på om disse testene burde vært unit eller integrasjonstester
     }
 
-    @Test
-    @Disabled
-    public void zombie_should_move_expected_trail_given_specfic_seed() throws IOException {
-        // Given
-        Sleeper sleeper = (timeUnit, count) -> {};
-
-        Zombie zombie = ZombieFactory.create(new MapInfo(15, 10));
-        Gson gson = new Gson();
-        Random random = new Random(345983);
-
-        GameLoopRunner gameLoopRunner = new GameLoopRunner(
-                bufferedFromTestReader,
-                EventHandler.create(zombie),
-                EventProducer.create(
-                        zombie,
-                        bufferedToTestWriter),
-                sleeper,
-                random
-        );
-
-        MapInfo mapInfo = new MapInfo(15, 10);
-        bufferedToGameWriter.write(gson.toJson(mapInfo));
-        BufferedReader expectedMovesReader = new BufferedReader(
-                new InputStreamReader(getClass().getResourceAsStream("/expectedMoves.txt")));
-        assertTrue(expectedMovesReader.ready());
-
-        for (int i = 0; i < 10000; i++) {
-            // When
-            gameLoopRunner.runOneIteration();
-
-            // Then
-            assertTrue(bufferedFromGameReader.ready());
-
-            String zombieMoveSerialized = bufferedFromGameReader.readLine();
-            Move zombieMove = gson.fromJson(zombieMoveSerialized, Move.class);
-
-            String[] xAndY = expectedMovesReader.readLine().split(",");
-            Move expectedMove = new Move(Integer.parseInt(xAndY[0]), Integer.parseInt(xAndY[1]));
-            assertEquals(expectedMove, zombieMove);
-        }
-    }
 }

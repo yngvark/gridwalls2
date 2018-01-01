@@ -6,13 +6,14 @@ import java.util.Random;
 
 class WanderingZombie implements ZombieState {
     private final MapInfo mapInfo;
-    private final Random random = new Random();
+    private final Random random;
 
     private final int x;
     private final int y;
 
-    public WanderingZombie(MapInfo mapInfo, int x, int y) {
+    public WanderingZombie(MapInfo mapInfo, Random random, int x, int y) {
         this.mapInfo = mapInfo;
+        this.random = random;
         this.x = x;
         this.y = y;
     }
@@ -22,7 +23,7 @@ class WanderingZombie implements ZombieState {
 
         return new Container(
                 move,
-                new WanderingZombie(mapInfo, move.getX(), move.getY())
+                new WanderingZombie(mapInfo, random, move.getX(), move.getY())
         );
     }
 

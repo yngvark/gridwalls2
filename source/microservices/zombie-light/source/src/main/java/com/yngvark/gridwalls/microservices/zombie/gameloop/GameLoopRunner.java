@@ -21,7 +21,6 @@ public class GameLoopRunner {
     private final EventHandler eventHandler;
     private final EventProducer eventProducer;
     private final Sleeper sleeper;
-    private final Random random;
 
     private boolean run = true;
 
@@ -29,13 +28,12 @@ public class GameLoopRunner {
             BufferedReader bufferedReader,
             EventHandler eventHandler,
             EventProducer eventProducer,
-            Sleeper sleeper,
-            Random random) {
+            Sleeper sleeper
+    ) {
         this.bufferedReader = bufferedReader;
         this.eventHandler = eventHandler;
         this.eventProducer = eventProducer;
         this.sleeper = sleeper;
-        this.random = random;
     }
 
     public static GameLoopRunner create(
@@ -50,8 +48,8 @@ public class GameLoopRunner {
                 EventProducer.create(
                         zombie,
                         bufferedWriter),
-                sleeper,
-                new Random());
+                sleeper
+        );
     }
 
     public void run() {
