@@ -29,7 +29,7 @@ public class EventProducer {
     public void produce() {
         Event event = zombie.move();
         String serializedEvent = serializer.serialize(event);
-        write(serializedEvent);
+        write("/publishTo Zombie " + serializedEvent);
     }
 
     private void write(String eventSerialized) {

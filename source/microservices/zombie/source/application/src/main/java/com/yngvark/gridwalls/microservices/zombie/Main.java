@@ -35,7 +35,7 @@ public class Main {
         String fifoOutputFilename = args[1];
 
         OutputFileOpener outputFileOpener = new OutputFileOpener(fifoOutputFilename);
-        InputFileOpener inputFileOpen er = new InputFileOpener(fifoInputFilename);
+        InputFileOpener inputFileOpener = new InputFileOpener(fifoInputFilename);
 
         main(outputFileOpener, inputFileOpener, args);
     }

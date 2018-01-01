@@ -1,6 +1,7 @@
 package com.yngvark.gridwalls.micrfoservices.zombie_test
 
 import com.google.gson.Gson
+import com.yngvark.communicate_through_named_pipes.RetrySleeper
 import com.yngvark.gridwalls.microservices.zombie.common.MapInfoRequest
 import com.yngvark.gridwalls.microservices.zombie.common.MapInfo
 import com.yngvark.gridwalls.microservices.zombie.move_zombie.Move
@@ -14,6 +15,9 @@ import org.slf4j.LoggerFactory
 
 import java.time.Duration
 import java.time.LocalDateTime
+import java.util.concurrent.Executors
+import java.util.concurrent.Future
+import java.util.concurrent.TimeUnit
 
 import static org.junit.jupiter.api.Assertions.*
 
@@ -60,7 +64,7 @@ class ZombieTest {
             Duration timeSinceLastMove = Duration.between(moveTime, now)
             moveTime = now
 
-            assertTrue(timeSinceLastMove.toMillis() < 1000,
+            assertTrue(timeSinceLastMove.toMillis() < 1100,
                     "Time used for a move was: " + timeSinceLastMove)
 
             String[] parts = StringUtils.split(move, " ", 3)
@@ -70,8 +74,8 @@ class ZombieTest {
             gatherMinMax(gatherer, m)
 
             // Then
-            assertTrue(m.toX <= 10 && m.toX >= 1
-                    && m.toY <= 15 && m.toY >= 1)
+            assertTrue(m.getX() <= 10 && m.getX() >= 1
+                    && m.getY() <= 15 && m.getY() >= 1)
         }
 
         // Then

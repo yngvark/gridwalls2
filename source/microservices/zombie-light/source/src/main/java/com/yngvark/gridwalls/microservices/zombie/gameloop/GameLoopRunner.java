@@ -52,6 +52,8 @@ public class GameLoopRunner {
     }
 
     public void run() {
+        logger.info("--- STARTING GAME ---------------------------------------------------------");
+
         int i = 0;
         while (i++ < 20) {
             logger.info("Running iteration: {}", i);
@@ -69,8 +71,8 @@ public class GameLoopRunner {
             eventHandler.handle(incomingEvent);
         }
 
-        waitRemainderOfTurn(timeBeforeReadingMessagesFromNetwork);
         eventProducer.produce();
+        waitRemainderOfTurn(timeBeforeReadingMessagesFromNetwork);
     }
 
     private boolean existsMessageFromNetwork() {
