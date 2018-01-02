@@ -27,7 +27,7 @@ class NetworkAppFactory {
         String to = "build/to_netcom_forwarder";
         String from = "build/from_netcom_forwarder";
 
-        Path toPath = Paths.get(from);
+        Path toPath = Paths.get(to);
         if (Files.exists(toPath)) {
             Files.delete(toPath);
         }
