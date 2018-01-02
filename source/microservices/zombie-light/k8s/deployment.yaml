@@ -1,0 +1,46 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: zombie-light
+  labels:
+    app: zombie
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: zombie
+    spec:
+      containers:
+      - name: zombie
+        image: eu.gcr.io/gridwalls2/zombielight_zombie
+        args: ["/app_data/in", "/app_data/out"]
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+          - name: named-pipes
+            mountPath: /app_data
+      - name: zombie-netcom-forwarder
+        image: eu.gcr.io/gridwalls2/netcom_forwarder
+        args: ["/app_data/out", "/app_data/in", "rabbithost-rabbitmq"]
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+          - name: named-pipes
+            mountPath: /app_data
+        env:
+        - name: RABBITMQ_USERNAME
+          value: "user"
+        - name: RABBITMQ_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: rabbithost-rabbitmq
+              key: rabbitmq-password
+      - name: init-named-pipes
+        image: alpine
+        command: ["/bin/sh"]
+        args: ["-c", "mkdir -p /app_data && rm -f /app_data/in && rm -f /app_data/out && mkfifo /app_data/in && mkfifo /app_data/out"]
+        volumeMounts:
+          - name: named-pipes
+            mountPath: /app_data
+      volumes:
+        - name: named-pipes
+          emptyDir: {}

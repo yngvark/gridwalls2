@@ -1,13 +1,6 @@
 group 'com.yngvark.gridwalls'
 version '1.0-SNAPSHOT'
 
-apply plugin: 'groovy'
-
-repositories {
-    mavenCentral()
-    mavenLocal()
-}
-
 buildscript {
     repositories {
         mavenCentral()
@@ -17,8 +10,14 @@ buildscript {
         classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.2'
     }
 }
-
 apply plugin: 'org.junit.platform.gradle.plugin'
+
+apply plugin: 'groovy'
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
 
 dependencies {
     compile 'org.codehaus.groovy:groovy-all:2.3.11'

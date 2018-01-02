@@ -1,0 +1,62 @@
+https://hub.kubeapps.com/charts/stable/rabbitmq
+
+~/.helm$ helm repo add stable https://kubernetes-charts.storage.googleapis.com
+"stable" has been added to your repositories
+~/.helm$ helm install stable/rabbitmq --version 0.6.14
+NAME:   loitering-mite
+LAST DEPLOYED: Tue Jan  2 11:15:48 2018
+NAMESPACE: default
+STATUS: DEPLOYED
+
+RESOURCES:
+==> v1/Secret
+NAME                     TYPE    DATA  AGE
+loitering-mite-rabbitmq  Opaque  2     0s
+
+==> v1/PersistentVolumeClaim
+NAME                     STATUS   VOLUME    CAPACITY  ACCESS MODES  STORAGECLASS  AGE
+loitering-mite-rabbitmq  Pending  standard  0s
+
+==> v1/Service
+NAME                     TYPE       CLUSTER-IP     EXTERNAL-IP  PORT(S)                                AGE
+loitering-mite-rabbitmq  ClusterIP  10.47.244.188  <none>       4369/TCP,5672/TCP,25672/TCP,15672/TCP  0s
+
+==> v1beta1/Deployment
+NAME                     DESIRED  CURRENT  UP-TO-DATE  AVAILABLE  AGE
+loitering-mite-rabbitmq  1        1        1           0          0s
+
+==> v1/Pod(related)
+NAME                                      READY  STATUS   RESTARTS  AGE
+loitering-mite-rabbitmq-2728013056-49l6z  0/1    Pending  0         0s
+
+
+NOTES:
+
+** Please be patient while the chart is being deployed **
+
+  Credentials:
+
+    echo Username      : user
+    echo Password      : $(kubectl get secret --namespace default loitering-mite-rabbitmq -o jsonpath="{.data.rabbitmq-password}" | base64 --decode)
+    echo ErLang Cookie : $(kubectl get secret --namespace default loitering-mite-rabbitmq -o jsonpath="{.data.rabbitmq-erlang-cookie}" | base64 --decode)
+
+  RabbitMQ can be accessed within the cluster on port 5672 at loitering-mite-rabbitmq.default.svc.cluster.local
+
+  To access for outside the cluster execute the following commands:
+
+    export POD_NAME=$(kubectl get pods --namespace default -l "app=loitering-mite-rabbitmq" -o jsonpath="{.items[0].metadata.name}")
+    kubectl port-forward $POD_NAME 5672:5672 15672:15672
+
+  To Access the RabbitMQ AMQP port:
+
+    echo amqp://127.0.0.1:5672/
+
+  To Access the RabbitMQ Management interface:
+
+    echo URL : http://127.0.0.1:15672
+
+~/.helm$ kubectl get po
+NAME                                       READY     STATUS              RESTARTS   AGE
+loitering-mite-rabbitmq-2728013056-49l6z   0/1       ContainerCreating   0          7s
+
+

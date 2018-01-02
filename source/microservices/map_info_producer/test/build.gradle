@@ -1,10 +1,16 @@
 group 'com.yngvark.gridwalls'
 version '1.0-SNAPSHOT'
 
-task wrapper(type: Wrapper) {
-  gradleVersion = '4.0'
-  distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.2'
+    }
 }
+apply plugin: 'org.junit.platform.gradle.plugin'
 
 apply plugin: 'java'
 sourceCompatibility = 1.8
@@ -18,10 +24,10 @@ dependencies {
     testCompile('org.slf4j:slf4j-api:1.7.+')
     testCompile('org.slf4j:slf4j-simple:1.7.+')
 
-    testCompile("org.junit.jupiter:junit-jupiter-api:5.0.0-M4")
-    testRuntime("org.junit.jupiter:junit-jupiter-engine:5.0.0-M4")
+    testCompile("org.junit.jupiter:junit-jupiter-api:5.0.2")
+    testRuntime("org.junit.jupiter:junit-jupiter-engine:5.0.2")
 
-    testCompile 'com.yngvark:named_pipe_process_starter:1.0.+'
+    testCompile 'com.yngvark:named_pipe_process_starter:1.1.+'
 
     testCompile 'com.google.code.gson:gson:2.8.+'
     testCompile 'org.apache.commons:commons-lang3:3.5'

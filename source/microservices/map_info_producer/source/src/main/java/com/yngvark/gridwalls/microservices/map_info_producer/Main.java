@@ -1,7 +1,6 @@
 package com.yngvark.gridwalls.microservices.map_info_producer;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.yngvark.communicate_through_named_pipes.RetrySleeper;
 import com.yngvark.communicate_through_named_pipes.input.InputFileOpener;
 import com.yngvark.communicate_through_named_pipes.input.InputFileReader;

@@ -51,6 +51,15 @@ public class RabbitBrokerConnecter {
             connectionFactory.setRequestedHeartbeat(20);
             connectionFactory.setAutomaticRecoveryEnabled(true);
 
+            if (System.getenv("RABBITMQ_USERNAME") != null) {
+                logger.info("Found env variable for user.");
+                connectionFactory.setUsername(System.getenv("RABBITMQ_USERNAME"));
+            }
+            if (System.getenv("RABBITMQ_PASSWORD") != null) {
+                logger.info("Found env variable for password.");
+                connectionFactory.setPassword(System.getenv("RABBITMQ_PASSWORD"));
+            }
+
             logger.info("Connecting to " + host);
             try {
                 Connection connection = connectionFactory.newConnection();

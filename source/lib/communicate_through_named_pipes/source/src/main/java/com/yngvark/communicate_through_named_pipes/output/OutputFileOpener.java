@@ -20,16 +20,7 @@ public class OutputFileOpener {
     }
 
     public OutputFileWriter openStream(RetrySleeper retrySleeper) {
-        logger.info("Opening output file... " + fifoOutputFilename);
-
-        RetryWaiter retryWaiter = new RetryWaiter(retrySleeper);
-        retryWaiter.waitUntilFileExists(fifoOutputFilename);
-        FileOutputStream fileOutputStream = openFileStream(fifoOutputFilename);
-
-        logger.info("Opening output file... done.");
-
-        BufferedWriter out = new BufferedWriter(new OutputStreamWriter(fileOutputStream));
-        return new OutputFileWriter(out);
+        return new OutputFileWriter(createWriter(retrySleeper));
     }
 
     private FileOutputStream openFileStream(String file) {
@@ -40,6 +31,18 @@ public class OutputFileOpener {
             throw new RuntimeException(e);
         }
         return f;
+    }
+
+    public BufferedWriter createWriter(RetrySleeper retrySleeper) {
+        logger.info("Opening output file... " + fifoOutputFilename);
+
+        RetryWaiter retryWaiter = new RetryWaiter(retrySleeper);
+        retryWaiter.waitUntilFileExists(fifoOutputFilename);
+        FileOutputStream fileOutputStream = openFileStream(fifoOutputFilename);
+
+        logger.info("Opening output file... done.");
+
+        return new BufferedWriter(new OutputStreamWriter(fileOutputStream));
     }
 
 }
