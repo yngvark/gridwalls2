@@ -1,6 +1,24 @@
 TODO
 ---------------------------------------------------------------
 
+[ ] Det siste her må inn i netcom forwarder
+
+        String to = "build/to_netcom_forwarder";
+        String from = "build/from_netcom_forwarder";
+
+        Path toPath = Paths.get(to);
+        if (Files.exists(toPath)) {
+            Files.delete(toPath);
+        }
+        Path fromPath = Paths.get(from);
+        if (Files.exists(fromPath)) {
+            Files.delete(fromPath);
+        }
+        Runtime.getRuntime().exec("mkfifo " + to).waitFor();
+        Runtime.getRuntime().exec("mkfifo " + from).waitFor();
+
+		Se også NetcomForwarder test -> ProcessTest
+
 should_not_resend_map_info_request_after_receiving_map_info
 
 [ ] netcomforwarder: should_get_exception_when_producer_throws_exception
