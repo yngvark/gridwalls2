@@ -7,11 +7,9 @@ sourceCompatibility = 1.8
 buildscript {
     repositories {
         mavenCentral()
-        // The following is only necessary if you want to use SNAPSHOT releases.
-        // maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     }
     dependencies {
-        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0-M4'
+        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.2'
     }
 }
 apply plugin: 'org.junit.platform.gradle.plugin'
@@ -30,9 +28,9 @@ dependencies {
     testRuntime('org.slf4j:slf4j-api:1.7.+')
     testRuntime('org.slf4j:slf4j-simple:1.7.+')
 
-    testCompile 'com.yngvark:communicate_through_named_pipes:1.0.+'
-    testCompile 'com.yngvark.gridwalls:rabbitmq_helper:1.0.0'
-    testCompile 'com.yngvark:process_test_helper:1.0.+'
+    testCompile 'com.yngvark:communicate_through_named_pipes:1.2.+'
+    testCompile 'com.yngvark.gridwalls:rabbitmq_helper:1.1.+'
+    testCompile 'com.yngvark:named_pipe_process_starter:1.1.+'
 
     testCompile 'com.rabbitmq:amqp-client:3.6.3'
     testCompile 'commons-io:commons-io:2.5'

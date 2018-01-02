@@ -1,0 +1,4 @@
+rootProject.name = 'netcom_forwarder_test'
+
+include ':source'
+project(':source').projectDir = new File('../source')

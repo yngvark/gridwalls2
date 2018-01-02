@@ -1,5 +1,5 @@
 group 'com.yngvark.gridwalls'
-version '1.1.0'
+version '1.1.1'
 
 apply plugin: 'java'
 sourceCompatibility = 1.8
@@ -7,11 +7,9 @@ sourceCompatibility = 1.8
 buildscript {
     repositories {
         mavenCentral()
-        // The following is only necessary if you want to use SNAPSHOT releases.
-        // maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     }
     dependencies {
-        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0-M4'
+        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.2'
     }
 }
 apply plugin: 'org.junit.platform.gradle.plugin'
@@ -27,8 +25,8 @@ dependencies {
 
     compile 'com.rabbitmq:amqp-client:3.6.3'
 
-    testCompile("org.junit.jupiter:junit-jupiter-api:5.0.0-M4")
-    testRuntime("org.junit.jupiter:junit-jupiter-engine:5.0.0-M4")
+    testCompile("org.junit.jupiter:junit-jupiter-api:5.0.2")
+    testRuntime("org.junit.jupiter:junit-jupiter-engine:5.0.2")
 
     testCompile "org.mockito:mockito-core:2.+"
 }

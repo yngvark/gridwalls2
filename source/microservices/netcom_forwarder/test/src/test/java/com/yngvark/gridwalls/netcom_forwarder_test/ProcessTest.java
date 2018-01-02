@@ -22,8 +22,21 @@ import java.util.concurrent.TimeUnit;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.slf4j.LoggerFactory.getLogger;
 
+/**
+ * These tests are integration tests. You need to do the following steps before running them:
+ * - docker run -p 8080:15672 -p 15674:15674 rabbitmq:3-management
+ * -
+ * - Replace the variable RABBITMQ_IP with the IP to the rabbitmq container. The IP can be found with:
+ * docker inspect eloquent_hypatia | grep IPAddress
+ * replace eloquent_hypatia with name of docker container.
+ *
+ * Yeah, it's far from perfect, but it works.
+ * - In source project, run
+ * ./gradlew installDist
+ */
 public class ProcessTest {
     public final Logger logger = getLogger(getClass());
+    public static final String RABBITMQ_IP = "172.17.0.2";
 
     // TODO: should_connect_to_broker_before_names_pipes
 
@@ -123,18 +136,14 @@ public class ProcessTest {
         List<String> receivedMessages = new ArrayList<>();
         Counter counter = new Counter();
 
-        try {
-            app.inputFileReader.consume((msg) -> {
-                logger.info("<<< Msg: " + msg);
-                receivedMessages.add(msg);
-                counter.increase();
-                if (counter.value() == expectedMessageCount)
-                    app.inputFileReader.closeStream();
-            });
-            return receivedMessages;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        app.inputFileReader.consume((msg) -> {
+            logger.info("<<< Msg: " + msg);
+            receivedMessages.add(msg);
+            counter.increase();
+            if (counter.value() == expectedMessageCount)
+                app.inputFileReader.closeStream();
+        });
+        return receivedMessages;
     }
 
     private void waitForSubscriptionQueueToAppear(String rabbitMgmtHost) {

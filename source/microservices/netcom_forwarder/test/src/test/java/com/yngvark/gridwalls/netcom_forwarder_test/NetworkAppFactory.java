@@ -6,8 +6,8 @@ import com.yngvark.communicate_through_named_pipes.output.OutputFileOpener;
 import com.yngvark.communicate_through_named_pipes.output.OutputFileWriter;
 import com.yngvark.gridwalls.rabbitmq.RabbitBrokerConnecter;
 import com.yngvark.gridwalls.rabbitmq.RabbitConnection;
-import com.yngvark.process_test_helper.InputStreamListener;
-import com.yngvark.process_test_helper.ProcessStarter;
+import com.yngvark.named_piped_app_runner.InputStreamListener;
+import com.yngvark.named_piped_app_runner.ProcessStarter;
 import org.slf4j.Logger;
 
 import java.nio.file.Files;
@@ -21,8 +21,7 @@ class NetworkAppFactory {
 
     public static NetworkApp start() throws Exception {
         logger.info(Paths.get(".").toAbsolutePath().toString());
-        String host = "172.21.0.2"; // TODO Make dynamic.
-        RabbitBrokerConnecter rabbitBrokerConnecter = new RabbitBrokerConnecter(host);
+        RabbitBrokerConnecter rabbitBrokerConnecter = new RabbitBrokerConnecter(ProcessTest.RABBITMQ_IP);
         RabbitConnection rabbitConnection = rabbitBrokerConnecter.connect();
 
         String to = "build/to_netcom_forwarder";
@@ -40,10 +39,10 @@ class NetworkAppFactory {
         Runtime.getRuntime().exec("mkfifo " + from).waitFor();
 
         Process process = ProcessStarter.startProcess(
-                "../../source/build/install/app/bin/run",
+                "../source/build/install/app/bin/run",
                 to,
                 from,
-                host);
+                ProcessTest.RABBITMQ_IP);
 
         InputStreamListener stdoutListener = new InputStreamListener();
         stdoutListener.listenInNewThreadOn(process.getInputStream());
@@ -61,7 +60,7 @@ class NetworkAppFactory {
         logger.info("Streams opened.");
 
         NetworkApp app = new NetworkApp();
-        app.host = host;
+        app.host = ProcessTest.RABBITMQ_IP;
         app.rabbitConnection = rabbitConnection;
         app.process = process;
         app.stdoutListener = stdoutListener;
