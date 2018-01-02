@@ -4,8 +4,6 @@ import com.yngvark.communicate_through_named_pipes.output.OutputFileWriter;
 import com.yngvark.gridwalls.rabbitmq.RabbitMessageListener;
 import org.slf4j.Logger;
 
-import java.io.IOException;
-
 import static org.slf4j.LoggerFactory.getLogger;
 
 class NetworkMsgListener implements RabbitMessageListener {

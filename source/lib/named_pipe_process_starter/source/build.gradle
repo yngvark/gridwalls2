@@ -12,11 +12,11 @@ repositories {
 dependencies {
     compile 'org.slf4j:slf4j-api:1.7.+'
 
-    compile "org.junit.jupiter:junit-jupiter-api:5.0.0-M4"
-    runtime "org.junit.jupiter:junit-jupiter-engine:5.0.0-M4"
+    compile "org.junit.jupiter:junit-jupiter-api:5.0.2"
+    runtime "org.junit.jupiter:junit-jupiter-engine:5.0.2"
     compile "org.apache.commons:commons-lang3:3.5"
 
-    compile 'com.yngvark:communicate_through_named_pipes:1.1.+'
+    compile 'com.yngvark:communicate_through_named_pipes:1.2.+'
 }
 
 apply plugin: 'maven-publish'

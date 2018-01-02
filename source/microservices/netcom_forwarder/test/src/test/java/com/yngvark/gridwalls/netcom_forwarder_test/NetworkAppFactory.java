@@ -10,6 +10,7 @@ import com.yngvark.named_piped_app_runner.InputStreamListener;
 import com.yngvark.named_piped_app_runner.ProcessStarter;
 import org.slf4j.Logger;
 
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -18,12 +19,19 @@ class NetworkAppFactory {
     public static final Logger logger = getLogger(NetworkAppFactory.class);
 
     public static NetworkApp start() throws Exception {
-        logger.info(Paths.get(".").toAbsolutePath().toString());
+        return start(
+                Paths.get("build/to_netcom_forwarder"),
+                Paths.get("build/from_netcom_forwarder"));
+    }
+
+    public static NetworkApp start(Path toNetcomForwarderFile, Path fromNetcomForwarderFile) throws Exception {
+        logger.info("Running in dir: {}", Paths.get(".").toAbsolutePath().toString());
+
         RabbitBrokerConnecter rabbitBrokerConnecter = new RabbitBrokerConnecter(ProcessTest.RABBITMQ_IP);
         RabbitConnection rabbitConnection = rabbitBrokerConnecter.connect();
 
-        String to = Paths.get("build/to_netcom_forwarder").toAbsolutePath().toString();
-        String from = Paths.get("build/from_netcom_forwarder").toAbsolutePath().toString();
+        String to = toNetcomForwarderFile.toAbsolutePath().toString();
+        String from = fromNetcomForwarderFile.toAbsolutePath().toString();
 
         Process process = ProcessStarter.startProcess(
                 "../source/build/install/app/bin/run",

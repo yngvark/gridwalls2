@@ -3,8 +3,6 @@ package com.yngvark.gridwalls.netcom_forwarder_test;
 import com.yngvark.gridwalls.rabbitmq.RabbitConnection;
 import com.yngvark.gridwalls.rabbitmq.RabbitPublisher;
 import com.yngvark.gridwalls.rabbitmq.RabbitSubscriber;
-import com.yngvark.named_piped_app_runner.ProcessKiller;
-import com.yngvark.named_piped_app_runner.ProcessStarter;
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -41,27 +39,30 @@ import static org.slf4j.LoggerFactory.getLogger;
  */
 public class ProcessTest {
     public final Logger logger = getLogger(getClass());
-    public static final String RABBITMQ_IP = "172.17.0.2";
+    public static final String RABBITMQ_IP = "172.18.0.2";
 
     // TODO: should_connect_to_broker_before_names_pipes
 
     @Test
     public void should_create_named_pipes_if_they_dont_exist() throws Exception {
         // Given
-        Path to = Paths.get("build/to_netcom_forwarder");
-        Path from = Paths.get("build/from_netcom_forwarder");
+        Path to = Paths.get("build/do/create/all/dirs/to_netcom_forwarder");
+        Path from = Paths.get("build/do/create/all2/dirs/from_netcom_forwarder");
 
         deleteIfExists(to);
         deleteIfExists(from);
 
         // When
-        NetworkApp app = NetworkAppFactory.start();
+        NetworkApp app = NetworkAppFactory.start(to, from);
         app.stopAndFreeResources();
 
         // Then
-        assertTrue(Files.exists(to));
-        assertTrue(Files.exists(from));
+        assertTrue(Files.exists(to), to.toString());
+        assertTrue(Files.exists(from), to.toString());
 
+        // Finally
+        Files.delete(to);
+        Files.delete(from);
     }
 
     private void deleteIfExists(Path path) throws IOException {

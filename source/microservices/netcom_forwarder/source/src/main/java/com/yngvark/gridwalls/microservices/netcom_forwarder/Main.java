@@ -13,6 +13,10 @@ import com.yngvark.os_process_exiter.ExecutorServiceExiter;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
@@ -24,7 +28,7 @@ public class Main {
     private static final Logger logger = getLogger(Main.class);
 
     public static void main(String[] args) {
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> logger.info("Received exit signa")));
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> logger.info("Received exit signal")));
         logger.info("Args: " + StringUtils.join(args, ' '));
 
         // Args
@@ -37,11 +41,32 @@ public class Main {
         String fifoOutputFilename = args[1];
         String host = args.length == 3 ? args[2] : "rabbitmq";
 
+        createNamedPipeIfNotExists(fifoInputFilename);
+        createNamedPipeIfNotExists(fifoOutputFilename);
+
         // Dependencies
         OutputFileOpener outputFileOpener = new OutputFileOpener(fifoOutputFilename);
         InputFileOpener inputFileOpener = new InputFileOpener(fifoInputFilename);
 
         main(outputFileOpener, inputFileOpener, host);
+    }
+
+    private static void createNamedPipeIfNotExists(String filename) {
+        Path path = Paths.get(filename);
+        String pathAbsolute = path.toAbsolutePath().toString();
+        if (!Files.exists(path)) {
+            try {
+                String parentDir = path.getParent().toAbsolutePath().toString();
+                logger.info("Creating parent dir if not exists: mkdir -p {}", parentDir);
+                Runtime.getRuntime().exec("mkdir -p " + parentDir).waitFor();
+                logger.info("Creating named pipe: {}", pathAbsolute);
+                Runtime.getRuntime().exec("mkfifo " + pathAbsolute).waitFor();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     private static void main(OutputFileOpener outputFileOpener, InputFileOpener inputFileOpener, String host) {
