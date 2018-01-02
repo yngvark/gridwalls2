@@ -1,4 +1,0 @@
-apiVersion: v1
-description: Zombie Light micro service
-name: ZombieLight
-version: v0.1.0

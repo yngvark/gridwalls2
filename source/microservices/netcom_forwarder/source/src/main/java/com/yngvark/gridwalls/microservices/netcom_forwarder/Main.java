@@ -13,9 +13,7 @@ import com.yngvark.os_process_exiter.ExecutorServiceExiter;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 
-import java.io.IOException;
 import java.util.concurrent.CompletionService;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -25,7 +23,8 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class Main {
     private static final Logger logger = getLogger(Main.class);
 
-    public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
+    public static void main(String[] args) {
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> logger.info("Received exit signa")));
         logger.info("Args: " + StringUtils.join(args, ' '));
 
         // Args
@@ -54,7 +53,11 @@ public class Main {
         RabbitConnection rabbitConnection = rabbitBrokerConnecter.connect();
         logger.info("Connecting to network... done.");
 
-        RetrySleeper retrySleeper = () -> Thread.sleep(1000);
+        RetrySleeper retrySleeper = () -> {
+            logger.info("Retrying...");
+            Thread.sleep(2000);
+            logger.info("Sleep done");
+        };
         OutputFileWriter outputFileWriter = outputFileOpener.openStream(retrySleeper);
         InputFileReader inputFileReader = inputFileOpener.openStream(retrySleeper);
 

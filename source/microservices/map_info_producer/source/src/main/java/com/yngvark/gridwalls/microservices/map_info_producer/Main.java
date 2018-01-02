@@ -10,12 +10,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-
 public class Main {
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
 
     public static void main(String[] args) {
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> logger.info("Received exit signa")));
+
         // Args
         if (args.length < 2) {
             System.err.println("USAGE: <this program> <mkfifo input> <mkfifo output>");
@@ -35,9 +35,12 @@ public class Main {
         }
     }
 
-    static void main(OutputFileOpener outputFileOpener, InputFileOpener inputFileOpener)
-            throws IOException, InterruptedException {
-        RetrySleeper retrySleeper = () -> Thread.sleep(2000);
+    static void main(OutputFileOpener outputFileOpener, InputFileOpener inputFileOpener) {
+        RetrySleeper retrySleeper = () -> {
+            logger.info("Retrying...");
+            Thread.sleep(2000);
+            logger.info("Sleep done");
+        };
         InputFileReader inputFileReader = inputFileOpener.openStream(retrySleeper);
 
         OutputFileWriter outputFileWriter = outputFileOpener.openStream(retrySleeper);

@@ -54,10 +54,15 @@ public class RabbitBrokerConnecter {
             if (System.getenv("RABBITMQ_USERNAME") != null) {
                 logger.info("Found env variable for user.");
                 connectionFactory.setUsername(System.getenv("RABBITMQ_USERNAME"));
+            } else {
+                logger.info("Didn't find env variable for user.");
             }
+
             if (System.getenv("RABBITMQ_PASSWORD") != null) {
                 logger.info("Found env variable for password.");
                 connectionFactory.setPassword(System.getenv("RABBITMQ_PASSWORD"));
+            } else {
+                logger.info("Didn't find env variable for password.");
             }
 
             logger.info("Connecting to " + host);

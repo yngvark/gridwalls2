@@ -29,7 +29,7 @@ class InputFileOpenerTest {
         // Given
         Path buildDir = Paths.get("build");
         String file = "build/toConsume_should_retry_if_file_is_not_available";
-        createFileIfNotExists(buildDir, file);
+        deleteFileIfExists(buildDir, file);
 
         Map<String, Boolean> testResult = new HashMap<>();
 
@@ -74,7 +74,7 @@ class InputFileOpenerTest {
         Files.delete(Paths.get(file));
     }
 
-    private void createFileIfNotExists(Path buildDir, String file) throws IOException {
+    private void deleteFileIfExists(Path buildDir, String file) throws IOException {
         if (!Files.exists(buildDir)) {
             Files.createDirectories(buildDir);
         }
