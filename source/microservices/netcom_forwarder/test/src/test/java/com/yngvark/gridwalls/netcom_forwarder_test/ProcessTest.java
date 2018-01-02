@@ -3,6 +3,8 @@ package com.yngvark.gridwalls.netcom_forwarder_test;
 import com.yngvark.gridwalls.rabbitmq.RabbitConnection;
 import com.yngvark.gridwalls.rabbitmq.RabbitPublisher;
 import com.yngvark.gridwalls.rabbitmq.RabbitSubscriber;
+import com.yngvark.named_piped_app_runner.ProcessKiller;
+import com.yngvark.named_piped_app_runner.ProcessStarter;
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -12,6 +14,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -39,6 +44,31 @@ public class ProcessTest {
     public static final String RABBITMQ_IP = "172.17.0.2";
 
     // TODO: should_connect_to_broker_before_names_pipes
+
+    @Test
+    public void should_create_named_pipes_if_they_dont_exist() throws Exception {
+        // Given
+        Path to = Paths.get("build/to_netcom_forwarder");
+        Path from = Paths.get("build/from_netcom_forwarder");
+
+        deleteIfExists(to);
+        deleteIfExists(from);
+
+        // When
+        NetworkApp app = NetworkAppFactory.start();
+        app.stopAndFreeResources();
+
+        // Then
+        assertTrue(Files.exists(to));
+        assertTrue(Files.exists(from));
+
+    }
+
+    private void deleteIfExists(Path path) throws IOException {
+        if (Files.exists(path)) {
+            Files.delete(path);
+        }
+    }
 
     @Test
     public void published_msgs_should_be_sent_to_network_on_correct_topic() throws Exception {

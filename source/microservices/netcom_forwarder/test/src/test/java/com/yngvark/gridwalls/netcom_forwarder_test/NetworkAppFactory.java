@@ -10,8 +10,6 @@ import com.yngvark.named_piped_app_runner.InputStreamListener;
 import com.yngvark.named_piped_app_runner.ProcessStarter;
 import org.slf4j.Logger;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -24,19 +22,8 @@ class NetworkAppFactory {
         RabbitBrokerConnecter rabbitBrokerConnecter = new RabbitBrokerConnecter(ProcessTest.RABBITMQ_IP);
         RabbitConnection rabbitConnection = rabbitBrokerConnecter.connect();
 
-        String to = "build/to_netcom_forwarder";
-        String from = "build/from_netcom_forwarder";
-
-        Path toPath = Paths.get(to);
-        if (Files.exists(toPath)) {
-            Files.delete(toPath);
-        }
-        Path fromPath = Paths.get(from);
-        if (Files.exists(fromPath)) {
-            Files.delete(fromPath);
-        }
-        Runtime.getRuntime().exec("mkfifo " + to).waitFor();
-        Runtime.getRuntime().exec("mkfifo " + from).waitFor();
+        String to = Paths.get("build/to_netcom_forwarder").toAbsolutePath().toString();
+        String from = Paths.get("build/from_netcom_forwarder").toAbsolutePath().toString();
 
         Process process = ProcessStarter.startProcess(
                 "../source/build/install/app/bin/run",
