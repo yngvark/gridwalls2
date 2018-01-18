@@ -4,3 +4,8 @@ build:
 run:
 	docker-compose build
 	docker-compose up
+
+ks:
+	docker build . -t zombie-light
+	docker tag zombie-light eu.gcr.io/gridwalls2/zombie-light
+	gcloud docker -- push eu.gcr.io/gridwalls2/zombie-light

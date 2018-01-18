@@ -1,5 +1,17 @@
 --------------------------------------------------------------------------------------------------------
 
+Fyre opp containere i k8s:
+
+/mnt/hd2/git/gridwalls2/source/microservices/zombie-light$ make ks
+/mnt/hd2/git/gridwalls2/source/microservices/map_info_producer$ make ks
+
+Images kommer da hit: https://console.cloud.google.com/gcr/images/gridwalls2?project=gridwalls2&gcrImageListsize=50
+
+Kjøre rabbitmq:
+
+
+--------------------------------------------------------------------------------------------------------
+
 draft init \
 --set \
 registry.url=gcr.io,\

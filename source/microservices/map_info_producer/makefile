@@ -5,7 +5,7 @@ run:
 	docker-compose build
 	docker-compose up
 
-k8s:
+ks:
 	docker build . -t map-info-producer
 	docker tag map-info-producer eu.gcr.io/gridwalls2/map-info-producer
 	gcloud docker -- push eu.gcr.io/gridwalls2/map-info-producer
