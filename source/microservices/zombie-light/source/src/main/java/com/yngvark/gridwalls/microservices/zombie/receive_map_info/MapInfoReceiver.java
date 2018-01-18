@@ -31,8 +31,10 @@ public class MapInfoReceiver {
                 new MapInfoRequest().replyToTopic("Zombie_MapInfo"));
         write("/publishTo MapInfoRequests " + mapInfoRequest);
 
+        logger.info("Waiting for reply with map info.");
         String reply = read();
-        logger.debug("Reply: {}", reply);
+
+        logger.info("Reply: {}", reply);
         String mapInfoTxt = reply.split(" ", 2)[1];
         MapInfo mapInfo = serializer.deserialize(mapInfoTxt, MapInfo.class);
 

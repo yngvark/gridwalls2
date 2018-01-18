@@ -12,32 +12,12 @@ services:
   map_info_producer_netcom_forwarder:
     networks:
       - netcom
-    image: netcom_forwarder
+    image: netcom-forwarder
     volumes:
       - named_pipes:/app_data
     command:
       - /app_data/out
       - /app_data/in
-
-  init:
-    image: ubuntu
-    volumes:
-      - ./init:/app_init
-      - named_pipes:/app_data
-    command:
-      - /bin/bash
-      - -c
-      - /app_init/init_named_pipes.sh
-
-  delpipes:
-    image: alpine
-    volumes:
-      - named_pipes:/app_data
-    command:
-      - sh
-      - -c
-      - echo Doing nothing
-      #- rm -f /app_data/* && ls /app_data
 
 volumes:
   named_pipes:
