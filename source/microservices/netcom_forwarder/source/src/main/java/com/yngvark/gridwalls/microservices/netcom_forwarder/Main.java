@@ -28,6 +28,8 @@ public class Main {
     private static final Logger logger = getLogger(Main.class);
 
     public static void main(String[] args) {
+        logger.info("Netcom Forwarder version 0.1");
+
         Runtime.getRuntime().addShutdownHook(new Thread(() -> logger.info("Received exit signal")));
         logger.info("Args: " + StringUtils.join(args, ' '));
 
@@ -54,7 +56,9 @@ public class Main {
     private static void createNamedPipeIfNotExists(String filename) {
         Path path = Paths.get(filename);
         String pathAbsolute = path.toAbsolutePath().toString();
-        if (!Files.exists(path)) {
+        if (Files.exists(path)) {
+            logger.info("Named pipe already exist, not doing anything: " + filename);
+        } else {
             try {
                 String parentDir = path.getParent().toAbsolutePath().toString();
                 logger.info("Creating parent dir if not exists: mkdir -p {}", parentDir);
