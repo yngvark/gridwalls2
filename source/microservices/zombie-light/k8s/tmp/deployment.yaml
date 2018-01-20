@@ -13,15 +13,15 @@ spec:
     spec:
       containers:
       - name: app
-        image: eu.gcr.io/gridwalls2/zombielight_zombie:latest
+        image: eu.gcr.io/gridwalls2/zombie-light:latest
         args: ["/app_data/in", "/app_data/out"]
         imagePullPolicy: Always
         volumeMounts:
           - name: named-pipes
             mountPath: /app_data
       - name: netcom-forwarder
-        image: eu.gcr.io/gridwalls2/netcom_forwarder:latest
-        args: ["/app_data/out", "/app_data/in", "rabbithost-rabbitmq"]
+        image: eu.gcr.io/gridwalls2/netcom-forwarder:latest
+        args: ["/app_data/out", "/app_data/in", "fair-blackbird-rabbitmq"]
         imagePullPolicy: Always
         volumeMounts:
           - name: named-pipes
@@ -32,15 +32,8 @@ spec:
         - name: RABBITMQ_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: rabbithost-rabbitmq
+              name: fair-blackbird-rabbitmq
               key: rabbitmq-password
-      - name: init
-        image: alpine
-        command: ["/bin/sh"]
-        args: ["-c", "mkdir -p /app_data && echo Before: && ls -lrt /app_data && rm -f /app_data/in && rm -f /app_data/out && mkfifo /app_data/in && mkfifo /app_data/out && echo After: && ls -lrt /app_data"]
-        volumeMounts:
-          - name: named-pipes
-            mountPath: /app_data
       volumes:
         - name: named-pipes
           emptyDir: {}

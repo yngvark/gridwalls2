@@ -1,8 +1,11 @@
 TODO
 ---------------------------------------------------------------
 
-[ ] NetComForwarder lager nå named pipes. Fjern init container fra k8s-filer og prøv å kjør map-info-producer og evt zombie-light på nytt på Kubernetes.
+[ ] zombie-light må få helm-template
+	secretKeyRef.name må få navnet til secreten som 
 
+
+[ ] NetComForwarder lager nå named pipes. Fjern init container fra k8s-filer og prøv å kjør map-info-producer og evt zombie-light på nytt på Kubernetes.
 
 
 
@@ -43,6 +46,7 @@ Clean code
 		notifyControllerStopReceive feks i stedet for setCurrentListenerNoOp.
 
 Lengre sikt
+[ ] Mikrotjeneste må få liveness og readyness probes som bruker rabbitmq.
 [ ] Finn ut hvordan jeg gjør det med timing av gamet.
 [ ] Fiks byggesystem så full bygging og kjøring av appen min blir smooth sailing
 	[ ] Make eller Kubernetes-oppsett

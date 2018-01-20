@@ -1,13 +1,23 @@
 --------------------------------------------------------------------------------------------------------
 
-Fyre opp containere i k8s:
+# Laste opp images til k8s:
 
-/mnt/hd2/git/gridwalls2/source/microservices/zombie-light$ make ks
-/mnt/hd2/git/gridwalls2/source/microservices/map_info_producer$ make ks
+make -C /mnt/hd2/git/gridwalls2/source/microservices/zombie-light ks
+make -C /mnt/hd2/git/gridwalls2/source/microservices/map_info_producer$ ks
+make -C /mnt/hd2/git/gridwalls2/source/microservices/netcom_forwarder ks
 
-Images kommer da hit: https://console.cloud.google.com/gcr/images/gridwalls2?project=gridwalls2&gcrImageListsize=50
 
-Kjøre rabbitmq:
+# Images kommer da hit: https://console.cloud.google.com/gcr/images/gridwalls2?project=gridwalls2&gcrImageListsize=50
+
+helm init
+helm repo add stable https://kubernetes-charts.storage.googleapis.com
+#helm install stable/rabbitmq --set image=bitnami/rabbitmq:3.7.2-r1
+helm install stable/rabbitmq --set image=bitnami/rabbitmq@sha256:396f17fefa0d4012463d063ce258b15b78aa54386667df30aafddb31e69e1925
+
+cd /mnt/hd2/git/gridwalls2/source/microservices/zombie-light && \
+	helm install k8s/helm -f k8s/helm/values.yaml --set rabbitmqReleaseName=fair-blackbird-rabbitmq
+
+	# hvor fair-blackbird er navnet på rabbitmq-releasen
 
 
 --------------------------------------------------------------------------------------------------------
@@ -20,3 +30,4 @@ registry.authtoken=${AUTH_TOKEN},\
 basedomain=draft.[[YOUR-DOMAIN]]
 
 --------------------------------------------------------------------------------------------------------
+
