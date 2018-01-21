@@ -1,1 +1,5 @@
 Happy Zombieing!
+
+Get logs:
+kubectl logs -f --namespace {{ .Release.Namespace }} $(kubectl get po -l app=zombie-light  -o jsonpath="{.items[0].metadata.name}") app
+kubectl logs -f --namespace {{ .Release.Namespace }} $(kubectl get po -l app=zombie-light  -o jsonpath="{.items[0].metadata.name}") netcom-forwarder

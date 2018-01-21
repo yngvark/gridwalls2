@@ -1,11 +1,10 @@
 TODO
 ---------------------------------------------------------------
 
-[ ] zombie-light må få helm-template
-	secretKeyRef.name må få navnet til secreten som 
+[ ] NÅ: Få notes.txt til å generere kommandoer for å vise logging til app (og netcom-forwarder?)
 
-
-[ ] NetComForwarder lager nå named pipes. Fjern init container fra k8s-filer og prøv å kjør map-info-producer og evt zombie-light på nytt på Kubernetes.
+			zombie-light ks-run:
+	
 
 
 
