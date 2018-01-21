@@ -11,4 +11,4 @@ ks:
 	gcloud docker -- push eu.gcr.io/gridwalls2/zombie-light
 
 ks-run:
-	helm install k8s/helm -f k8s/helm/values.yaml
+	helm install gridwalls/gridwalls-microservice -f helm_config.yaml

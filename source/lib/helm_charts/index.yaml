@@ -2,11 +2,11 @@ apiVersion: v1
 entries:
   gridwalls-microservice:
   - apiVersion: v1
-    created: 2018-01-21T12:33:33.626304647+01:00
+    created: 2018-01-21T12:42:10.673185443+01:00
     description: A Gridwalls Microservice
-    digest: 24f517292b8a0d48ff08a64f242da357208b8faac1423db33e09cbf56f85c4e5
+    digest: 622a4385324f12707686dc1a17b335c209e3f20ded29b04e436bbd7c5fa89256
     name: gridwalls-microservice
     urls:
     - gridwalls-microservice/gridwalls-microservice-0.1.0.tgz
     version: 0.1.0
-generated: 2018-01-21T12:33:33.625707963+01:00
+generated: 2018-01-21T12:42:10.672836317+01:00
