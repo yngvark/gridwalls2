@@ -1,2 +1,0 @@
-update:
-	helm repo index . 

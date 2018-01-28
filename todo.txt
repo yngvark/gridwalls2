@@ -1,12 +1,7 @@
 TODO
 ---------------------------------------------------------------
 
-[ ] NÅ: Få notes.txt til å generere kommandoer for å vise logging til app (og netcom-forwarder?)
-
-			zombie-light ks-run:
-	
-
-
+[ ] phaser.io: Lag frontend som viser det hele.
 
 
 [ ] netcomforwarder: should_get_exception_when_producer_throws_exception

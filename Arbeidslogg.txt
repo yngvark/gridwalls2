@@ -11,8 +11,10 @@ helm repo add stable https://kubernetes-charts.storage.googleapis.com
 
 make -C /mnt/hd2/git/gridwalls2/source/microservices/rabbitmq ks-run
 
-make -C /mnt/hd2/git/gridwalls2/source/microservices/zombie-light ks-run
 make -C /mnt/hd2/git/gridwalls2/source/microservices/map_info_producer ks-run
+
+#map_info_producer må være ready før zombie kan kjøre
+make -C /mnt/hd2/git/gridwalls2/source/microservices/zombie-light ks-run
 
 
 --------------------------------------------------------------------------------------------------------
