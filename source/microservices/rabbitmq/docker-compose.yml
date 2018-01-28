@@ -3,7 +3,7 @@ version: '2'
 services:
 
   rabbitmq:
-    image: rabbitmq:3-management
+    image: rabbitmq-gridwalls
     #hostname: rabbithost
     ports:
       - "8080:15672"

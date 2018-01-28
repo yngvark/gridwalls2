@@ -1,7 +1,14 @@
 TODO
 ---------------------------------------------------------------
 
+[ ] https://www.rabbitmq.com/web-stomp.html -> må confe brukernavn og pw når connections ikke er fra localhost
+	https://github.com/bitnami/bitnami-docker-rabbitmq
+
+	Hvordan får jeg config-filene inn i volumet som mountes som en pvc i deploymenten til rabbitmq?
+
+	The image looks for configurations in /bitnami/rabbitmq/conf/. As mentioned in Persisting your application you can mount a volume at /bitnami and copy/edit the configurations in the /path/to/rabbitmq-persistence/rabbitmq/conf/. 
 [ ] phaser.io: Lag frontend som viser det hele.
+[ ] lage helm chart for frontend
 [ ] fiks sånn at zombie og mapinfo får igjen sin egen helm chart hver.
 
 

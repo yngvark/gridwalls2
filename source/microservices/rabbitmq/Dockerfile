@@ -1,3 +1,3 @@
-FROM rabbitmq:3-management
+FROM bitnami/rabbitmq@sha256:396f17fefa0d4012463d063ce258b15b78aa54386667df30aafddb31e69e1925
 
-RUN rabbitmq-plugins enable rabbitmq_stomp
+RUN rabbitmq-plugins enable rabbitmq_web_stomp
