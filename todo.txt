@@ -2,6 +2,7 @@ TODO
 ---------------------------------------------------------------
 
 [ ] phaser.io: Lag frontend som viser det hele.
+[ ] fiks sånn at zombie og mapinfo får igjen sin egen helm chart hver.
 
 
 [ ] netcomforwarder: should_get_exception_when_producer_throws_exception
