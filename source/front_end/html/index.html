@@ -16,6 +16,13 @@
 <body>
 <h1>The game2</h1>
 
+<div id="login">
+	Server:<input id="server" type="text"/><br/>
+	User:<input id="username" type="text" /><br/>
+	Pw:<input id="password" type="password" /><br/>
+	Submit: <input id="submit" type="button" text="Connect" /><br/>
+</div>
+
 <div id="content"></div>
 
 Se console log.
@@ -23,15 +30,18 @@ Se console log.
 
 <script>
 
-var main = new Main();
+	console.log("Hello from console");
 
-window.onload = () => {
-    main.run();
-};
+	document.getElementById("submit").onclick = function() {
+		console.log("Connecting...");
+		var main = new Main();
+	  main.run();
+	}
 
-function disconnect() {
-	main.disconnect();
-}
+
+	function disconnect() {
+		main.disconnect();
+	}
 
 </script>
 
