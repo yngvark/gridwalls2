@@ -4,6 +4,7 @@ install:
 	# install vscode manually for now
 
 build:
+	tsc -p html/lib
 	docker build . -t eu.gcr.io/gridwalls2/front_end
 
 run:

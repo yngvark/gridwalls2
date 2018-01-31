@@ -1,5 +1,5 @@
 {
-    "compilerOptionns": {
+    "compilerOptions": {
         "outFile": "game.js",
         "target": "es5"
     },

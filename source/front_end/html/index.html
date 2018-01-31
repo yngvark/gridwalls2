@@ -17,10 +17,12 @@
 <h1>The game2</h1>
 
 <div id="login">
-	Server:<input id="server" type="text"/><br/>
-	User:<input id="username" type="text" /><br/>
-	Pw:<input id="password" type="password" /><br/>
-	Submit: <input id="submit" type="button" text="Connect" /><br/>
+	Server:<input id="server" type="text" value="" /><br/>
+	User:<input id="username" type="text" value="" /><br/>
+	Pw:<input id="password" type="password" value="" /><br/>
+	Submit: <input id="submit" type="button" value="Connect" /><br/>
+	<p/><br/>
+	Test move: <input id="testMove" type="button" value="Test zombie move" /><br/>
 </div>
 
 <div id="content"></div>
@@ -32,12 +34,22 @@ Se console log.
 
 	console.log("Hello from console");
 
+	var main = new Main();
+	main.initGame();
+
 	document.getElementById("submit").onclick = function() {
 		console.log("Connecting...");
-		var main = new Main();
-	  main.run();
+
+	  main.run({
+			server: document.getElementById('server').value,
+			username: document.getElementById('username').value,
+			password: document.getElementById('password').value
+		});
 	}
 
+	document.getElementById("testMove").onclick = function() {
+	  main.testMove();
+	}
 
 	function disconnect() {
 		main.disconnect();
