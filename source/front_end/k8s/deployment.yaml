@@ -15,3 +15,6 @@ spec:
       - name: front-end
         image: eu.gcr.io/gridwalls2/front_end:latest
         imagePullPolicy: Always
+        ports:
+        - name: http
+          containerPort: 80
