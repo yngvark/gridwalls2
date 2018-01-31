@@ -1,7 +1,10 @@
 TODO
 ---------------------------------------------------------------
 
-[ ] https://www.rabbitmq.com/web-stomp.html -> må confe brukernavn og pw når connections ikke er fra localhost
+[ ] phaser allow cross orgin, for å teste lokalt
+[ ] Blir noe feil med grafikken, trykk test zombie move for å se hva.
+
+[x] https://www.rabbitmq.com/web-stomp.html -> må confe brukernavn og pw når connections ikke er fra localhost
 	https://github.com/bitnami/bitnami-docker-rabbitmq
 
 	Hvordan får jeg config-filene inn i volumet som mountes som en pvc i deploymenten til rabbitmq?
