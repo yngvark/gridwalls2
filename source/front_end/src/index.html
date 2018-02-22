@@ -10,6 +10,9 @@
         }
     </style>
     <link rel="stylesheet" href="form.css">
+
+    <script type="text/javascript" src="lib/npm/node_modules/phaser/build/phaser.min.js"></script>
+    <script type="text/javascript" src="lib/npm/node_modules/stompjs/lib/stomp.js"></script>
 	<script src="lib/game.js"></script>
 </head>
 <body>
@@ -45,9 +48,13 @@
             var host = document.getElementById('host').value
             var username = document.getElementById('username').value
             var password = document.getElementById('password').value
+            var auth = new Authentication()
+            auth.host = host
+            auth.username = username
+            auth.password = password
 
             console.log("Connect to " + host + " with u/p: " + username + "/" + password)
-            //main.run('content');
+            main.run('content', auth);
             //document.getElementById('disconnect').style.display = 'block'
             // document.getElementById('connect').style.display = 'none'
             
@@ -55,7 +62,7 @@
         
 		function disconnect() {
             console.log("Disconnect")
-            //main.disconnect();
+            main.disconnect();
 		}
 	</script>
 

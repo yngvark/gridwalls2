@@ -2,8 +2,8 @@ class GameRunner {
     private game:Phaser.Game;
 
     run(divIdName:String):void {
-        console.log("Starting game");
-        this.game = new Phaser.Game(800, 600, Phaser.AUTO, divIdName, {
+        console.log("Starting game!");
+        this.game = new Phaser.Game(800, 200, Phaser.AUTO, divIdName, {
 
             preload: this.preload,
             create: this.create
@@ -24,7 +24,7 @@ class GameRunner {
     zombieMoved(zombieMoved:ZombieMoved) {
         if (this.zombies.hasOwnProperty(zombieMoved.id)) {
             let zombie = this.zombies[zombieMoved.id];
-            zombie.sprite.position.setTo(zombieMoved.coordinate.x * 40, zombieMoved.coordinate.y * 40);
+            zombie.sprite.position.setTo(zombieMoved.coordinate.x * 15, zombieMoved.coordinate.y * 15);
         } else {
             console.log(this.game);            
             let sprite = this.game.add.sprite(zombieMoved.coordinate.x, zombieMoved.coordinate.y, "skeleton"); 

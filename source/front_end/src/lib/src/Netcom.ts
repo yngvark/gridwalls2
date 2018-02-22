@@ -1,26 +1,29 @@
 class Netcom {
+    private auth:Authentication;
     private zombieMovedProcessor:ZombieMovedProcessor;
 	private client:any;
 			
     constructor(auth:Authentication, zombieMovedProcessor:ZombieMovedProcessor) {
+		this.auth = auth
         this.zombieMovedProcessor = zombieMovedProcessor;
     }
 
-    init(connectionString:any, game:GameRunner):void {
-		console.log("connectionString:");
-		console.log(connectionString);
+    init(game:GameRunner):void {
 		//var ws = new WebSocket('ws://127.0.0.1:15674/ws');
-		var ws = new WebSocket('ws://' + connectionString.server + ':15674/ws');
+		var websocketUrl = 'ws://' + this.auth.host + ':15674/ws';
+		console.log("Websocket url: " + websocketUrl);
+		var ws = new WebSocket(websocketUrl);
+		this.client = Stomp.over(ws); 
+		
 		//var client = Stomp.client(ws);
-	    this.client = Stomp.over(ws); 
-		var client = this.client;
+		//var client = this.client;
 
 		var _that = this;
 	    var on_connect = function() {
 	        console.log('connected');
 
 			console.log(".-SUBSCRIBE");
-			var subscription = client.subscribe("/exchange/Zombie", function(msg:any) {
+			var subscription = _that.client.subscribe("/exchange/Zombie", function(msg:any) {
 				console.log("<<< RECEIVED:")
 				console.log(msg);
                 let zombieMoved:ZombieMoved = _that.zombieMovedProcessor.process(msg.body);
@@ -37,7 +40,9 @@ class Netcom {
 	    };
 
 		//client.connect('guest', 'guest', on_connect, on_error, '/');
-		client.connect(connectionString.username, connectionString.password, on_connect, on_error, '/');
+		console.log("Connecting with auth:");
+		console.log(this.auth)
+		this.client.connect(this.auth.username, this.auth.password, on_connect, on_error, '/');
 		
     }
 
