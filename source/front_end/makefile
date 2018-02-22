@@ -2,7 +2,10 @@ build:
 	docker build . -t eu.gcr.io/gridwalls2/front_end
 
 run:
-	docker run -v `pwd`/html:/usr/share/nginx/html:ro -d -p 8081:80 eu.gcr.io/gridwalls2/front_end
+	docker run -v `pwd`/src:/usr/share/nginx/html:ro -d -p 8081:80 --name front_end eu.gcr.io/gridwalls2/front_end
+
+stop:
+	docker stop front_end && docker rm front_end
 
 ks: build
 	gcloud docker -- push eu.gcr.io/gridwalls2/front_end

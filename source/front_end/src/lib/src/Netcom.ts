@@ -2,7 +2,7 @@ class Netcom {
     private zombieMovedProcessor:ZombieMovedProcessor;
 	private client:any;
 			
-    constructor(zombieMovedProcessor:ZombieMovedProcessor) {
+    constructor(auth:Authentication, zombieMovedProcessor:ZombieMovedProcessor) {
         this.zombieMovedProcessor = zombieMovedProcessor;
 
 		console.log("inited with: ");

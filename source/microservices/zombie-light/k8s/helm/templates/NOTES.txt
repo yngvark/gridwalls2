@@ -1,5 +1,0 @@
-Happy Zombieing!
-
-Get logs:
-kubectl logs -f --namespace {{ .Release.Namespace }} $(kubectl get po -l "app={{ template "gridwalls-microservice.name" . }}" -l "release={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}") app
-kubectl logs -f --namespace {{ .Release.Namespace }} $(kubectl get po -l "app={{ template "gridwalls-microservice.name" . }}" -l "release={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}") netcom-forwarder

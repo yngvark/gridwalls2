@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Game setup</title>
+	<style>
+	    body {
+	        width: 35em;
+	        margin: 0 auto;
+	        font-family: Tahoma, Verdana, Arial, sans-serif;
+        }
+    </style>
+    <link rel="stylesheet" href="form.css">
+	<script src="lib/game.js"></script>
+</head>
+<body>
+	<h1>Game setup</h1>
+
+    <div id"setup">
+        <form>
+            <label for="host">Rabbitmq host ip</label>
+            <input id="host" type="text">
+            <br/>
+            <label for="username">Username</label>
+            <input id="username" type="text" value="webstomp">
+            <br/>
+            <label for="password">Password</label>
+            <input id="password" type="text">
+
+            <br/>
+
+        </form>
+    </div>
+    
+    <button onclick="connect()">Connect</button>
+    <button onclick="disconnect()">Disconnect</button>
+
+    <div id="content"><!-- Phaser content goes here --></div>
+    
+	<script>
+        console.log("Hello")
+
+        var main = new Main();
+
+        function connect() {
+            var host = document.getElementById('host').value
+            var username = document.getElementById('username').value
+            var password = document.getElementById('password').value
+
+            console.log("Connect to " + host + " with u/p: " + username + "/" + password)
+            //main.run('content');
+            //document.getElementById('disconnect').style.display = 'block'
+            // document.getElementById('connect').style.display = 'none'
+            
+        }
+        
+		function disconnect() {
+            console.log("Disconnect")
+            //main.disconnect();
+		}
+	</script>
+
+</body>
+</html>
+
+

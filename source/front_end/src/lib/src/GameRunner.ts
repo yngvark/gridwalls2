@@ -1,8 +1,8 @@
 class GameRunner {
     private game:Phaser.Game;
 
-    run():void {
-        this.game = new Phaser.Game(800, 600, Phaser.AUTO, 'content', {
+    run(divIdName:String):void {
+        this.game = new Phaser.Game(800, 600, Phaser.AUTO, divIdName, {
             preload: this.preload,
             create: this.create
         });

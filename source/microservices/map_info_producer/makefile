@@ -11,4 +11,4 @@ ks:
 	gcloud docker -- push eu.gcr.io/gridwalls2/map-info-producer
 
 ks-run:
-	helm install ../../lib/helm_charts/gridwalls-microservice -f helm_config.yaml --name map-info-producer
+	helm install local/gridwalls-microservice -f helm_values.yaml --name map-info-producer
