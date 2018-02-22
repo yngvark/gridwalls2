@@ -1,14 +1,20 @@
 class Main {
     private netcom:Netcom;
+    private game:GameRunner;
 
-    run(divIdName:String):void {
-        console.log("Running game")
+    initGame(divIdName:String):void {
+        this.game = new GameRunner();
+        this.game.run(divIdName);
+    }
 
-        var game = new GameRunner();
-        game.run(divIdName);
+    testMove():void {
+        this.game.zombieMoved(new ZombieMoved("123", new Coordinate(1, 1)))
+    }
+
+    run(server:String):void {
 
         this.netcom = new Netcom(new ZombieMovedProcessor());
-        this.netcom.init(game);
+        this.netcom.init(server, this.game);
 
     }
 

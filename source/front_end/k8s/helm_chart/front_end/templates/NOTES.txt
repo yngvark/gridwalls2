@@ -1,0 +1,4 @@
+Happy front-ending!
+
+Get logs:
+kubectl logs -f --namespace {{ .Release.Namespace }} $(kubectl get po -l "app={{ template "front-end.name" . }}" -l "release={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}")

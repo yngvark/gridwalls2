@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Welcome to nginx!</title>
+	<style>
+	    body {
+	        width: 35em;
+	        margin: 0 auto;
+	        font-family: Tahoma, Verdana, Arial, sans-serif;
+	    }
+	</style>
+	<script type="text/javascript" src="lib/npm/node_modules/phaser/build/phaser.min.js"></script>
+	<script type="text/javascript" src="lib/npm/node_modules/stompjs/lib/stomp.js"></script>
+	<script src="lib/game.js"></script>
+</head>
+<body>
+<h1>The game2</h1>
+
+<div id="login">
+	Server:<input id="server" type="text" value="" /><br/>
+	User:<input id="username" type="text" value="" /><br/>
+	Pw:<input id="password" type="password" value="" /><br/>
+	Submit: <input id="submit" type="button" value="Connect" /><br/>
+	<p/><br/>
+	Test move: <input id="testMove" type="button" value="Test zombie move" /><br/>
+</div>
+
+<div id="content"></div>
+
+Se console log.
+<button onclick="disconnect()">Disconnect</button>
+
+<script>
+
+	console.log("Hello from console");
+
+	var main = new Main();
+	main.initGame();
+
+	document.getElementById("submit").onclick = function() {
+		console.log("Connecting...");
+
+	  main.run({
+			server: document.getElementById('server').value,
+			username: document.getElementById('username').value,
+			password: document.getElementById('password').value
+		});
+	}
+
+	document.getElementById("testMove").onclick = function() {
+	  main.testMove();
+	}
+
+	function disconnect() {
+		main.disconnect();
+	}
+
+</script>
+
+</body>
+</html>
