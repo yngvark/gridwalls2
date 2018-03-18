@@ -3,7 +3,7 @@ class GameRunner {
 
     run(divIdName:String):void {
         console.log("Starting game!");
-        this.game = new Phaser.Game(800, 200, Phaser.AUTO, divIdName, {
+        this.game = new Phaser.Game(800, 350, Phaser.AUTO, divIdName, {
 
             preload: this.preload,
             create: this.create
@@ -24,9 +24,11 @@ class GameRunner {
     zombieMoved(zombieMoved:ZombieMoved) {
         if (this.zombies.hasOwnProperty(zombieMoved.id)) {
             let zombie = this.zombies[zombieMoved.id];
+            console.log("Existing zombie:");
+            console.log(zombie);
+            console.log(zombieMoved);
             zombie.sprite.position.setTo(zombieMoved.coordinate.x * 15, zombieMoved.coordinate.y * 15);
         } else {
-            console.log(this.game);            
             let sprite = this.game.add.sprite(zombieMoved.coordinate.x, zombieMoved.coordinate.y, "skeleton"); 
             sprite.scale.setTo(0.2 , 0.2);
 
@@ -34,6 +36,10 @@ class GameRunner {
                 id: zombieMoved.id,
                 sprite: sprite
             }
+
+            console.log("New zombie:");
+            console.log(zombie);
+            console.log(zombieMoved);
 
             this.zombies[zombie.id] = zombie;
         }

@@ -26,7 +26,7 @@ class Netcom {
 			var subscription = _that.client.subscribe("/exchange/Zombie", function(msg:any) {
 				console.log("<<< RECEIVED:")
 				console.log(msg);
-                let zombieMoved:ZombieMoved = _that.zombieMovedProcessor.process(msg.body);
+                let zombieMoved:ZombieMoved = _that.zombieMovedProcessor.process(JSON.parse(msg.body));
                 game.zombieMoved(zombieMoved);
 			});
 			console.log(".-subscription");

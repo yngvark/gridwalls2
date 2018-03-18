@@ -1,6 +1,7 @@
 TODO
 ---------------------------------------------------------------
 
+[ ] få docker regsitry opp via url
 [ ] phaser allow cross orgin, for å teste lokalt
 [ ] Blir noe feil med grafikken, trykk test zombie move for å se hva.
 

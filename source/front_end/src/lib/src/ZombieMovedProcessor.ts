@@ -18,9 +18,16 @@ class ZombieMovedProcessor {
         var coordinate = new Coordinate(coords[0], coords[1]);
         */
 
-        var id = "123"
-        var coordinate = new Coordinate(msg.x, msg.y)
+        console.log("Processing incomming message:");
+        console.log(msg);
+        console.log("Type: " + typeof(msg));
+        var id = "123";
+        var coordinate = new Coordinate(msg.x, msg.y);
+        var zombieMoved = new ZombieMoved(id, coordinate);
+        console.log("Resulting ZombieMoved");
+        console.log(zombieMoved);
+        console.log("msg.x: " + msg.x + " and msg.y: " + msg.y);
         
-        return new ZombieMoved(id, coordinate);
+        return zombieMoved
     }
 }
