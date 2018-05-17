@@ -60,7 +60,7 @@ class ProcessTest {
     }
 
     @Test
-    void turn_time_should_be_below_50ms_when_using_nosleep() throws Exception {
+    void turn_time_should_be_below_100ms_when_using_nosleep() throws Exception {
         // Given
         app = NamedPipeProcessStarter.start("--nosleep", "-seed=123")
         def gson = new Gson()
@@ -93,7 +93,7 @@ class ProcessTest {
             // Then
             long turnTimeMillis = turnTime.toMillis()
             logger.info("Turn time (millis): {}", turnTimeMillis)
-            assertTrue(turnTimeMillis < 50, "Turn time was: " + turnTimeMillis)
+            assertTrue(turnTimeMillis < 100, "Turn time was: " + turnTimeMillis)
         }
 
         // Finally

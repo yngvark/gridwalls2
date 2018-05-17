@@ -77,17 +77,17 @@ class ZombieTest {
             gatherMinMax(gatherer, m)
 
             // Then
-            assertTrue(m.getX() <= 15 && m.getX() >= 1
-                    && m.getY() <= 10 && m.getY() >= 1,
+            assertTrue(m.getX() <= 14 && m.getX() >= 0
+                    && m.getY() <= 9 && m.getY() >= 0,
                     "x: " + m.getX() + ", y: " + m.getY())
         }
 
         // Then
-        assertEquals(1, gatherer.min("x"))
-        assertEquals(15, gatherer.max("x"))
+        assertEquals(0, gatherer.min("x"))
+        assertEquals(14, gatherer.max("x"))
 
-        assertEquals(1, gatherer.min("y"))
-        assertEquals(10, gatherer.max("y"))
+        assertEquals(0, gatherer.min("y"))
+        assertEquals(9, gatherer.max("y"))
     }
 
     private void gatherMinMax(MaxMinGatherer gatherer, Move m) {
@@ -142,6 +142,40 @@ class ZombieTest {
             return gson.fromJson(moveTxt, Move.class)
         } catch (JsonSyntaxException e) {
             throw new RuntimeException("Could not parse: " + moveTxt, e)
+        }
+    }
+
+    @Test
+    void should_move_at_most_1_distance_per_move() throws Exception {
+        // Given
+        app = NamedPipeProcessStarter.start("--nosleep", "-seed=123")
+        def gson = new Gson()
+
+        AppLineReader.readLine(app) // subscription
+        AppLineReader.readLine(app) // request for map info
+        String mapInfo = gson.toJson(new MapInfo(15, 10))
+        app.outputFileWriter.write("[Zombie_MapInfo] " + mapInfo)
+
+        Move lastMove
+        for (int i = 0; i < 1000; i++) {
+            // When
+            String moveTxt = app.inputFileLineReader.readLine()
+            logger.debug(moveTxt)
+
+            String[] parts = StringUtils.split(moveTxt, " ", 3)
+            Move move = gson.fromJson(parts[2], Move.class)
+            if (i == 0) {
+                lastMove = move
+                continue
+            }
+
+            // Then
+            int distanceX = Math.abs(lastMove.getX() - move.getX())
+            int distanceY = Math.abs(lastMove.getY() - move.getY())
+            assertTrue(distanceX <= 1, "DistanceX: " + distanceX + ". lastMove: " + lastMove + ", move: " + move)
+            assertTrue(distanceY <= 1, "DistanceY: " + distanceY + ". lastMove: " + lastMove + ", move: " + move)
+
+            lastMove = move
         }
     }
 }

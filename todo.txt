@@ -1,6 +1,15 @@
 TODO
 ---------------------------------------------------------------
 
+[ ] Oppgrader clusteret: søk på e-post Kubernetes vulnerabilities
+
+MIDT i arbeidet: Få opp gluster i scaleway.
+	hOLDER PÅå å fikse at scaleway master er NTP master.
+		https://serverfault.com/questions/204082/using-ntp-to-sync-a-group-of-linux-servers-to-a-common-time-source
+
+		https://github.com/heketi/heketi/blob/master/docs/admin/install-kubernetes.md UTDATERT
+		https://github.com/gluster/gluster-kubernetes
+
 [ ] få docker regsitry opp via url
 [ ] phaser allow cross orgin, for å teste lokalt
 [ ] Blir noe feil med grafikken, trykk test zombie move for å se hva.
@@ -477,9 +486,4 @@ the output is "--> Main class name: null".
 
 
 --
-
-
-Ikke noe problem. I can switch to english, 
-
-because I am a self-declared expert at reading people. Show me a picture
 

@@ -9,9 +9,11 @@ Current plan:
 
 ## Installation
 
-* Start a Kubernetes cluster (use kubeadm)
-  * Set up a default storage class
-  	`kube-apiserver --admission-control=DefaultStorageClass`
+### Install a Kubernetes cluster
+
+Lots of commands goes here. TODO.
+
+`kubeadm init --apiserver-cert-extra-sans=<server public ip> --pod-network-cidr=10.244.0.0/16`
 
 ### Install Helm
 
@@ -47,6 +49,8 @@ On slave host:
 
 sudo echo "<master ip> gluster1" >> /etc/hosts # replace with master ip
 
+(Some steps from https://docs.gluster.org/en/latest/Install-Guide/Install/ TODO)
+
 #### Use master as NTP source
 
 Source: https://serverfault.com/questions/204082/using-ntp-to-sync-a-group-of-linux-servers-to-a-common-time-source
@@ -79,6 +83,11 @@ apt install -y glusterfs-server
 ```
 
 
+### Install Nginx ingress controller
+
+helm install stable/nginx-ingress --set rbac.create=true --set controller.hostNetwork=true --set controller.service.type=ClusterIP #--set controller.service.externalIPs={51.15.77.186} --set controller.service.nodePorts.http=80
+
+Then make sure your ingress host is set correctly.
 
 ### Run the game
 

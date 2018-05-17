@@ -6,6 +6,6 @@ import java.util.Random;
 
 public class ZombieFactory {
     public static Zombie create(MapInfo mapInfo, Random random) {
-        return new ZombieController(new WanderingZombie(mapInfo, random,1, 1));
+        return new ZombieController(new WanderingZombie(mapInfo, random,0, 0));
     }
 }

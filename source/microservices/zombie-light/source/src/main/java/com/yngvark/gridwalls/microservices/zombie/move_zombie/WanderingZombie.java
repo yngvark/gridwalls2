@@ -1,10 +1,14 @@
 package com.yngvark.gridwalls.microservices.zombie.move_zombie;
 
 import com.yngvark.gridwalls.microservices.zombie.common.MapInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Random;
 
 class WanderingZombie implements ZombieState {
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
     private final MapInfo mapInfo;
     private final Random random;
 
@@ -28,8 +32,17 @@ class WanderingZombie implements ZombieState {
     }
 
     private Move getMove() {
-        int toX = random.nextInt(mapInfo.getWidth()) + 1;
-        int toY = random.nextInt(mapInfo.getHeight()) + 1;
+        int toX = -1;
+        while (toX < 0 || toX >= mapInfo.getWidth()) {
+            int xDiff = random.nextInt(3) - 1;
+            toX = x + xDiff;
+        }
+
+        int toY = -1;
+        while (toY < 0 || toY >= mapInfo.getHeight()) {
+            int yDiff = random.nextInt(3) - 1;
+            toY = y + yDiff;
+        }
 
         return new Move(toX, toY);
     }
