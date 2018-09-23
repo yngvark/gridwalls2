@@ -1,0 +1,4 @@
+apiVersion: v1
+description: Publishes info about the game map.
+name: map-info-producer
+version: 0.0.1

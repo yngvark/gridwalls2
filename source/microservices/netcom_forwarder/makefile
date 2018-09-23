@@ -1,7 +1,10 @@
+project = netcom-forwarder
+image = ${PRIVATE_DOCKER_REGISTRY}/$(project)
+
 build:
 	./source/gradlew -p source clean installDist
-	docker build . -t netcom-forwarder
+	docker build . -t $(image)
 
-ks: build
-	docker tag netcom-forwarder eu.gcr.io/gridwalls2/netcom-forwarder
-	gcloud docker -- push eu.gcr.io/gridwalls2/netcom-forwarder
+push:
+	docker tag $(project) $(image)
+	docker push $(image)

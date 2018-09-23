@@ -1,15 +1,23 @@
-build-local:
+project = zombie-light
+image = ${PRIVATE_DOCKER_REGISTRY}/$(project)
+
+build:
 	./source/gradlew -p source clean installDist
+	docker build . -t $(image)
 
-build: build-local
-	docker build . -t zombie-light
-
-run: build
+run-local: build
+	docker build . -t $(project)
 	docker-compose up
 
-ks: build
-	docker tag zombie-light eu.gcr.io/gridwalls2/zombie-light
-	gcloud docker -- push eu.gcr.io/gridwalls2/zombie-light
+push:
+	docker tag $(project) $(image)
+	docker push $(image)
 
-ks-run:
-	helm install local/gridwalls-microservice -f helm_values.yaml --name zombie-light
+run-helm:
+	helm upgrade --install \
+		$(project) \
+		--set app.image.repository=$(image) \
+		--set netcomForwarder.image.repository=${PRIVATE_DOCKER_REGISTRY}/netcom-forwarder \
+		helm/$(project)
+
+run: build push run-helm

@@ -61,7 +61,7 @@ rabbitmqManagerPort: 15672
 rabbitmqDiskFreeLimit: '"6GiB"'
 
 ## Kubernetes service type
-serviceType: LoadBalancer
+serviceType: ClusterIP
 
 persistence:
   enabled: true

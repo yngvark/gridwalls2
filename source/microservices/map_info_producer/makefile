@@ -1,13 +1,23 @@
+project = zombie-light
+image = ${PRIVATE_DOCKER_REGISTRY}/$(project)
+
 build:
 	./source/gradlew -p source clean installDist
+	docker build . -t $(image)
 
-run: build
-	docker build . -t map-info-producer
+run-local: build
+	docker build . -t $(project)
 	docker-compose up
 
-ks:
-	docker tag map-info-producer eu.gcr.io/gridwalls2/map-info-producer
-	gcloud docker -- push eu.gcr.io/gridwalls2/map-info-producer
+push:
+	docker tag $(project) $(image)
+	docker push $(image)
 
-ks-run:
-	helm install local/gridwalls-microservice -f helm_values.yaml --name map-info-producer
+run-helm:
+	helm upgrade --install \
+		$(project) \
+		--set app.image.repository=$(image) \
+		--set netcomForwarder.image.repository=${PRIVATE_DOCKER_REGISTRY}/netcom-forwarder \
+		helm/$(project)
+
+run: build push run-helm

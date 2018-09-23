@@ -1,18 +1,26 @@
-build:
-	docker build . -t ${GR_DOCKER_REGISTRY}/rabbitmq-gridwalls
+project = rabbitmq-gridwalls
+image = ${PRIVATE_DOCKER_REGISTRY}/$(project)
 
-run:
+build:
+	./source/gradlew -p source clean installDist
+	docker build . -t $(image)
+
+run-local: build
+	docker build . -t $(project)
 	docker-compose up
 
-ks-build: build
-	docker push ${GR_DOCKER_REGISTRY}/rabbitmq-gridwalls
-	
-ks-run:
-	helm install k8s/helm_chart/rabbitmq --set image=${PRIVATE_DOCKER_REGISTRY}/rabbitmq-gridwalls --name rabbitmq
+push:
+	docker tag $(project) $(image)
+	docker push $(image)
 
-gcloud-push:
-	docker tag rabbitmq-gridwalls ${PRIVATE_DOCKER_REGISTRY}/rabbitmq-gridwalls
-	docker push ${PRIVATE_DOCKER_REGISTRY}/rabbitmq-gridwalls
+run-helm:
+	helm upgrade --install \
+		$(project) \
+		--set image=${PRIVATE_DOCKER_REGISTRY}/$(project) \
+		helm/$(project)
 
-gcloud-run:
-	helm install k8s/helm_chart/rabbitmq --set image=${PRIVATE_DOCKER_REGISTRY}/rabbitmq-gridwalls --name rabbitmq
+run: build push run-helm
+
+get-credentials:
+	echo Username      : user
+	echo Password      : `kubectl get secret --namespace project rabbitmq-rabbitmq -o jsonpath="{.data.rabbitmq-password}" | base64 --decode`

@@ -1,0 +1,44 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "gridwalls-microservice.fullname" . }}
+  labels:
+    app: {{ template "gridwalls-microservice.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "gridwalls-microservice.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+      - name: app
+        image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}"
+        args: ["/named_pipes/in", "/named_pipes/out"]
+        imagePullPolicy: {{ .Values.app.image.pullPolicy }}
+        volumeMounts:
+        - name: named-pipes
+          mountPath: /named_pipes
+        resources:
+      - name: netcom-forwarder
+        image: "{{ .Values.netcomForwarder.image.repository }}:{{ .Values.netcomForwarder.image.tag }}"
+        args: ["/named_pipes/out", "/named_pipes/in", "{{ .Values.rabbitmqReleaseName }}-rabbitmq"]
+        imagePullPolicy: {{ .Values.netcomForwarder.image.pullPolicy }}
+        volumeMounts:
+        - name: named-pipes
+          mountPath: /named_pipes
+        env:
+        - name: RABBITMQ_USERNAME
+          value: "user"
+        - name: RABBITMQ_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.rabbitmqReleaseName }}-rabbitmq
+              key: rabbitmq-password
+      volumes:
+        - name: named-pipes
+          emptyDir: {}
