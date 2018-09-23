@@ -93,7 +93,11 @@ Then make sure your ingress host is set correctly.
 
 * (Opt) Watch pods: `watch kubectl get po`
 * (Opt) Watch helm releases: `watch helm list`
-* `export GR_DOCKER_REGISTRY=localhost:5000/`
+* If you used the private docker registry above, use
+  * `export PRIVATE_DOCKER_REGISTRY=localhost:5000`
+* If not, use
+  * `export PRIVATE_DOCKER_REGISTRY=eu.gcr.io/my-project-12345` (find the "my-project-xx" part in in gcloud
+    console)
 * Run rabbitmq
   * `make -C source/microservices/rabbitmq ks-build ks-run`
 * Run helm repo
