@@ -1,12 +1,13 @@
-build:
+build-local:
 	./source/gradlew -p source clean installDist
 
-run:
-	docker-compose build
+build: build-local
+	docker build . -t zombie-light
+
+run: build
 	docker-compose up
 
-ks:
-	docker build . -t zombie-light
+ks: build
 	docker tag zombie-light eu.gcr.io/gridwalls2/zombie-light
 	gcloud docker -- push eu.gcr.io/gridwalls2/zombie-light
 

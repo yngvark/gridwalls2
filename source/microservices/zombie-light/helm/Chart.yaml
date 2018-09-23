@@ -1,0 +1,4 @@
+apiVersion: v1
+description: A Gridwalls Microservice
+name: gridwalls-microservice
+version: 0.0.1

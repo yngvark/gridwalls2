@@ -1,5 +1,8 @@
 TODO
 ---------------------------------------------------------------
+[ ] Create my own Nexus, so contributing is much easier?
+
+--------- GAMMELT
 
 [ ] Oppgrader clusteret: søk på e-post Kubernetes vulnerabilities
 

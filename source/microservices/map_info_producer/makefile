@@ -1,12 +1,11 @@
 build:
 	./source/gradlew -p source clean installDist
 
-run:
-	docker-compose build
+run: build
+	docker build . -t map-info-producer
 	docker-compose up
 
 ks:
-	docker build . -t map-info-producer
 	docker tag map-info-producer eu.gcr.io/gridwalls2/map-info-producer
 	gcloud docker -- push eu.gcr.io/gridwalls2/map-info-producer
 

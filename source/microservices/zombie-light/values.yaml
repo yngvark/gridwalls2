@@ -1,0 +1,19 @@
+replicaCount: 1
+app:
+  image:
+    repository: eu.gcr.io/gridwalls2/zombie-light
+    tag: latest
+    pullPolicy: Always
+netcomForwarder:
+  image:
+    repository: eu.gcr.io/gridwalls2/netcom-forwarder
+    tag: latest
+    pullPolicy: Always
+rabbitmqReleaseName: rabbitmq
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
