@@ -1,16 +1,14 @@
-project = rabbitmq-gridwalls
+project = rabbitmq-custom
 image = ${PRIVATE_DOCKER_REGISTRY}/$(project)
 
 build:
-	./source/gradlew -p source clean installDist
 	docker build . -t $(image)
 
 run-local: build
-	docker build . -t $(project)
+	docker build . -t $(image)
 	docker-compose up
 
 push:
-	docker tag $(project) $(image)
 	docker push $(image)
 
 run-helm:

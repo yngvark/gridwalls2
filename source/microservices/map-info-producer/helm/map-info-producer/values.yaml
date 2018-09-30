@@ -1,15 +1,15 @@
 replicaCount: 1
 app:
   image:
-    repository: eu.gcr.io/gridwalls2/zombie-light
+    repository: eu.gcr.io/vast-service-217305/map-info-producer
     tag: latest
     pullPolicy: Always
 netcomForwarder:
   image:
-    repository: eu.gcr.io/gridwalls2/netcom-forwarder
+    repository: eu.gcr.io/vast-service-217305/netcom-forwarder
     tag: latest
     pullPolicy: Always
-rabbitmqReleaseName: rabbitmq
+rabbitmqReleaseName: rabbitmq-custom-rabbitmq-custom
 resources:
   limits:
     cpu: 100m

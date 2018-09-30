@@ -1,4 +1,4 @@
-project = zombie-light
+project = map-info-producer
 image = ${PRIVATE_DOCKER_REGISTRY}/$(project)
 
 build:
@@ -6,11 +6,10 @@ build:
 	docker build . -t $(image)
 
 run-local: build
-	docker build . -t $(project)
+	docker build . -t $(image)
 	docker-compose up
 
 push:
-	docker tag $(project) $(image)
 	docker push $(image)
 
 run-helm:

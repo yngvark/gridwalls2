@@ -1,4 +1,0 @@
-apiVersion: v1
-description: Publishes zombie actions.
-name: zombie-light
-version: 0.0.1

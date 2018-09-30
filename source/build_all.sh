@@ -5,10 +5,10 @@ function local_lib() {
 	echo Building locally: lib
 	echo ---------------------------------------------------------------------------------------------------
 
-	lib/os_process_exiter/source/gradlew -p lib/os_process_exiter/source publishToMavenLocal
-	lib/communicate_through_named_pipes/source/gradlew -p lib/communicate_through_named_pipes/source publishToMavenLocal
-	lib/rabbitmq_helper/source/gradlew -p lib/rabbitmq_helper/source publishToMavenLocal
-	lib/named_pipe_process_starter/source/gradlew -p lib/named_pipe_process_starter/source publishToMavenLocal
+	lib/os-process-exiter/source/gradlew -p lib/os-process-exiter/source publishToMavenLocal
+	lib/communicate-through-named_pipes/source/gradlew -p lib/communicate-through-named_pipes/source publishToMavenLocal
+	lib/rabbitmq-helper/source/gradlew -p lib/rabbitmq-helper/source publishToMavenLocal
+	lib/named-pipe-process-starter/source/gradlew -p lib/named-pipe-process-starter/source publishToMavenLocal
 }
 
 function local_ms() {
@@ -17,7 +17,7 @@ function local_ms() {
 	echo ---------------------------------------------------------------------------------------------------
 
 	cd microservices
-	cd netcom_forwarder && ./build.sh && cd ..
+	cd netcom-forwarder && ./build.sh && cd ..
 	cd zombie && ./build.sh && cd ..
 	cd ..
 }
@@ -37,10 +37,10 @@ function docker_lib() {
 	echo ---------------------------------------------------------------------------------------------------
 
 	cd lib
-	cd os_process_exiter && ./publish_artifact_docker.sh && cd ..
-	cd communicate_through_named_pipes && ./publish_artifact_docker.sh && cd ..
-	cd rabbitmq_helper && ./publish_artifact_docker.sh && cd ..
-	cd named_pipe_process_starter && ./publish_artifact_docker.sh && cd ..
+	cd os-process-exiter && ./publish_artifact_docker.sh && cd ..
+	cd communicate-through-named_pipes && ./publish_artifact_docker.sh && cd ..
+	cd rabbitmq-helper && ./publish_artifact_docker.sh && cd ..
+	cd named-pipe-process-starter && ./publish_artifact_docker.sh && cd ..
 	cd ..
 
 }
@@ -51,7 +51,7 @@ function docker_ms() {
 	echo ---------------------------------------------------------------------------------------------------
 
 	cd microservices
-	cd netcom_forwarder && ./build.sh && cd ..
+	cd netcom-forwarder && ./build.sh && cd ..
 	cd zombie && ./build.sh && cd ..
 	cd ..
 

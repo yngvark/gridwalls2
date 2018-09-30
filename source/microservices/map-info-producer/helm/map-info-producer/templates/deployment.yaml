@@ -26,7 +26,7 @@ spec:
         resources:
       - name: netcom-forwarder
         image: "{{ .Values.netcomForwarder.image.repository }}:{{ .Values.netcomForwarder.image.tag }}"
-        args: ["/named_pipes/out", "/named_pipes/in", "{{ .Values.rabbitmqReleaseName }}-rabbitmq"]
+        args: ["/named_pipes/out", "/named_pipes/in", "{{ .Values.rabbitmqReleaseName }}"]
         imagePullPolicy: {{ .Values.netcomForwarder.image.pullPolicy }}
         volumeMounts:
         - name: named-pipes
@@ -37,7 +37,7 @@ spec:
         - name: RABBITMQ_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: {{ .Values.rabbitmqReleaseName }}-rabbitmq
+              name: {{ .Values.rabbitmqReleaseName }}
               key: rabbitmq-password
       volumes:
         - name: named-pipes
