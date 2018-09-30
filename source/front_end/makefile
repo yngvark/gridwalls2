@@ -13,14 +13,23 @@ build:
 	tsc -p src/lib
 	docker build . -t $(image)
 
-run:
+run-local: build
 	docker run -v `pwd`/src:/usr/share/nginx/html:ro -d -p 8081:80 --name $(project) $(image)
 
-stop:
+stop-local:
 	docker stop $(project) && docker rm $(project)
 
-ks: build
-	gcloud docker -- push $(project)
+push:
+	docker push $(image)
+
+run-helm:
+	helm upgrade --install \
+		$(project) \
+		--set image.repository=$(image) \
+		k8s/helm-chart/$(project)
+#		--debug \
+		#--dry-run \
 	
 ks-run:
 	#helm install ../../lib/helm_charts/gridwalls-microservice -f helm_config.yaml --name zombie-light
+

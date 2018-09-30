@@ -19,9 +19,9 @@ spec:
 #  - name: dist
 #    port: {{ default "5672" .Values.rabbitmqNodePort | add 20000 }}
 #    targetPort: dist
-#  - name: stats
-#    port: {{ default "15672" .Values.rabbitmqManagerPort }}
-#    targetPort: stats
+  - name: stats
+    port: {{ default "15672" .Values.rabbitmqManagerPort }}
+    targetPort: stats
   - name: webstomp
     port: 15674
     targetPort: webstomp

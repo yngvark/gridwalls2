@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: {{ template "front-end.fullname" . }}
   labels:
-    app: {{ template "front-end.name" . }}
+    app: {{ template "front-end.fullname" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -12,7 +12,7 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ template "gridwalls-microservice.name" . }}
+        app: {{ template "front-end.fullname" . }}
         release: {{ .Release.Name }}
     spec:
       containers:
