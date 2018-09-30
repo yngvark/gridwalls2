@@ -1,25 +1,28 @@
 export TILLER_NAMESPACE=project
 export PRIVATE_DOCKER_REGISTRY=eu.gcr.io/vast-service-217305
+CURRENT_DIR=`pwd`
 
-echo
+echo ---------------------------------------------------------------------------------------------------
 echo Building libs
-##cd source && ./build_all.sh -ll && cd ..
-cd source && echo hei && cd ..
+echo ---------------------------------------------------------------------------------------------------
+# cd source && ./build_all.sh -ll && cd ..
 
-pwd
-
-echo
+echo ---------------------------------------------------------------------------------------------------
 echo netcom-forwarder
-make -C source/microservices/netcom-forwarder build push
+echo ---------------------------------------------------------------------------------------------------
+make -C $CURRENT_DIR/source/microservices/netcom-forwarder build push
 
-echo
+echo ---------------------------------------------------------------------------------------------------
 echo rabbitmq
-make -C source/microservices/rabbitmq run
+echo ---------------------------------------------------------------------------------------------------
+make -C $CURRENT_DIR/source/microservices/rabbitmq run
 
-echo
+echo ---------------------------------------------------------------------------------------------------
 echo map-info-producer
-make -C source/microservices/map-info-producer run
+echo ---------------------------------------------------------------------------------------------------
+make -C $CURRENT_DIR/source/microservices/map-info-producer run
 
-echo
+echo ---------------------------------------------------------------------------------------------------
 echo zombie-light
-make -C source/microservices/zombie-light 
+echo ---------------------------------------------------------------------------------------------------
+make -C $CURRENT_DIR/source/microservices/zombie-light run
