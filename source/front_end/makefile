@@ -1,10 +1,13 @@
 install:
-	sudo apt-get install nodejs-legacy
-	sudo npm install -g typescript
+	# sudo apt-get install nodejs-legacy
+	# npm is required, install that first. Then:
+
+	npm install -g typescript
 	# install vscode manually for now
 
 build:
-	tsc -p html/lib
+	cd src/lib/npm && npm install
+	tsc -p src/lib
 	docker build . -t eu.gcr.io/gridwalls2/front_end
 
 run:
