@@ -29,7 +29,9 @@ run-helm:
 		k8s/helm-chart/$(project)
 #		--debug \
 		#--dry-run \
-	
+
+run: build push run-helm
+
 ks-run:
 	#helm install ../../lib/helm_charts/gridwalls-microservice -f helm_config.yaml --name zombie-light
 
