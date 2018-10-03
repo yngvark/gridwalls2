@@ -5,6 +5,9 @@ TODO
 https://github.com/photonstorm/phaser3-docs/issues/47
 få phaser til å kjøre med phaser 3
 
+03 okt 2172,30 left
+
+
 
 --------- GAMMELT
 
