@@ -4,7 +4,6 @@ class GameRunner {
     run(divIdName:String):void {
         console.log("Starting game!");
         this.game = new Phaser.Game(800, 350, Phaser.AUTO, divIdName, {
-
             preload: this.preload,
             create: this.create
         });
@@ -12,6 +11,11 @@ class GameRunner {
 
     private preload():void {
         this.game.load.image("skeleton", "img/skeleton.png");
+        this.game.load.image("human", "img/human.png");
+
+        console.log("Starting game!!");
+        this.game.add.sprite(1, 1, "human");
+        document.game = this.game;
     }
 
     private create():void {

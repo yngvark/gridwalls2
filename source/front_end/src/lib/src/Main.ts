@@ -8,7 +8,7 @@ class Main {
         game.run(divIdName);
 
         this.netcom = new Netcom(auth, new ZombieMovedProcessor());
-        this.netcom.init(game);
+        //this.netcom.init(game);
     }
 
     disconnect():void {

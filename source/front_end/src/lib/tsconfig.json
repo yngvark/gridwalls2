@@ -11,6 +11,6 @@
         "./npm"
     ],
     "files": [
-        "./npm/node_modules/phaser/typescript/phaser.d.ts"
+        "../lib/ts_definitions/phaser.d.ts"
     ]
 }

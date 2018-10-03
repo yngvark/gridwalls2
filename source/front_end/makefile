@@ -8,6 +8,9 @@ install:
 	npm install -g typescript
 	# install vscode manually for now
 
+	wget https://raw.githubusercontent.com/photonstorm/phaser3-docs/master/typescript/phaser.d.ts -O \
+		src/lib/ts_definitions/phaser.d.ts
+
 build:
 	cd src/lib/npm && npm install
 	tsc -p src/lib
