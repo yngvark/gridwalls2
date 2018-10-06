@@ -18,7 +18,10 @@ services:
     command:
       - /app_data/out
       - /app_data/in
-
+    environment:
+      RABBITMQ_USERNAME: user
+      RABBITMQ_PASSWORD: pw
+      
 volumes:
   named_pipes:
 
