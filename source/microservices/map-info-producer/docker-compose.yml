@@ -1,15 +1,15 @@
 version: "3"
 
 services:
-  map_info_producer:
-    build: .
+  map-info-producer:
+    image: ${PRIVATE_DOCKER_REGISTRY}/map-info-producer
     volumes:
       - named_pipes:/app_data
     command:
       - /app_data/in
       - /app_data/out
 
-  map_info_producer_netcom_forwarder:
+  map-info-producer-netcom-forwarder:
     networks:
       - netcom
     image: netcom-forwarder
