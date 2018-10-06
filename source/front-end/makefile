@@ -14,7 +14,7 @@ build:
 	docker build . -t $(image)
 
 run-local: build
-	docker run -v `pwd`/src:/usr/share/nginx/html:ro -d -p 8081:80 --name $(project) $(image)
+	docker run -d -v `pwd`/src:/usr/share/nginx/html:ro -d -p 8081:80 --name $(project) $(image)
 
 stop-local:
 	docker stop $(project) && docker rm $(project)
