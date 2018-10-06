@@ -5,10 +5,13 @@ build:
 	docker build . -t $(image)
 
 run-local: build
-	docker build . -t $(image)
-	docker-compose up
+	docker-compose up -d
+
+stop-local:
+	docker-compose down
 
 push:
+	docker tag $(project)_rabbitmq $(image)
 	docker push $(image)
 
 run-helm:

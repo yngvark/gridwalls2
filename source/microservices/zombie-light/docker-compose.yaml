@@ -2,14 +2,14 @@ version: "3"
 
 services:
   zombie:
-    build: .
+    image: ${PRIVATE_DOCKER_REGISTRY}/zombie-light
     volumes:
       - named_pipes:/app_data
     command:
       - /app_data/in
       - /app_data/out
 
-  zombie_netcom_forwarder:
+  zombie-netcom-forwarder:
     networks:
       - netcom
     image: netcom-forwarder
@@ -18,7 +18,10 @@ services:
     command:
       - /app_data/out
       - /app_data/in
-
+    environment:
+      RABBITMQ_USERNAME: user
+      RABBITMQ_PASSWORD: pw
+      
 volumes:
   named_pipes:
 

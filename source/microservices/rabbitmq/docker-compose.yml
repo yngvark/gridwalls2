@@ -3,13 +3,17 @@ version: '2'
 services:
 
   rabbitmq:
-    image: ${GR_DOCKER_REGISTRY}rabbitmq-gridwalls
+    build: .
+    image: ${PRIVATE_DOCKER_REGISTRY}/rabbitmq-custom
     #hostname: rabbithost
     ports:
       - "8080:15672"
       - 15674:15674
     networks:
       - netcom
+    environment:
+      RABBITMQ_USERNAME: user
+      RABBITMQ_PASSWORD: pw
 
   #web_server:
     ##build: web_server

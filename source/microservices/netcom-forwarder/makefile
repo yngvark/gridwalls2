@@ -3,8 +3,8 @@ image = ${PRIVATE_DOCKER_REGISTRY}/$(project)
 
 build:
 	./source/gradlew -p source clean installDist
-	docker build . -t $(image)
+	docker build . -t $(project)
 
 push:
-	docker tag $(project) $(image)
+	docker tag $(project) $(image) 
 	docker push $(image)

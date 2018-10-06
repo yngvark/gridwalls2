@@ -1,33 +1,22 @@
-export TILLER_NAMESPACE=project
 export PRIVATE_DOCKER_REGISTRY=eu.gcr.io/vast-service-217305
 CURRENT_DIR=`pwd`
 
 echo ---------------------------------------------------------------------------------------------------
-echo Building libs
-echo ---------------------------------------------------------------------------------------------------
-cd source && ./build_all.sh -ll && cd ..
-
-echo ---------------------------------------------------------------------------------------------------
 echo rabbitmq
 echo ---------------------------------------------------------------------------------------------------
-make -C $CURRENT_DIR/source/microservices/rabbitmq run
+make -C $CURRENT_DIR/source/microservices/rabbitmq stop-local
 
 echo ---------------------------------------------------------------------------------------------------
 echo front-end
 echo ---------------------------------------------------------------------------------------------------
-make -C $CURRENT_DIR/source/front-end run
-
-echo ---------------------------------------------------------------------------------------------------
-echo netcom-forwarder
-echo ---------------------------------------------------------------------------------------------------
-make -C $CURRENT_DIR/source/microservices/netcom-forwarder build push
+make -C $CURRENT_DIR/source/front-end stop-local
 
 echo ---------------------------------------------------------------------------------------------------
 echo map-info-producer
 echo ---------------------------------------------------------------------------------------------------
-make -C $CURRENT_DIR/source/microservices/map-info-producer run
+make -C $CURRENT_DIR/source/microservices/map-info-producer stop-local
 
 echo ---------------------------------------------------------------------------------------------------
 echo zombie-light
 echo ---------------------------------------------------------------------------------------------------
-make -C $CURRENT_DIR/source/microservices/zombie-light run
+make -C $CURRENT_DIR/source/microservices/zombie-light stop-local
