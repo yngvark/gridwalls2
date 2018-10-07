@@ -1,0 +1,20 @@
+{
+  "name": "npm",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "yk": "webpack --config webpack.config.js",
+    "dev": "webpack --mode development && webpack-dev-server --mode development",
+    "build": "webpack --mode production && webpack-dev-server --mode production"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "phaser": "^3.14.0",
+    "stompjs": "^2.3.3"
+  },
+  "devDependencies": {
+    "webpack": "^4.20.2"
+  }
+}

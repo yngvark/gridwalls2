@@ -1,25 +1,34 @@
-class GameRunner {
+import { MainScene } from "./MainScene";
+import Sprite = Phaser.GameObjects.Sprite;
+
+export class GameRunner {
     private game:Phaser.Game;
+    private scene:MainScene;
 
     run(divIdName:String):void {
         console.log("Starting game!");
-        this.game = new Phaser.Game(800, 350, Phaser.AUTO, divIdName, {
-            preload: this.preload,
-            create: this.create
+
+        this.scene = new MainScene();
+
+        this.game = new Phaser.Game({
+            width: 800,
+            height: 350,
+            type: Phaser.AUTO,
+            scene: this.scene
         });
     }
-
-    private preload():void {
-        this.game.load.image("skeleton", "img/skeleton.png");
-        this.game.load.image("human", "img/human.png");
-
-        console.log("Starting game!!");
-        this.game.add.sprite(1, 1, "human");
-        document.game = this.game;
-    }
-
-    private create():void {
-    }
+    //
+    // private preload():void {
+    //     this.game.load.image("skeleton", "img/skeleton.png");
+    //     this.game.load.image("human", "img/human.png");
+    //
+    //     console.log("Starting game!!");
+    //     this.game.add.sprite(1, 1, "human");
+    //     document.game = this.game;
+    // }
+    //
+    // private create():void {
+    // }
 
     private zombies:{
         [key: string]: Zombie
@@ -31,10 +40,10 @@ class GameRunner {
             console.log("Existing zombie:");
             console.log(zombie);
             console.log(zombieMoved);
-            zombie.sprite.position.setTo(zombieMoved.coordinate.x * 15, zombieMoved.coordinate.y * 15);
+            zombie.sprite.setPosition(zombieMoved.coordinate.x * 15, zombieMoved.coordinate.y * 15);
         } else {
-            let sprite = this.game.add.sprite(zombieMoved.coordinate.x, zombieMoved.coordinate.y, "skeleton"); 
-            sprite.scale.setTo(0.2 , 0.2);
+            let sprite = this.scene.add.sprite(zombieMoved.coordinate.x, zombieMoved.coordinate.y, "skeleton");
+            sprite.setScale(0.2 , 0.2);
 
             let zombie:Zombie = { 
                 id: zombieMoved.id,
@@ -53,7 +62,7 @@ class GameRunner {
 
 class Zombie {
     readonly id:string;
-    readonly sprite:Phaser.Sprite;
+    readonly sprite:Sprite;
 }
 
 class Map<V> {

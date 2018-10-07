@@ -1,4 +1,7 @@
-class Main {
+import {GameRunner} from "./GameRunner";
+import {Netcom} from "./Netcom";
+
+export class Main {
     private netcom:Netcom;
 
     run(divIdName:String, auth:Authentication):void {

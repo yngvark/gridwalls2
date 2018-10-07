@@ -1,5 +1,7 @@
-class Netcom {
-    private auth:Authentication;
+import { GameRunner } from "./GameRunner"
+
+export class Netcom {
+    private readonly auth:Authentication;
     private zombieMovedProcessor:ZombieMovedProcessor;
 	private client:any;
 			
