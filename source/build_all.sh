@@ -1,13 +1,29 @@
 #!/bin/bash
+set -e
 
 function local_lib() {
 	echo ---------------------------------------------------------------------------------------------------
 	echo Building locally: lib
 	echo ---------------------------------------------------------------------------------------------------
 
+	echo ---------------------------------------------------------------------------------------------------
+	echo Building locally: os-process-exiter
+	echo ---------------------------------------------------------------------------------------------------
 	lib/os-process-exiter/source/gradlew -p lib/os-process-exiter/source publishToMavenLocal
-	lib/communicate-through-named_pipes/source/gradlew -p lib/communicate-through-named_pipes/source publishToMavenLocal
+
+	echo ---------------------------------------------------------------------------------------------------
+	echo Building locally: communicate-through-named_pipes
+	echo ---------------------------------------------------------------------------------------------------
+	lib/communicate-through-named-pipes/source/gradlew -p lib/communicate-through-named-pipes/source publishToMavenLocal
+
+	echo ---------------------------------------------------------------------------------------------------
+	echo Building locally: rabbitmq-helper
+	echo ---------------------------------------------------------------------------------------------------
 	lib/rabbitmq-helper/source/gradlew -p lib/rabbitmq-helper/source publishToMavenLocal
+
+	echo ---------------------------------------------------------------------------------------------------
+	echo Building locally: named-pipe-process-starter
+	echo ---------------------------------------------------------------------------------------------------
 	lib/named-pipe-process-starter/source/gradlew -p lib/named-pipe-process-starter/source publishToMavenLocal
 }
 

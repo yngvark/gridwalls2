@@ -1,6 +1,9 @@
 export TILLER_NAMESPACE=project
 export PRIVATE_DOCKER_REGISTRY=eu.gcr.io/vast-service-217305
 CURRENT_DIR=`pwd`
+gcloud auth configure-docker
+
+set -e
 
 echo ---------------------------------------------------------------------------------------------------
 echo Building libs
