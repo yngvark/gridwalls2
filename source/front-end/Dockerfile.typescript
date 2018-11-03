@@ -1,0 +1,11 @@
+# Copied form https://github.com/harmishhk/dockerfiles/blob/master/typescript/Dockerfile
+FROM node:10.13.0-alpine
+
+RUN npm install -g tslint typescript @types/npm && \
+    mkdir -p /workspace/build && \
+    #
+    # clean-up
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+VOLUME /workspace
+WORKDIR /workspace
