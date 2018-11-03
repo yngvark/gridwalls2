@@ -11,7 +11,6 @@ stop-local:
 	docker-compose down
 
 push:
-	docker tag $(project)_rabbitmq $(image)
 	docker push $(image)
 
 run-helm:

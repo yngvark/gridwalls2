@@ -6,5 +6,4 @@ build:
 	docker build . -t $(project)
 
 push:
-	docker tag $(project) $(image) 
 	docker push $(image)

@@ -12,7 +12,6 @@ stop-local:
 	docker-compose down
 
 push:
-	docker tag $(project)_map-info-producer $(image)
 	docker push $(image)
 
 run-helm:
