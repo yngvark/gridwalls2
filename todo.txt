@@ -1,7 +1,10 @@
 TODO
 ---------------------------------------------------------------
-04 okt 2141
-06 okt 2114
+03.nov 10-11
+04.nov 11-13
+
+todo: restarte rabbitmq og de andre, secreeten til rabbitmq er feil
+Todo: Innføre resourcelimits på alle MS-ene. Arve netcomforwarder fra helm chart.
 
 
 [ ] Create my own Nexus, so contributing is much easier?
