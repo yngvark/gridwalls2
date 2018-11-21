@@ -11,12 +11,7 @@ install:
 	# install vscode manually for now
 
 	wget https://raw.githubusercontent.com/photonstorm/phaser3-docs/master/typescript/phaser.d.ts -O \
-		src/lib/ts_definitions/phaser.d.ts
-
-yk: 
-	if ! [[ `docker image ls tsc -q | wc -l` = 1 ]]; then \
-		echo expression evaluated as true; \
-	fi
+		src/ts_definitions/phaser.d.ts
 
 build:
 	if ! [[ `docker image ls tscz -q | wc -l` = 1 ]]; then \
@@ -34,11 +29,6 @@ build:
 	#Building docker image
 	#------------------------------------------------------------------
 	docker build . -t $(image)
-
-aaa:
-	#docker build -f Dockerfile.typescript . -t tsc
-	#docker run -u`id -u`:`id -g` -v `pwd`/src:/appsrc -w /appsrc tsc tsc
-	#docker build . -t $(image)
 
 run-local: build
 	docker run -d -v `pwd`/src:/usr/share/nginx/html:ro -d -p 8081:80 --name $(project) $(image)
