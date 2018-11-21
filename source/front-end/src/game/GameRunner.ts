@@ -1,5 +1,6 @@
 import { MainScene } from "./MainScene";
 import Sprite = Phaser.GameObjects.Sprite;
+import {ZombieMoved} from "./ZombieMoved";
 
 export class GameRunner {
     private game:Phaser.Game;

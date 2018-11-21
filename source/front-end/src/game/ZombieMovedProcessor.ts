@@ -1,4 +1,7 @@
-class ZombieMovedProcessor {
+import {ZombieMoved} from "./ZombieMoved";
+import {Coordinate} from "./Coordinate";
+
+export class ZombieMovedProcessor {
     private regex = /([a-z]+)=([a-zA-Z0-9,-]+)/g;
 
     process(msg:any):ZombieMoved {

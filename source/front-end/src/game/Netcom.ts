@@ -1,4 +1,8 @@
 import { GameRunner } from "./GameRunner"
+import {Authentication} from "./Authentication";
+import {ZombieMovedProcessor} from "./ZombieMovedProcessor";
+import {ZombieMoved} from "./ZombieMoved";
+// import 'stomp';
 
 export class Netcom {
     private readonly auth:Authentication;

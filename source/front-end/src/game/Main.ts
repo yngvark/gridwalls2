@@ -1,5 +1,8 @@
+import 'phaser';
 import {GameRunner} from "./GameRunner";
 import {Netcom} from "./Netcom";
+import {Authentication} from "./Authentication";
+import {ZombieMovedProcessor} from "./ZombieMovedProcessor";
 
 export class Main {
     private netcom:Netcom;
@@ -11,10 +14,11 @@ export class Main {
         game.run(divIdName);
 
         this.netcom = new Netcom(auth, new ZombieMovedProcessor());
-        //this.netcom.init(game);
+        this.netcom.init(game);
     }
 
     disconnect():void {
+        console.log("main disconnect!!!!!!!!!");
         this.netcom.disconnect();
     }
 }

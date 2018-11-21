@@ -1,4 +1,6 @@
-class ZombieMoved {
+import {Coordinate} from "./Coordinate";
+
+export class ZombieMoved {
     readonly id:string;
     readonly coordinate:Coordinate;
 

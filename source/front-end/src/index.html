@@ -11,8 +11,8 @@
     </style>
     <link rel="stylesheet" href="form.css">
 
-    <script type="text/javascript" src="lib/npm/node_modules/phaser/build/phaser.min.js"></script>
-    <script type="text/javascript" src="lib/npm/node_modules/stompjs/lib/stomp.js"></script>
+    <!--<script type="text/javascript" src="lib/npm/node_modules/phaser/build/phaser.min.js"></script>-->
+    <script type="text/javascript" src="node_modules/stompjs/lib/stomp.js"></script>
 	<script src="dist/bundle.js"></script>
 </head>
 <body>
@@ -34,13 +34,19 @@
         </form>
     </div>
     
-    <button onclick="connect()">Connect</button>
-    <button onclick="disconnect()">Disconnect</button>
+    <!--<button onclick="connect()">Connect</button>-->
+    <!--<button onclick="disconnect()">Disconnect</button>-->
+
+    <button id="connect">Connect</button>
+    <button id="disconnect">Disconnect</button>
 
     <div id="content"><!-- Phaser content goes here --></div>
     
 	<script>
         console.log("Hello")
+
+        /*
+        import Yo from 'index'
 
         var main = new Main();
 
@@ -64,6 +70,7 @@
             console.log("Disconnect")
             main.disconnect();
 		}
+		*/
 	</script>
 
 </body>
