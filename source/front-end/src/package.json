@@ -6,7 +6,8 @@
   "scripts": {
     "yk": "webpack --config webpack.config.js",
     "dev": "webpack --mode development && webpack-dev-server --mode development",
-    "build": "webpack --mode production && webpack-dev-server --mode production"
+    "prod": "webpack --mode production && webpack-dev-server --mode production",
+    "build": "webpack --mode production"
   },
   "author": "",
   "license": "ISC",
@@ -17,7 +18,8 @@
   "devDependencies": {
     "ts-loader": "^5.3.0",
     "typescript": "^3.1.6",
-    "webpack": "^4.20.2",
-    "webpack-cli": "^3.1.2"
+    "webpack": "^4.27.1",
+    "webpack-cli": "^3.1.2",
+    "webpack-dev-server": "^3.1.10"
   }
 }

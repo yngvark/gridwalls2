@@ -4,8 +4,7 @@ project = front-end
 image = ${PRIVATE_DOCKER_REGISTRY}/$(project)
 
 install:
-	# sudo apt-get install nodejs-legacy
-	# npm is required, install that first. Then:
+	# npm is required, install that first using nvm for instance. Then:
 
 	npm install -g typescript
 	# install vscode manually for now
@@ -21,19 +20,22 @@ build:
 	fi
 
 	#------------------------------------------------------------------
-	#Building Typescript code
+	# Building Typescript code
 	#------------------------------------------------------------------
 	docker run -u`id -u`:`id -g` -v `pwd`/src:/appsrc -w /appsrc tsc tsc
 
 	#------------------------------------------------------------------
-	#Building docker image
+	# Building docker image
 	#------------------------------------------------------------------
 	docker build . -t $(image)
 
-run-local: build
+run-dev: build
+	
+
+run-prod: build
 	docker run -d -v `pwd`/src:/usr/share/nginx/html:ro -d -p 8081:80 --name $(project) $(image)
 
-stop-local:
+stop-prod:
 	docker stop $(project) && docker rm $(project)
 
 push:
