@@ -31,6 +31,8 @@ build:
 
 run-dev: build
 	
+run-docker:
+	docker run -p 8081:80 --name $(project) $(image)
 
 run-prod: build
 	docker run -d -v `pwd`/src:/usr/share/nginx/html:ro -d -p 8081:80 --name $(project) $(image)
