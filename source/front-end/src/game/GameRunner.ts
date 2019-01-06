@@ -36,11 +36,12 @@ export class GameRunner {
     } = {};
 
     zombieMoved(zombieMoved:ZombieMoved) {
+        console.log(zombieMoved);
+
         if (this.zombies.hasOwnProperty(zombieMoved.id)) {
             let zombie = this.zombies[zombieMoved.id];
-            console.log("Existing zombie:");
-            console.log(zombie);
-            console.log(zombieMoved);
+            // console.log("Existing zombie:");
+            // console.log(zombie);
             zombie.sprite.setPosition(zombieMoved.coordinate.x * 15, zombieMoved.coordinate.y * 15);
         } else {
             let sprite = this.scene.add.sprite(zombieMoved.coordinate.x, zombieMoved.coordinate.y, "skeleton");
@@ -51,9 +52,8 @@ export class GameRunner {
                 sprite: sprite
             }
 
-            console.log("New zombie:");
-            console.log(zombie);
-            console.log(zombieMoved);
+            // console.log("New zombie:");
+            // console.log(zombie);
 
             this.zombies[zombie.id] = zombie;
         }

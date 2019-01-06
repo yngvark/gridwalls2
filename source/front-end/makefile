@@ -29,13 +29,16 @@ build:
 	#------------------------------------------------------------------
 	docker build . -t $(image)
 
-run-dev: build
-	
-run-docker:
-	docker run -p 8081:80 --name $(project) $(image)
+run-tsc-dev:
+	docker run -u`id -u`:`id -g` -v `pwd`/src:/appsrc -w /appsrc tsc tsc -w
 
-run-prod: build
-	docker run -d -v `pwd`/src:/usr/share/nginx/html:ro -d -p 8081:80 --name $(project) $(image)
+run-dev: ## Runs dev server on port 8080
+	npm --prefix src run dev
+
+	echo in another window, run
+
+run-docker:
+	docker run -v `pwd`/src:/usr/share/nginx/html:ro -p 8081:80 --name $(project) $(image)
 
 stop-prod:
 	docker stop $(project) && docker rm $(project)

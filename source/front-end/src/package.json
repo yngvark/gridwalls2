@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "yk": "webpack --config webpack.config.js",
-    "dev": "webpack --mode development && webpack-dev-server --mode development",
+    "dev": "webpack --mode development && webpack-dev-server --mode development --watch",
     "prod": "webpack --mode production && webpack-dev-server --mode production",
     "build": "webpack --mode production"
   },

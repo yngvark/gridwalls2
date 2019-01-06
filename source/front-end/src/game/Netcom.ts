@@ -19,8 +19,8 @@ export class Netcom {
 		var websocketUrl = 'ws://' + this.auth.host + ':15674/ws';
 		console.log("Websocket url: " + websocketUrl);
 		var ws = new WebSocket(websocketUrl);
-		this.client = Stomp.over(ws); 
-		
+		this.client = Stomp.over(ws);
+
 		//var client = Stomp.client(ws);
 		//var client = this.client;
 
@@ -30,8 +30,8 @@ export class Netcom {
 
 			console.log(".-SUBSCRIBE");
 			var subscription = _that.client.subscribe("/exchange/Zombie", function(msg:any) {
-				console.log("<<< RECEIVED:")
-				console.log(msg);
+				//console.log("<<< RECEIVED:")
+				//console.log(msg);
                 let zombieMoved:ZombieMoved = _that.zombieMovedProcessor.process(JSON.parse(msg.body));
                 game.zombieMoved(zombieMoved);
 			});
