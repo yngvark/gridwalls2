@@ -38,9 +38,9 @@ run-tsc-dev:
 	docker run -u`id -u`:`id -g` -v `pwd`/src:/appsrc -w /appsrc tsc tsc -w
 
 run-dev: ## Runs dev server on port 8080
+	@echo In another window, run make run-tsc-dev
 	npm --prefix src run dev
 
-	echo in another window, run
 
 run-docker:
 	docker run -v `pwd`/src:/usr/share/nginx/html:ro -p 8081:80 --name $(project) $(image)
