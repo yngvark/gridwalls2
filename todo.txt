@@ -1,5 +1,7 @@
 TODO
 ---------------------------------------------------------------
+Se gitlog, må fikse index.html ref til bundle.js
+
 Sticky:
 echo $(kubectl get secret --namespace project rabbitmq-custom-rabbitmq-custom -o jsonpath="{.data.rabbitmq-password}" | base64 --decode)
 
