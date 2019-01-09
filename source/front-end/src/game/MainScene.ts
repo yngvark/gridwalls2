@@ -1,56 +1,48 @@
 export class MainScene extends Phaser.Scene {
-    private phaserSprite: Phaser.GameObjects.Sprite;
+    private humanSprite: Phaser.GameObjects.Sprite;
     private cursors: any;
 
     constructor() {
         super({
             key: "MainScene"
         });
-
-        console.log("CREATECORSKORSKEYS 5555555555555555");
     }
 
     preload(): void {
-        // this.load.image("logo", "./assets/boilerplate/phaser.png");
         this.load.image("skeleton", "img/skeleton.png");
         this.load.image("human", "img/human.png");
     }
 
+
+    private x:integer = 100;
+    private y:integer = 100;
+
     create(): void {
-        // this.phaserSprite = this.add.sprite(400, 300, "logo");
-
-        console.log("HALLO!");
-        this.phaserSprite = this.add.sprite(100, 100, "human");
-
+        this.humanSprite = this.add.sprite(this.x, this.y, "human");
+        this.humanSprite.setScale(0.2 , 0.2);
         this.cursors = this.input.keyboard.createCursorKeys();
     }
 
     update(): void {
-        //console.log("update!!");
+        // https://phaser.io/tutorials/making-your-first-phaser-3-game/part7
 
         if (this.cursors.left.isDown)
         {
-            console.log("LEFT");
-            //player.setVelocityX(-160);
-            //player.anims.play('left', true);
+            this.x -= 15;
         }
         else if (this.cursors.right.isDown)
         {
-            console.log("RIGHT");
-            //player.setVelocityX(160);
-            //player.anims.play('right', true);
+            this.x += 15;
         }
-        else
+        else if (this.cursors.up.isDown)
         {
-            //player.setVelocityX(0);
-            //player.anims.play('turn');
+            this.y -= 15;
+        }
+        else if (this.cursors.down.isDown)
+        {
+            this.y += 15
         }
 
-        /*
-        if (cursors.up.isDown && player.body.touching.down)
-        {
-            player.setVelocityY(-330);
-        }
-        */
+        this.humanSprite.setPosition(this.x, this.y);
     }
 }
