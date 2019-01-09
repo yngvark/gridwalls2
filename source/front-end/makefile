@@ -6,18 +6,23 @@ image = ${PRIVATE_DOCKER_REGISTRY}/$(project)
 install:
 	# npm is required, install that first using nvm for instance. Then:
 
-	npm install -g typescript
+	#npm install -g typescript
 	# install vscode manually for now
 
-	wget https://raw.githubusercontent.com/photonstorm/phaser3-docs/master/typescript/phaser.d.ts -O \
-		src/ts_definitions/phaser.d.ts
+	#wget https://raw.githubusercontent.com/photonstorm/phaser3-docs/master/typescript/phaser.d.ts -O \
+	#src/ts_definitions/phaser.d.ts
 
-build:
 	if ! [[ `docker image ls tscz -q | wc -l` = 1 ]]; then \
 		#Building Typescript build image; \
 		#------------------------------------------------------------------; \
 		docker build -f Dockerfile.typescript . -t tsc; \
 	fi
+
+	npm --prefix src install
+
+
+build:
+	
 
 	#------------------------------------------------------------------
 	# Building Typescript code
