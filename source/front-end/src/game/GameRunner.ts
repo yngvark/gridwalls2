@@ -6,7 +6,7 @@ export class GameRunner {
     private game:Phaser.Game;
     private scene:MainScene;
 
-    run(divIdName:String):void {
+    run():void {
         console.log("Starting game!");
 
         this.scene = new MainScene();
@@ -18,25 +18,13 @@ export class GameRunner {
             scene: this.scene
         });
     }
-    //
-    // private preload():void {
-    //     this.game.load.image("skeleton", "img/skeleton.png");
-    //     this.game.load.image("human", "img/human.png");
-    //
-    //     console.log("Starting game!!");
-    //     this.game.add.sprite(1, 1, "human");
-    //     document.game = this.game;
-    // }
-    //
-    // private create():void {
-    // }
 
     private zombies:{
         [key: string]: Zombie
     } = {};
 
     zombieMoved(zombieMoved:ZombieMoved) {
-        console.log(zombieMoved);
+        //console.log(zombieMoved);
 
         if (this.zombies.hasOwnProperty(zombieMoved.id)) {
             let zombie = this.zombies[zombieMoved.id];

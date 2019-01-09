@@ -3,7 +3,7 @@ import {Authentication} from "./Authentication";
 
 class Index {
     private main:Main = new Main();
-
+    
     connect() {
         let host:String = (document.getElementById('host') as any).value;
         let username:String = (document.getElementById('username') as any).value;
@@ -14,7 +14,7 @@ class Index {
         auth.password = password;
 
         console.log("Connect to " + host + " with u/p: " + username + "/" + password);
-        this.main.run('content', auth);
+        this.main.run(auth);
 
         //document.getElementById('disconnect').style.display = 'block'
         // document.getElementById('connect').style.display = 'none'

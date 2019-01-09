@@ -7,11 +7,15 @@ import {ZombieMovedProcessor} from "./ZombieMovedProcessor";
 export class Main {
     private netcom:Netcom;
 
-    run(divIdName:String, auth:Authentication):void {
+    constructor() {
+        console.log("Main version 55555555")
+    }
+
+    run(auth:Authentication):void {
         console.log("Running game")
 
         var game = new GameRunner();
-        game.run(divIdName);
+        game.run();
 
         this.netcom = new Netcom(auth, new ZombieMovedProcessor());
         this.netcom.init(game);
